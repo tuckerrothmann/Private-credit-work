@@ -1,39 +1,41 @@
 #!/usr/bin/env python3
-"""CCLF Liquidity Scenario Model
+"""CCLF Liquidity Scenario Model.
 
-This script projects 8 quarters of Cliffwater Corporate Lending Fund (CCLF)
-liquidity activity under configurable scenarios that link tender program
-obligations, credit losses, and borrowing headroom.
+Projects 8 quarters of Cliffwater Corporate Lending Fund (CCLF) liquidity under
+configurable tender, loss, distribution, and unfunded-commitment assumptions.
 
-Dependencies: Python 3 standard library only.
+Dependencies: Python standard library only.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Dict, List
 import csv
+from dataclasses import dataclass
 from math import inf
+from pathlib import Path
+from typing import Dict, List
+
+ROOT = Path(__file__).resolve().parent
 
 
 @dataclass
 class ScenarioConfig:
     name: str
-    nav_start: float = 31.5e9  # USD
+    nav_start: float = 31.5e9
     senior_notes: float = 5.65e9
     senior_credit_outstanding: float = 1.19e9
     senior_credit_limit: float = 2.5e9
-    distribution_rate: float = 0.1075  # annual
-    tender_rate: float = 0.05  # percent of NAV repurchased per quarter
-    portfolio_yield: float = 0.12  # annual gross investment yield
-    scheduled_repayment_rate: float = 0.03  # percent of NAV turning to cash per quarter
+    distribution_rate: float = 0.1075
+    tender_rate: float = 0.05
+    portfolio_yield: float = 0.12
+    scheduled_repayment_rate: float = 0.03
     annual_default_rate: float = 0.02
     loss_given_default: float = 0.4
     unfunded_commitments: float = 4.0e9
-    unfunded_draw_rate: float = 0.1  # percent of remaining unfunded commitments per quarter
+    unfunded_draw_rate: float = 0.10
     quarters: int = 8
     min_cash_buffer: float = 0.0
     starting_cash: float = 0.5e9
-    max_leverage: float = 2.0  # Debt / NAV ceiling
+    max_leverage: float = 2.0
 
 
 def quarterly_rate(annual_rate: float) -> float:
@@ -64,7 +66,6 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
         cash_sources = nii + scheduled_repayments
         cash_uses = distributions + tender + credit_losses + unfunded_draw
         net_cash = cash_sources - cash_uses
-
         cash += net_cash
 
         liquidity_shortfall = False
@@ -114,24 +115,19 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
 
 
 def summarize(rows: List[Dict[str, float | bool | int]]) -> Dict[str, float | str]:
-    min_cash = min(r["Cash_Bn"] for r in rows)
-    max_facility = max(r["Facility_Out_Bn"] for r in rows)
-    min_headroom = min(r["Headroom_Bn"] for r in rows)
-    first_shortfall = next((r["Quarter"] for r in rows if r["Liquidity_Shortfall"]), "none")
-    first_breach = next((r["Quarter"] for r in rows if r["Covenant_Breach"]), "none")
     return {
-        "min_cash_bn": min_cash,
-        "max_facility_utilization_bn": max_facility,
-        "min_headroom_bn": min_headroom,
-        "first_liquidity_shortfall_quarter": first_shortfall,
-        "first_covenant_breach_quarter": first_breach,
+        "min_cash_bn": min(r["Cash_Bn"] for r in rows),
+        "max_facility_utilization_bn": max(r["Facility_Out_Bn"] for r in rows),
+        "min_headroom_bn": min(r["Headroom_Bn"] for r in rows),
+        "first_liquidity_shortfall_quarter": next((r["Quarter"] for r in rows if r["Liquidity_Shortfall"]), "none"),
+        "first_covenant_breach_quarter": next((r["Quarter"] for r in rows if r["Covenant_Breach"]), "none"),
     }
 
 
-def save_csv(path: str, rows: List[Dict[str, float | bool | int]]) -> None:
+def save_csv(path: Path, rows: List[Dict[str, float | bool | int]]) -> None:
     if not rows:
         return
-    with open(path, "w", newline="") as fh:
+    with path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
@@ -140,62 +136,62 @@ def save_csv(path: str, rows: List[Dict[str, float | bool | int]]) -> None:
 def print_table(rows: List[Dict[str, float | bool | int]]) -> None:
     headers = list(rows[0].keys())
     col_widths = {}
-    for h in headers:
+    for header in headers:
         lengths = []
         for row in rows:
-            val = row[h]
-            if isinstance(val, float):
-                lengths.append(len(f"{val:,.2f}"))
-            else:
-                lengths.append(len(str(val)))
-        col_widths[h] = max([len(h)] + lengths)
-    header_line = " ".join(f"{h:>{col_widths[h]}}" for h in headers)
+            value = row[header]
+            lengths.append(len(f"{value:,.2f}") if isinstance(value, float) else len(str(value)))
+        col_widths[header] = max([len(header)] + lengths)
+
+    header_line = " ".join(f"{header:>{col_widths[header]}}" for header in headers)
     print(header_line)
     print("-" * len(header_line))
     for row in rows:
         formatted = []
-        for h in headers:
-            val = row[h]
-            if isinstance(val, float):
-                formatted.append(f"{val:>{col_widths[h]},.2f}")
+        for header in headers:
+            value = row[header]
+            if isinstance(value, float):
+                formatted.append(f"{value:>{col_widths[header]},.2f}")
             else:
-                formatted.append(f"{str(val):>{col_widths[h]}}")
+                formatted.append(f"{str(value):>{col_widths[header]}}")
         print(" ".join(formatted))
 
 
+def default_scenarios() -> List[ScenarioConfig]:
+    return [
+        ScenarioConfig(
+            name="Baseline",
+            tender_rate=0.05,
+            annual_default_rate=0.02,
+            loss_given_default=0.4,
+            unfunded_draw_rate=0.08,
+        ),
+        ScenarioConfig(
+            name="Stressed",
+            tender_rate=0.10,
+            annual_default_rate=0.06,
+            loss_given_default=0.5,
+            unfunded_draw_rate=0.15,
+            portfolio_yield=0.11,
+        ),
+    ]
+
+
 def run_default_scenarios() -> None:
-    baseline_cfg = ScenarioConfig(
-        name="Baseline",
-        tender_rate=0.05,
-        annual_default_rate=0.02,
-        loss_given_default=0.4,
-        unfunded_draw_rate=0.08,
-    )
-
-    stressed_cfg = ScenarioConfig(
-        name="Stressed",
-        tender_rate=0.10,
-        annual_default_rate=0.06,
-        loss_given_default=0.5,
-        unfunded_draw_rate=0.15,
-        portfolio_yield=0.11,
-    )
-
-    scenarios = [baseline_cfg, stressed_cfg]
     summary_rows: List[Dict[str, float | str]] = []
 
-    for cfg in scenarios:
+    for cfg in default_scenarios():
         rows = run_scenario(cfg)
-        save_csv(f"{cfg.name.lower()}_projection.csv", rows)
+        save_csv(ROOT / f"{cfg.name.lower()}_projection.csv", rows)
         print(f"\n=== {cfg.name} Scenario ===")
         print_table(rows)
         summary = summarize(rows)
         summary_rows.append({"scenario": cfg.name} | summary)
         print("Summary:")
-        for k, v in summary.items():
-            print(f"  {k}: {v}")
+        for key, value in summary.items():
+            print(f"  {key}: {value}")
 
-    save_csv("scenario_summary.csv", summary_rows)
+    save_csv(ROOT / "scenario_summary.csv", summary_rows)
     print("\nScenario summaries saved to scenario_summary.csv")
 
 
