@@ -14,7 +14,8 @@ A focused working repo for reviewing the Cliffwater Corporate Lending Fund (CCLF
 - `scripts/extract_cclf_pdf.py` - converts raw report PDFs into plaintext sidecar files
 - `tools/extract_cliffwater.py` - extracts anchor-based disclosure blocks into JSONL
 - `data/raw/` - original Cliffwater report PDFs and plaintext extracts
-- `data/processed/` - extracted snippets and processed text artifacts
+- `data/processed/` - extracted snippets, source summaries, and processed text artifacts
+- `memo/` - draft investment memos and narrative outputs
 - `tests/` - basic regression / smoke tests for the scenario model
 
 ## Quick start
