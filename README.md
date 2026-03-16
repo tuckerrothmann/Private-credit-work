@@ -77,6 +77,8 @@ The dashboard includes:
 - cash-flow driver charts
 - downloadable scenario CSVs
 - plain-English scenario interpretation
+- sensitivity heatmap for tender/default stress
+- assumptions transparency panel
 
 ## Rebuild PDF-derived artifacts
 

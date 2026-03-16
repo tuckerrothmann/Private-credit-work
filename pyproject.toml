@@ -6,6 +6,7 @@ requires-python = ">=3.10"
 dependencies = [
   "pdfminer.six>=20221105",
   "pandas>=2.0",
+  "plotly>=5.18",
   "streamlit>=1.32",
 ]
 
