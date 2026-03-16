@@ -1,0 +1,3 @@
+scenario,min_cash_bn,max_facility_utilization_bn,min_headroom_bn,first_liquidity_shortfall_quarter,first_covenant_breach_quarter
+Baseline,-4.157850098990288,2.5,0.0,3,none
+Stressed,-14.60777260930723,2.5,0.0,1,none
