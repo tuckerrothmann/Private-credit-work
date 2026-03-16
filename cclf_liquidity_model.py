@@ -154,7 +154,11 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
                 "Tender_Outflow_Bn": tender / 1e9,
                 "Distributions_Bn": distributions / 1e9,
                 "Credit_Losses_Bn": credit_losses / 1e9,
+                "Scheduled_Repayments_Bn": scheduled_repayments / 1e9,
+                "NII_Bn": nii / 1e9,
+                "Net_Cash_Change_Bn": net_cash / 1e9,
                 "Unfunded_Draw_Bn": unfunded_draw / 1e9,
+                "Total_Debt_Bn": total_debt / 1e9,
                 "Liquidity_Shortfall": liquidity_shortfall,
                 "Covenant_Breach": covenant_breach,
                 "Leverage_x": leverage,
@@ -169,8 +173,11 @@ def summarize(rows: List[Dict[str, float | bool | int]]) -> Dict[str, float | st
         raise ValueError("Cannot summarize empty row set")
     return {
         "min_cash_bn": min(r["Cash_Bn"] for r in rows),
+        "ending_cash_bn": rows[-1]["Cash_Bn"],
+        "ending_nav_bn": rows[-1]["NAV_Bn"],
         "max_facility_utilization_bn": max(r["Facility_Out_Bn"] for r in rows),
         "min_headroom_bn": min(r["Headroom_Bn"] for r in rows),
+        "peak_leverage_x": max(r["Leverage_x"] for r in rows),
         "first_liquidity_shortfall_quarter": next((r["Quarter"] for r in rows if r["Liquidity_Shortfall"]), "none"),
         "first_covenant_breach_quarter": next((r["Quarter"] for r in rows if r["Covenant_Breach"]), "none"),
     }

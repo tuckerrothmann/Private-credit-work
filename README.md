@@ -10,6 +10,7 @@ A focused working repo for reviewing the Cliffwater Corporate Lending Fund (CCLF
 - `stressed_projection.csv` - stressed model output
 - `scenario_summary.csv` - compact scenario summary table
 - `effective_scenarios.json` - exact scenario payload used for the last model run
+- `dashboard.py` - Streamlit dashboard for interactive scenario analysis
 - `scripts/extract_cclf_pdf.py` - converts raw report PDFs into plaintext sidecar files
 - `tools/extract_cliffwater.py` - extracts anchor-based disclosure blocks into JSONL
 - `data/raw/` - original Cliffwater report PDFs and plaintext extracts
@@ -61,6 +62,21 @@ python cclf_liquidity_model.py --config scenarios/default_scenarios.json --outpu
 ```bash
 python cclf_liquidity_model.py --quiet
 ```
+
+## Run the dashboard
+
+```bash
+streamlit run dashboard.py
+```
+
+The dashboard includes:
+- scenario presets
+- user-adjustable assumptions
+- KPI cards
+- liquidity / leverage charts
+- cash-flow driver charts
+- downloadable scenario CSVs
+- plain-English scenario interpretation
 
 ## Rebuild PDF-derived artifacts
 
