@@ -1,0 +1,19 @@
+{
+  "scenarios": [
+    {
+      "name": "Baseline",
+      "tender_rate": 0.05,
+      "annual_default_rate": 0.02,
+      "loss_given_default": 0.4,
+      "unfunded_draw_rate": 0.08
+    },
+    {
+      "name": "Stressed",
+      "tender_rate": 0.1,
+      "annual_default_rate": 0.06,
+      "loss_given_default": 0.5,
+      "unfunded_draw_rate": 0.15,
+      "portfolio_yield": 0.11
+    }
+  ]
+}

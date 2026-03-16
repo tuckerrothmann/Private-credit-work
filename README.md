@@ -1,58 +1,76 @@
 # Private Credit Liquidity Analysis
 
-A focused working repo for reviewing the Cliffwater Corporate Lending Fund (CCLF) liquidity profile, source disclosures, and simple downside scenarios.
+A focused working repo for reviewing the Cliffwater Corporate Lending Fund (CCLF) liquidity profile, source disclosures, and downside scenarios.
 
-## What is in the repo
+## Repo layout
 
-- `cclf_liquidity_model.py` - 8-quarter scenario model for tender pressure, distributions, credit losses, unfunded draws, and borrowing headroom
+- `cclf_liquidity_model.py` - config-driven 8-quarter liquidity scenario model
+- `scenarios/default_scenarios.json` - default scenario assumptions
 - `baseline_projection.csv` - baseline model output
 - `stressed_projection.csv` - stressed model output
-- `scenario_summary.csv` - compact scenario-level summary table
-- `scripts/extract_cclf_pdf.py` - converts the raw report PDFs into plaintext sidecar files
-- `tools/extract_cliffwater.py` - extracts disclosure blocks around key liquidity / leverage anchors into JSONL
+- `scenario_summary.csv` - compact scenario summary table
+- `effective_scenarios.json` - exact scenario payload used for the last model run
+- `scripts/extract_cclf_pdf.py` - converts raw report PDFs into plaintext sidecar files
+- `tools/extract_cliffwater.py` - extracts anchor-based disclosure blocks into JSONL
 - `data/raw/` - original Cliffwater report PDFs and plaintext extracts
 - `data/processed/` - extracted snippets and processed text artifacts
+- `tests/` - basic regression / smoke tests for the scenario model
 
 ## Quick start
 
-### 1) Create a virtual environment
+### Create a virtual environment
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 2) Install dependency for the PDF tools
+### Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3) Run the liquidity model
+## Run the liquidity model
 
 ```bash
 python cclf_liquidity_model.py
 ```
 
-This refreshes:
+This uses `scenarios/default_scenarios.json` and refreshes:
 - `baseline_projection.csv`
 - `stressed_projection.csv`
 - `scenario_summary.csv`
+- `effective_scenarios.json`
 
-### 4) Rebuild report text extracts
+### Run with a custom config or alternate output folder
+
+```bash
+python cclf_liquidity_model.py --config scenarios/default_scenarios.json --output-dir outputs
+```
+
+### Quiet mode
+
+```bash
+python cclf_liquidity_model.py --quiet
+```
+
+## Rebuild PDF-derived artifacts
+
+### Plaintext sidecars
 
 ```bash
 python scripts/extract_cclf_pdf.py
 ```
 
-### 5) Extract disclosure blocks for review
+### Anchor-based disclosure extraction
 
 ```bash
 python tools/extract_cliffwater.py
@@ -61,15 +79,27 @@ python tools/extract_cliffwater.py
 Default output:
 - `data/processed/cliffwater_blocks.jsonl`
 
+Example with a narrower search window:
+
+```bash
+python tools/extract_cliffwater.py --pattern 'CCLFX-Annual-Report.pdf' --window 1200
+```
+
+## Run tests
+
+```bash
+python -m unittest discover -s tests -v
+```
+
 ## Notes
 
-- The liquidity model uses only the Python standard library.
+- The liquidity model itself uses only the Python standard library.
 - The PDF extraction tools require `pdfminer.six`.
-- `cliffwater_blocks.jsonl` is newline-delimited JSON, which makes it easy to inspect or load into pandas later.
+- `cliffwater_blocks.jsonl` is newline-delimited JSON for easy inspection or downstream loading.
 
-## Suggested next improvements
+## Recommended next upgrades
 
-- parameterize scenario assumptions from a YAML/JSON config
-- add a maturity ladder / financing stack input table
-- create a small notebook or dashboard for scenario comparison
-- parse specific facility and note disclosures into structured fields instead of text blocks
+- move from heuristic text extraction to structured disclosure parsing
+- add richer financing-stack and maturity-ladder inputs
+- build scenario comparison charts or a lightweight dashboard
+- add CI to run tests automatically on push

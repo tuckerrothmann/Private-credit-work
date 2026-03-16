@@ -1,20 +1,27 @@
 #!/usr/bin/env python3
-"""CCLF Liquidity Scenario Model.
+"""CCLF liquidity scenario model.
 
-Projects 8 quarters of Cliffwater Corporate Lending Fund (CCLF) liquidity under
-configurable tender, loss, distribution, and unfunded-commitment assumptions.
+Projects Cliffwater Corporate Lending Fund (CCLF) liquidity under configurable
+assumptions for tenders, distributions, defaults, and unfunded commitments.
 
-Dependencies: Python standard library only.
+Highlights:
+- standard-library only model runtime
+- config-driven scenarios from JSON
+- CSV output for each scenario plus a summary file
+- reusable functions for downstream tooling/tests
 """
 from __future__ import annotations
 
+import argparse
 import csv
-from dataclasses import dataclass
+import json
+from dataclasses import asdict, dataclass, fields
 from math import inf
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, Iterable, List, Sequence
 
 ROOT = Path(__file__).resolve().parent
+DEFAULT_CONFIG_PATH = ROOT / "scenarios" / "default_scenarios.json"
 
 
 @dataclass
@@ -37,9 +44,52 @@ class ScenarioConfig:
     starting_cash: float = 0.5e9
     max_leverage: float = 2.0
 
+    @classmethod
+    def from_dict(cls, payload: Dict[str, object]) -> "ScenarioConfig":
+        field_names = {f.name for f in fields(cls)}
+        unknown = sorted(set(payload) - field_names)
+        if unknown:
+            raise ValueError(f"Unknown scenario field(s): {', '.join(unknown)}")
+        cfg = cls(**payload)
+        cfg.validate()
+        return cfg
+
+    def validate(self) -> None:
+        if not self.name.strip():
+            raise ValueError("Scenario name cannot be empty")
+        if self.quarters <= 0:
+            raise ValueError("quarters must be > 0")
+        if self.nav_start <= 0:
+            raise ValueError("nav_start must be > 0")
+        if self.senior_credit_limit < 0 or self.senior_credit_outstanding < 0:
+            raise ValueError("credit amounts must be >= 0")
+        if self.senior_credit_outstanding > self.senior_credit_limit:
+            raise ValueError("senior_credit_outstanding cannot exceed senior_credit_limit")
+        bounded_rates = {
+            "distribution_rate": self.distribution_rate,
+            "tender_rate": self.tender_rate,
+            "scheduled_repayment_rate": self.scheduled_repayment_rate,
+            "annual_default_rate": self.annual_default_rate,
+            "loss_given_default": self.loss_given_default,
+            "unfunded_draw_rate": self.unfunded_draw_rate,
+        }
+        for label, value in bounded_rates.items():
+            if not 0 <= value <= 1:
+                raise ValueError(f"{label} must be between 0 and 1")
+        if self.portfolio_yield < 0:
+            raise ValueError("portfolio_yield must be >= 0")
+        if self.starting_cash < 0 or self.min_cash_buffer < 0 or self.unfunded_commitments < 0:
+            raise ValueError("cash and commitment values must be >= 0")
+        if self.max_leverage <= 0:
+            raise ValueError("max_leverage must be > 0")
+
 
 def quarterly_rate(annual_rate: float) -> float:
     return 1 - (1 - annual_rate) ** 0.25
+
+
+def sanitize_name(name: str) -> str:
+    return "".join(ch.lower() if ch.isalnum() else "_" for ch in name).strip("_") or "scenario"
 
 
 def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
@@ -54,7 +104,7 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
     q_yield = cfg.portfolio_yield / 4
     q_distribution_rate = cfg.distribution_rate / 4
 
-    for q in range(1, cfg.quarters + 1):
+    for quarter in range(1, cfg.quarters + 1):
         nii = nav * q_yield
         distributions = nav * q_distribution_rate
         tender = nav * cfg.tender_rate
@@ -94,7 +144,7 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
 
         rows.append(
             {
-                "Quarter": q,
+                "Quarter": quarter,
                 "NAV_Bn": nav / 1e9,
                 "Cash_Bn": cash / 1e9,
                 "Facility_Out_Bn": facility / 1e9,
@@ -115,6 +165,8 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
 
 
 def summarize(rows: List[Dict[str, float | bool | int]]) -> Dict[str, float | str]:
+    if not rows:
+        raise ValueError("Cannot summarize empty row set")
     return {
         "min_cash_bn": min(r["Cash_Bn"] for r in rows),
         "max_facility_utilization_bn": max(r["Facility_Out_Bn"] for r in rows),
@@ -127,6 +179,7 @@ def summarize(rows: List[Dict[str, float | bool | int]]) -> Dict[str, float | st
 def save_csv(path: Path, rows: List[Dict[str, float | bool | int]]) -> None:
     if not rows:
         return
+    path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
         writer.writeheader()
@@ -137,10 +190,7 @@ def print_table(rows: List[Dict[str, float | bool | int]]) -> None:
     headers = list(rows[0].keys())
     col_widths = {}
     for header in headers:
-        lengths = []
-        for row in rows:
-            value = row[header]
-            lengths.append(len(f"{value:,.2f}") if isinstance(value, float) else len(str(value)))
+        lengths = [len(f"{row[header]:,.2f}") if isinstance(row[header], float) else len(str(row[header])) for row in rows]
         col_widths[header] = max([len(header)] + lengths)
 
     header_line = " ".join(f"{header:>{col_widths[header]}}" for header in headers)
@@ -157,43 +207,73 @@ def print_table(rows: List[Dict[str, float | bool | int]]) -> None:
         print(" ".join(formatted))
 
 
-def default_scenarios() -> List[ScenarioConfig]:
-    return [
-        ScenarioConfig(
-            name="Baseline",
-            tender_rate=0.05,
-            annual_default_rate=0.02,
-            loss_given_default=0.4,
-            unfunded_draw_rate=0.08,
-        ),
-        ScenarioConfig(
-            name="Stressed",
-            tender_rate=0.10,
-            annual_default_rate=0.06,
-            loss_given_default=0.5,
-            unfunded_draw_rate=0.15,
-            portfolio_yield=0.11,
-        ),
-    ]
+def load_scenarios(path: Path) -> List[ScenarioConfig]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(payload, dict) and "scenarios" in payload:
+        payload = payload["scenarios"]
+    if not isinstance(payload, list):
+        raise ValueError("Scenario config must be a list or {'scenarios': [...]} object")
+    return [ScenarioConfig.from_dict(item) for item in payload]
 
 
-def run_default_scenarios() -> None:
+def save_effective_config(path: Path, scenarios: Sequence[ScenarioConfig]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"scenarios": [asdict(cfg) for cfg in scenarios]}
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def run_scenarios(scenarios: Iterable[ScenarioConfig], output_dir: Path, print_tables: bool = True) -> List[Dict[str, float | str]]:
+    output_dir.mkdir(parents=True, exist_ok=True)
     summary_rows: List[Dict[str, float | str]] = []
 
-    for cfg in default_scenarios():
+    for cfg in scenarios:
         rows = run_scenario(cfg)
-        save_csv(ROOT / f"{cfg.name.lower()}_projection.csv", rows)
-        print(f"\n=== {cfg.name} Scenario ===")
-        print_table(rows)
+        save_csv(output_dir / f"{sanitize_name(cfg.name)}_projection.csv", rows)
         summary = summarize(rows)
         summary_rows.append({"scenario": cfg.name} | summary)
-        print("Summary:")
-        for key, value in summary.items():
-            print(f"  {key}: {value}")
+        if print_tables:
+            print(f"\n=== {cfg.name} Scenario ===")
+            print_table(rows)
+            print("Summary:")
+            for key, value in summary.items():
+                print(f"  {key}: {value}")
 
-    save_csv(ROOT / "scenario_summary.csv", summary_rows)
-    print("\nScenario summaries saved to scenario_summary.csv")
+    save_csv(output_dir / "scenario_summary.csv", summary_rows)
+    save_effective_config(output_dir / "effective_scenarios.json", list(scenarios))
+    if print_tables:
+        print(f"\nScenario summaries saved to {output_dir / 'scenario_summary.csv'}")
+    return summary_rows
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=DEFAULT_CONFIG_PATH,
+        help=f"Scenario JSON config path (default: {DEFAULT_CONFIG_PATH})",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=ROOT,
+        help="Directory for scenario CSV outputs (default: repo root)",
+    )
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Write outputs without printing scenario tables",
+    )
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
+    args = parser.parse_args()
+    scenarios = load_scenarios(args.config)
+    run_scenarios(scenarios, output_dir=args.output_dir, print_tables=not args.quiet)
+    return 0
 
 
 if __name__ == "__main__":
-    run_default_scenarios()
+    raise SystemExit(main())
