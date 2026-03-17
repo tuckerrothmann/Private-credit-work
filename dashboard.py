@@ -43,6 +43,11 @@ PRESETS: Dict[str, Dict[str, float]] = {
         "scheduled_repayment_rate": 0.02,
         "starting_cash": 0.25e9,
     },
+    "Net inflows": {
+        "net_subscription_rate": 0.01,
+        "tender_rate": 0.04,
+        "annual_default_rate": 0.02,
+    },
 }
 
 SENSITIVITY_TENDERS = [0.02, 0.05, 0.08, 0.10, 0.12, 0.15]
@@ -82,14 +87,16 @@ def narrative(summary: Dict[str, float | str], cfg: ScenarioConfig, df: pd.DataF
     total_distributions = df["Distributions_Bn"].sum()
     total_losses = df["Credit_Losses_Bn"].sum()
     total_unfunded = df["Unfunded_Draw_Bn"].sum()
+    total_subscriptions = df["Subscription_Inflow_Bn"].sum()
     dominant = max(
         [
             ("tender activity", total_tenders),
             ("distribution outflows", total_distributions),
             ("credit losses", total_losses),
             ("unfunded commitment draws", total_unfunded),
+            ("net subscriptions", total_subscriptions),
         ],
-        key=lambda item: item[1],
+        key=lambda item: abs(item[1]),
     )[0]
 
     if summary["first_liquidity_shortfall_quarter"] != "none":
@@ -109,7 +116,7 @@ def narrative(summary: Dict[str, float | str], cfg: ScenarioConfig, df: pd.DataF
     return (
         f"The {cfg.name} scenario remains above the modeled liquidity floor throughout the forecast horizon. Ending NAV is "
         f"{summary['ending_nav_bn']:.2f}bn, ending cash is {summary['ending_cash_bn']:.2f}bn, and peak leverage reaches {summary['peak_leverage_x']:.2f}x. "
-        f"Results still depend heavily on tender assumptions ({pct(cfg.tender_rate)} quarterly), repayment pace ({pct(cfg.scheduled_repayment_rate)} quarterly), and default severity ({pct(cfg.loss_given_default)} LGD)."
+        f"Results still depend heavily on tender assumptions ({pct(cfg.tender_rate)} quarterly), repayment pace ({pct(cfg.scheduled_repayment_rate)} quarterly), subscription support ({pct(cfg.net_subscription_rate)} quarterly), and default severity ({pct(cfg.loss_given_default)} LGD)."
     )
 
 
@@ -174,6 +181,7 @@ def waterfall_chart(df: pd.DataFrame) -> go.Figure:
         ("Credit_Losses_Bn", "#7C3AED"),
         ("Unfunded_Draw_Bn", "#2563EB"),
         ("Scheduled_Repayments_Bn", "#059669"),
+        ("Subscription_Inflow_Bn", "#14B8A6"),
         ("NII_Bn", "#10B981"),
     ]:
         figure.add_trace(go.Bar(x=df["Quarter"], y=df[column], name=column.replace("_Bn", ""), marker_color=color))
@@ -237,6 +245,7 @@ def render() -> None:
     unfunded_draw_rate = st.sidebar.slider("Unfunded draw rate (% of remaining per quarter)", 0.0, 30.0, base_cfg.unfunded_draw_rate * 100, 1.0) / 100
     portfolio_yield = st.sidebar.slider("Portfolio yield (annual %)", 8.0, 18.0, base_cfg.portfolio_yield * 100, 0.25) / 100
     distribution_rate = st.sidebar.slider("Distribution rate (annual %)", 0.0, 15.0, base_cfg.distribution_rate * 100, 0.25) / 100
+    net_subscription_rate = st.sidebar.slider("Net subscription inflow (% of NAV per quarter)", -2.0, 3.0, base_cfg.net_subscription_rate * 100, 0.25) / 100
 
     with st.sidebar.expander("Advanced assumptions"):
         nav_start = st.number_input("Starting NAV ($bn)", min_value=1.0, value=base_cfg.nav_start / 1e9, step=0.5)
@@ -263,6 +272,7 @@ def render() -> None:
         loss_given_default=loss_given_default,
         unfunded_commitments=unfunded_commitments * 1e9,
         unfunded_draw_rate=unfunded_draw_rate,
+        net_subscription_rate=net_subscription_rate,
         quarters=int(quarters),
         min_cash_buffer=min_cash_buffer * 1e9,
         starting_cash=starting_cash * 1e9,

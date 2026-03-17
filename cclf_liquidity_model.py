@@ -39,6 +39,7 @@ class ScenarioConfig:
     loss_given_default: float = 0.4
     unfunded_commitments: float = 4.0e9
     unfunded_draw_rate: float = 0.10
+    net_subscription_rate: float = 0.0
     quarters: int = 8
     min_cash_buffer: float = 0.0
     starting_cash: float = 0.5e9
@@ -72,6 +73,7 @@ class ScenarioConfig:
             "annual_default_rate": self.annual_default_rate,
             "loss_given_default": self.loss_given_default,
             "unfunded_draw_rate": self.unfunded_draw_rate,
+            "net_subscription_rate": self.net_subscription_rate,
         }
         for label, value in bounded_rates.items():
             if not 0 <= value <= 1:
@@ -110,10 +112,11 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
         tender = nav * cfg.tender_rate
         credit_losses = nav * q_default_rate * cfg.loss_given_default
         scheduled_repayments = nav * cfg.scheduled_repayment_rate
+        subscription_inflow = nav * cfg.net_subscription_rate
         unfunded_draw = min(unfunded_remaining, unfunded_remaining * cfg.unfunded_draw_rate)
         unfunded_remaining -= unfunded_draw
 
-        cash_sources = nii + scheduled_repayments
+        cash_sources = nii + scheduled_repayments + subscription_inflow
         cash_uses = distributions + tender + credit_losses + unfunded_draw
         net_cash = cash_sources - cash_uses
         cash += net_cash
@@ -137,7 +140,7 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
             facility -= facility_repay
             cash -= facility_repay
 
-        nav = nav + nii - distributions - tender - credit_losses
+        nav = nav + subscription_inflow + nii - distributions - tender - credit_losses
         total_debt = facility + senior_notes
         leverage = total_debt / nav if nav > 0 else inf
         covenant_breach = leverage > cfg.max_leverage
@@ -155,6 +158,7 @@ def run_scenario(cfg: ScenarioConfig) -> List[Dict[str, float | bool | int]]:
                 "Distributions_Bn": distributions / 1e9,
                 "Credit_Losses_Bn": credit_losses / 1e9,
                 "Scheduled_Repayments_Bn": scheduled_repayments / 1e9,
+                "Subscription_Inflow_Bn": subscription_inflow / 1e9,
                 "NII_Bn": nii / 1e9,
                 "Net_Cash_Change_Bn": net_cash / 1e9,
                 "Unfunded_Draw_Bn": unfunded_draw / 1e9,
