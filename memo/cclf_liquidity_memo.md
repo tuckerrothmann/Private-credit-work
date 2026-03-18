@@ -33,7 +33,19 @@ In a benign environment, the model can be made to look manageable if tenders rem
 
 Even with an interval structure, the fund still promises periodic liquidity against a portfolio that is not natively liquid in the way public fixed income is liquid. That is the first issue to keep in focus.
 
-### 2) The facility expansion is a double-edged sword
+### 2) Executed repurchases do not fully answer the demand question
+
+The filed text visible in this repo shows executed repurchase percentages of roughly **1.99%, 2.58%, 2.92%, 2.24%, 3.42%, and 2.90%** across the most recent observed tenders. On its face, that may look manageable because realized repurchases have remained below the standard 5% offer size.
+
+But that does **not** necessarily mean investor liquidity demand is low. It only proves what was ultimately repurchased.
+
+The repo now includes a structured filed table at `data/processed/repurchase_history.csv`, which makes one point easier to see: while executed percentages stayed below the 5% standard offer size in the observed periods, the **dollar amount** repurchased still rose meaningfully into 2025, reaching roughly **$1.03bn** in June 2025 before easing to about **$918mm** in September 2025. That strengthens the case for tracking tender pressure in both **percentage** and **absolute-dollar** terms.
+
+Tucker separately reported that the most recent tender request was around **14%**, with only about **5-7%** fulfilled. If that datapoint is confirmed by an underlying notice or transfer-agent disclosure, it would imply **latent demand materially above executed repurchases** and would strengthen the argument that tender pressure is being understated by realized repurchase percentages alone.
+
+For now, the executed percentages should be treated as **source-backed**, while the 14% requested / 5-7% fulfilled observation should be treated as **important but not yet independently sourced inside this repo**.
+
+### 3) The facility expansion is a double-edged sword
 
 Between March 31, 2025 and September 30, 2025, the senior secured facility grew from **$5.45bn** to **$6.475bn**. That is supportive on one hand.
 
@@ -44,7 +56,7 @@ But actual utilization also rose sharply:
 
 That does not prove distress on its own, but it does suggest the fund is increasingly relying on financing capacity, not merely holding it as idle backup.
 
-### 3) Unfunded commitments are large
+### 4) Unfunded commitments are large
 
 The filings show unfunded commitments of roughly:
 - **$4.69bn** principal at March 31, 2025
@@ -52,9 +64,11 @@ The filings show unfunded commitments of roughly:
 
 Those commitments matter because they are future uses of liquidity that can collide with repurchase obligations and credit stress.
 
-### 4) Stress outcomes are highly sensitive to tender pace
+### 5) Stress outcomes are highly sensitive to tender pace
 
 The current model is intentionally stylized, but one thing already stands out: **tender pressure is a dominant variable**. If tenders stay near the minimum and repayments stay healthy, the liquidity story is much easier to manage. If tender demand rises while repayments slow and commitments fund, outcomes deteriorate quickly.
+
+That point becomes even more important if oversubscription is common and executed tenders understate underlying redemption intent.
 
 ## What the current model is saying
 
@@ -86,6 +100,7 @@ I would get more comfortable if further work showed:
 I would get more negative if we found:
 - repeated or growing reliance on revolver / DDTL usage to bridge liquidity
 - rising tenders or signs of persistent repurchase pressure
+- evidence that tender requests materially exceed executed repurchases on a recurring basis
 - weaker-than-expected repayment conversion from the portfolio
 - more severe defaults or markdowns paired with commitment funding needs
 - tightening asset coverage or reduced financing flexibility
@@ -112,8 +127,8 @@ Put differently: this looks more like a **high-yield structured liquidity risk p
 
 ## Highest-value next work items
 
-1. Build a structured financing-stack table from the filings
+1. Build a structured repurchase-history table with dates, offer sizes, executed percentages, and any confirmed requested / fulfilled percentages
 2. Improve the model using the latest disclosed facility balances and commitment figures
-3. Pull actual repurchase-offer history into a clean table
-4. Add a source-backed section on asset-side liquidity proxies (repayments, sales, realizations)
+3. Add a source-backed section on asset-side liquidity proxies (repayments, sales, realizations)
+4. Build a structured financing-stack table from the filings
 5. Turn the dashboard outputs into an exportable investor memo / exhibit pack

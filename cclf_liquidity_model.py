@@ -27,17 +27,17 @@ DEFAULT_CONFIG_PATH = ROOT / "scenarios" / "default_scenarios.json"
 @dataclass
 class ScenarioConfig:
     name: str
-    nav_start: float = 31.5e9
+    nav_start: float = 31.6e9
     senior_notes: float = 5.65e9
-    senior_credit_outstanding: float = 1.19e9
-    senior_credit_limit: float = 2.5e9
+    senior_credit_outstanding: float = 3.2125e9
+    senior_credit_limit: float = 6.475e9
     distribution_rate: float = 0.1075
     tender_rate: float = 0.05
     portfolio_yield: float = 0.12
     scheduled_repayment_rate: float = 0.03
     annual_default_rate: float = 0.02
     loss_given_default: float = 0.4
-    unfunded_commitments: float = 4.0e9
+    unfunded_commitments: float = 6.26e9
     unfunded_draw_rate: float = 0.10
     net_subscription_rate: float = 0.0
     quarters: int = 8

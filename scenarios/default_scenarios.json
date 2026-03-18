@@ -2,6 +2,12 @@
   "scenarios": [
     {
       "name": "Baseline",
+      "nav_start": 31600000000,
+      "senior_notes": 5650000000,
+      "senior_credit_outstanding": 3212500000,
+      "senior_credit_limit": 6475000000,
+      "unfunded_commitments": 6260000000,
+      "starting_cash": 500000000,
       "tender_rate": 0.05,
       "annual_default_rate": 0.02,
       "loss_given_default": 0.4,
@@ -9,6 +15,12 @@
     },
     {
       "name": "Stressed",
+      "nav_start": 31600000000,
+      "senior_notes": 5650000000,
+      "senior_credit_outstanding": 3212500000,
+      "senior_credit_limit": 6475000000,
+      "unfunded_commitments": 6260000000,
+      "starting_cash": 500000000,
       "tender_rate": 0.1,
       "annual_default_rate": 0.06,
       "loss_given_default": 0.5,

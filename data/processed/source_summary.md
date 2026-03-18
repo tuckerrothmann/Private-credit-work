@@ -13,6 +13,35 @@ Source excerpts:
 - `data/raw/CCLFX-Annual-Report.txt` lines ~402829-402839
 - `data/raw/CCLFX-Annual-Report.txt` lines ~404807-404813
 - `data/raw/CCLFX-Semi-Annual-Report.txt` lines ~440925-440935
+- `data/raw/CCLFX-Semi-Annual-Report.txt` lines ~443083-443089
+
+## Historical repurchase percentages visible in the filed text
+
+The filed repurchase-results tables have now been normalized into:
+- `data/processed/repurchase_history.csv`
+
+Structured source-backed observations currently captured:
+- **2024-05-15** pricing date — **1.99%** executed, **$389.4mm** repurchased
+- **2024-08-14** pricing date — **2.58%** executed, **$558.3mm** repurchased
+- **2024-11-13** pricing date — **2.92%** executed, **$695.3mm** repurchased
+- **2025-02-19** pricing date — **2.24%** executed, **$595.1mm** repurchased
+- **2025-06-09** pricing date — **3.42%** executed, **$1.025bn** repurchased
+- **2025-09-08** pricing date — **2.90%** executed, **$917.5mm** repurchased
+
+Those figures suggest that *executed* repurchases have generally run below the standard 5% quarterly offer size, though executed percentages still do **not** answer the separate question of underlying tender demand.
+
+Relevant source locations:
+- `data/raw/CCLFX-Annual-Report.txt` lines ~404818-404890
+- `data/raw/CCLFX-Semi-Annual-Report.txt` lines ~443103-443150
+
+## Tender-pressure context not yet independently anchored in repo
+
+Tucker also reported that the most recent tender request was about **14%** of shares, with only about **5-7%** fulfilled. If accurate, that would imply latent investor liquidity demand materially above executed repurchases.
+
+That is analytically important, but it should currently be treated as a **Tucker-provided datapoint**, not a sourced filing fact inside this repo, until the underlying notice, shareholder letter, or transfer-agent / fund disclosure is pulled in and cited directly.
+
+A structured facility snapshot table now lives at:
+- `data/processed/financing_snapshot.csv`
 
 ## Senior credit facility — March 31, 2025
 
@@ -67,7 +96,7 @@ Other disclosed facility facts for 6M ended September 30, 2025:
 - average term loan balance: **$1.316bn**
 - average revolver balance: **$779.1mm**
 - average DDTL balance: **$276.7mm**
-- weighted average rates: roughly **6.17%–6.23%** across tranches
+- weighted average rates: roughly **6.17%-6.23%** across tranches
 - period-end rates: **6.10%** term / **6.04%** revolver / **6.19%** DDTL
 - facility interest expense: **$79.3mm**
 - commitment fees: **$3.4mm**
@@ -112,6 +141,8 @@ The most important high-level points from the source docs are:
 
 1. The fund offers only **limited interval-fund liquidity**, not daily liquidity.
 2. Even so, the repurchase program creates a recurring cash-use obligation.
-3. Facility capacity expanded materially between March and September 2025, but **actual utilization also rose sharply**.
-4. Unfunded commitments are large enough to matter to any stress analysis.
-5. The financing stack is meaningful and senior to common shareholders, which makes liquidity and asset-coverage discipline central to the thesis.
+3. Executed repurchases shown in the filings have been below the standard 5% offer amount, but that alone does **not** resolve the question of underlying tender demand.
+4. Facility capacity expanded materially between March and September 2025, but **actual utilization also rose sharply**.
+5. Unfunded commitments are large enough to matter to any stress analysis.
+6. If Tucker's latest tender-demand datapoint is confirmed, then **latent demand could be materially higher than executed repurchases imply**, which would strengthen the case for focusing on tender pressure as a primary stress variable.
+7. The financing stack is meaningful and senior to common shareholders, which makes liquidity and asset-coverage discipline central to the thesis.
