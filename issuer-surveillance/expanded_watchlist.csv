@@ -1,0 +1,32 @@
+issuer,sector,subsector,priority_bucket,hidden_mark_risk,actual_impairment_risk,bdc_relevance,status,core_reason
+Medallia,Software,Experience management,priority,5,4,5,live watch,Visible software stress and mark pressure with major lender relevance
+Finastra,Software,Financial software,priority,4,4,5,live watch,Large refi bellwether for software private credit
+Kaseya,Software,IT management / MSP,priority,4,4,4,live watch,Large sponsor-backed software credit with integration and refi questions
+RealPage,Software,Property management,priority,4,4,3,special situation,Regulatory overhang could impair value before marks fully move
+Zendesk,Software,Customer support,priority,4,3,4,AI-risk watch,Category may face AI/product compression faster than marks imply
+Coupa,Software,Spend management,priority,3,3,4,comp watch,Large-cap software LBO with enterprise-spend sensitivity
+Anaplan,Software,Enterprise planning,priority,3,3,4,comp watch,Useful large direct-lender comp
+Avalara,Software,Tax compliance,secondary,2,2,3,control case,Potentially stronger software recovery profile
+Pluralsight,Software,Tech learning,secondary,2,5,5,historical anchor,Best public software workout precedent
+Cloud Software Group / Citrix,Software,Enterprise infrastructure,priority,3,4,4,structure watch,Layered capital structure and financing stress precedent
+Epicor,Software,ERP / manufacturing software,secondary,3,3,2,screen,Sticky product but mature-growth risk
+Quest Software,Software,Infrastructure / database,secondary,3,3,2,screen,Older multi-product portfolio could have breakup-value issues
+Hyland Software,Software,Content management,secondary,3,3,2,screen,Durable but slower-growth profile may weaken refi flexibility
+CentralSquare,Software,Govtech,secondary,3,3,2,screen,Govtech stickiness may mask budget-cycle risk
+Calabrio,Software,Contact center / workforce,secondary,4,3,2,AI-risk screen,Category exposed to AI substitution pressure
+Envision Healthcare,Healthcare services,Physician staffing,priority,3,5,5,historical anchor,Major sponsor-backed healthcare distress precedent for lender pain
+athenahealth,Healthcare IT,Provider workflow / RCM,secondary,3,2,3,comp watch,Good HCIT contrast against weaker healthcare services names
+Cotiviti,Healthcare IT,Analytics / payment integrity,secondary,3,2,3,comp watch,Useful HCIT lender-underwriting contrast
+Waystar,Healthcare IT,Revenue cycle,secondary,2,2,2,control case,Potential healthier comp rather than danger case
+Surgery Partners,Healthcare services,Outpatient surgery,priority,4,4,4,live watch,Leverage plus reimbursement / procedure-volume sensitivity
+TeamHealth,Healthcare services,Physician services,priority,3,5,4,historical anchor,Classic private-credit / PE healthcare stress lesson
+MultiPlan,Healthcare IT / services,Pricing / analytics,priority,4,4,4,special situation,Litigation / business-model questions can outrun marks
+West Marine,Consumer / retail,Marine retail,secondary,3,4,2,cyclical screen,Consumer discretionary leverage with niche demand risk
+At Home,Consumer / retail,Home decor retail,secondary,2,5,3,historical anchor,Teaches what retail leverage impairment looks like
+PetSmart,Consumer / retail,Pet retail / services,secondary,3,3,3,screen,Consumer resilience can be overstated under leverage
+ATI Physical Therapy,Healthcare services,Physical therapy,secondary,2,5,3,historical anchor,Important recovery / restructuring precedent
+Staples,Business services / retail,Office products,secondary,3,4,3,screen,Mature business with structural demand pressure
+Travelport,Business services / travel tech,Travel technology,secondary,3,4,3,screen,Tech-enabled but cyclical and structurally pressured
+Vertafore,Software / insurance tech,Insurance software,secondary,3,2,2,comp watch,Potentially more resilient vertical software contrast
+Solera,Software / data,Auto / insurance software,secondary,3,3,2,screen,Vertical software with end-market sensitivity
+Genesys,Software,Contact center / CX,secondary,4,3,3,AI-risk screen,Contact-center AI pressure could matter for marks
