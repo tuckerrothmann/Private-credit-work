@@ -40,6 +40,15 @@ For each issuer memo:
 - `avalara_memo.md`
 - `pluralsight_memo.md`
 
+## Start here
+If you are jumping into this folder cold, the fastest reading order is:
+1. `PROJECT_COCKPIT.md`
+2. `bdc_bond_surveillance_framework.md`
+3. `issuer_risk_radar.csv`
+4. `issuer_lender_bdc_matrix.csv`
+5. `memo_queue.md`
+6. `NEXT_ACTIONS.md`
+
 ## Interpretation
 These are **investor working memos**, not rating-agency writeups. The point is to surface:
 - hidden mark risk
@@ -48,6 +57,7 @@ These are **investor working memos**, not rating-agency writeups. The point is t
 - what to monitor next
 
 ## Best next build-outs
-1. add a lender-exposure matrix across ARCC / BXSL / BCRED / HTGC / OBDC / OTF / GSBD / GBDC
+1. confirm lender-exposure evidence across ARCC / BXSL / BCRED / HTGC / OBDC / OTF / GSBD / GBDC
 2. attach source links and dated updates to each issuer memo
 3. track quarter-over-quarter mark / pricing changes where public evidence appears
+4. keep `risk_buckets.md` and `NEXT_ACTIONS.md` current as the watchlist evolves

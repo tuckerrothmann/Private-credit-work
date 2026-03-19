@@ -28,7 +28,7 @@ Current model defaults are now anchored to the latest disclosed **September 30, 
 - `scenario_summary.csv` - compact summary table across saved scenarios
 - `effective_scenarios.json` - exact scenario payload used for the last model run
 - `memo/cclf_liquidity_memo.md` - draft narrative memo / investment framing
-- `issuer-surveillance/` - issuer project cockpit, watchlists, source logs, radar tables, matrix work, and live issuer memos
+- `issuer-surveillance/` - issuer project cockpit, watchlists, source logs, radar tables, matrix work, `NEXT_ACTIONS.md`, and live issuer memos
 - `data/raw/` - original report PDFs and plaintext sidecars
 - `data/processed/source_summary.md` - source-backed disclosure summary
 - `data/processed/repurchase_history.csv` - structured filed repurchase-history table
@@ -40,6 +40,13 @@ Current model defaults are now anchored to the latest disclosed **September 30, 
 - `tests/` - regression / smoke tests for the scenario model
 
 ## Quick start
+
+If you're working on the issuer-surveillance track rather than the liquidity model, start with:
+- `issuer-surveillance/README.md`
+- `issuer-surveillance/PROJECT_COCKPIT.md`
+- `issuer-surveillance/issuer_risk_radar.csv`
+- `issuer-surveillance/NEXT_ACTIONS.md`
+
 
 ### Create a virtual environment
 
