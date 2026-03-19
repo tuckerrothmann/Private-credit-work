@@ -31,12 +31,15 @@ Best next memo upgrades:
 - state the likely first transmission channel to BDC bond risk
 - list what would falsify the concern
 
-Start with:
-1. Medallia
-2. Finastra
-3. Kaseya
-4. RealPage
-5. Zendesk
+Current status:
+- Medallia memo refreshed
+- Finastra memo refreshed
+- Kaseya memo refreshed
+
+Next up:
+1. RealPage
+2. Zendesk
+3. matrix-confirmation pass for Medallia / Finastra / Kaseya across visible BDC channels
 
 ### 3) Keep the buckets clean
 Use `risk_buckets.md` to separate:

@@ -1,20 +1,20 @@
 # Issuer Memo Queue
 
 ## Immediate memo order
-1. **Medallia**
+1. **Medallia** — refreshed
    - best live hidden-mark-risk case
    - unusually visible lender group
    - direct bridge to BDC / BCRED-style lender surveillance
 
-2. **Finastra**
+2. **Finastra** — refreshed
    - scale alone makes it important
    - likely bellwether for software private-credit refinancing and marks
 
-3. **Kaseya**
+3. **Kaseya** — refreshed
    - sticky category on paper, which makes any weakness more informative
    - useful test of integration / pricing / sponsor-ownership strain
 
-4. **RealPage**
+4. **RealPage** — next highest-value refresh
    - less clean lender-visibility than Medallia / Finastra, but legal overhang could produce mis-marked risk
 
 5. **Zendesk**
