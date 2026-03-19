@@ -1,5 +1,8 @@
 # Anaplan — issuer memo
 
+## What the company does
+Anaplan provides enterprise planning software used for finance, sales, supply-chain, and operational planning. Lenders can like the name because planning systems can be sticky and cross-functional, but the category can still be highly sensitive to growth expectations and valuation assumptions.
+
 ## Bottom line
 Anaplan is a good underwriting comp for large, sponsor-backed planning software. It likely belongs less in the immediate “danger now” bucket and more in the “important comp if software marks start drifting” bucket.
 

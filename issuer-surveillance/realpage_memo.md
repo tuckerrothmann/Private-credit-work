@@ -1,5 +1,8 @@
 # RealPage — issuer memo
 
+## What the company does
+RealPage sells software and data tools to property managers, landlords, and real-estate operators. Its products span property management, leasing, renter services, and revenue-management / pricing tools. It is financeable on paper because the software can look deeply embedded in customer workflows, but that same embeddedness becomes more fragile if legal or regulatory action attacks one of the company’s core value propositions.
+
 ## Bottom line
 RealPage is a **special-situation software credit**. The core issue is that regulatory and litigation overhang can impair enterprise value even if recurring revenue and software-like margins initially make the credit look financeable.
 
@@ -10,7 +13,8 @@ RealPage is a **special-situation software credit**. The core issue is that regu
 - valuation damage can arrive through legal overhang before classic operating collapse
 
 Public-source work to date points to:
-- roughly **$3bn** initial first-lien financing plus about **$1bn** second-lien financing around the buyout
+- a roughly **$10.2bn** take-private, including net debt
+- a documented first-lien term loan, revolver, and second-lien term facility totaling about **$4bn** at acquisition financing
 - later capital-structure references showing a still-large first-lien / second-lien stack
 - a regulatory and litigation cloud that can impair lender recoveries indirectly by shrinking buyer appetite and valuation confidence
 

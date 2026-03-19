@@ -1,5 +1,8 @@
 # Avalara — issuer memo
 
+## What the company does
+Avalara provides tax-compliance automation software that helps businesses calculate, collect, report, and remit taxes. This is one of the more intuitively defensible software categories because compliance workflows are recurring, operationally necessary, and harder to treat as discretionary spend.
+
 ## Bottom line
 Avalara is useful as a **control case**. Tax and compliance software may deserve better marks and better recoveries than more replaceable software categories. If that holds, Avalara helps us avoid turning the project into a generic anti-software screen.
 

@@ -1,5 +1,8 @@
 # Kaseya — issuer memo
 
+## What the company does
+Kaseya provides IT-management, endpoint, security, backup, and automation software used heavily by managed service providers and internal IT teams. Lenders can like this profile because the products are embedded in day-to-day IT operations, customer switching can be painful, and the business can be framed as recurring-revenue infrastructure software rather than discretionary tech spend.
+
 ## Bottom line
 Kaseya is a high-value watch because it looks like the kind of software credit lenders are often comfortable owning: sticky MSP / IT-management exposure, sponsor backing, and scale. That is exactly why it is useful. If this type of name weakens, it suggests private-credit marks may be too generous across a broader slice of software.
 

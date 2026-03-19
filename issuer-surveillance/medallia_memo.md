@@ -1,5 +1,8 @@
 # Medallia — issuer memo
 
+## What the company does
+Medallia sells customer-experience and employee-experience software used to collect feedback, analyze behavior, and improve service / retention outcomes across enterprises. It was easy to finance because it fit the classic sponsor-backed software template: recurring revenue, enterprise customers, embedded workflows, and the perception of sticky data / analytics products.
+
 ## Bottom line
 Medallia is the **best live software private-credit watch name** for this project because it combines:
 - a large, publicly identified direct-lender group
@@ -23,11 +26,7 @@ Medallia sells customer and employee experience software. It was easy to finance
 That same underwriting template is exactly why Medallia matters now. If a name like this starts to wobble, it raises broader questions about software credit assumptions rather than just this company.
 
 ## Capital-structure relevance
-Public sources tie Medallia's 2021 take-private financing to a roughly **$1.8bn unitranche** supported by a lender group including:
-- Blackstone
-- Apollo
-- KKR credit arms
-- Antares
+Public sources tie Medallia's 2021 take-private financing to the then-largest **recurring-revenue unitranche** structure, supporting Thoma Bravo's **$6.4bn** acquisition of the company. Latham's deal writeup identifies **Blackstone Alternative Credit Advisors** as lead lender together with credit arms of **Apollo** and **KKR**, plus **Antares**.
 
 That is unusually valuable for this project because it gives us a real bridge from issuer analysis into lender-platform surveillance.
 
