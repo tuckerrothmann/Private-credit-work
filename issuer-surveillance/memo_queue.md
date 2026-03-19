@@ -14,10 +14,10 @@
    - sticky category on paper, which makes any weakness more informative
    - useful test of integration / pricing / sponsor-ownership strain
 
-4. **RealPage** — next highest-value refresh
+4. **RealPage** — refreshed
    - less clean lender-visibility than Medallia / Finastra, but legal overhang could produce mis-marked risk
 
-5. **Zendesk**
+5. **Zendesk** — refreshed
    - customer-support software is a strong AI-pressure category
    - good test of whether marks are still giving too much credit to recurring-revenue labels
 
