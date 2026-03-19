@@ -1,19 +1,31 @@
-# Memo Queue
+# Issuer Memo Queue
 
-## Recommended order
-1. Medallia
-2. Finastra
-3. Kaseya
-4. RealPage
-5. Zendesk
-6. Coupa
-7. Anaplan
-8. Avalara
-9. Pluralsight
+## Immediate memo order
+1. **Medallia**
+   - best live hidden-mark-risk case
+   - unusually visible lender group
+   - direct bridge to BDC / BCRED-style lender surveillance
 
-## Why this order
-- **Medallia** is the cleanest live case where lender marks and broader software-credit stress intersect.
-- **Finastra** and **Kaseya** are large enough to matter as market bellwethers.
-- **RealPage** and **Zendesk** add non-traditional risk vectors: legal overhang and AI/category pressure.
-- **Coupa / Anaplan / Avalara** help separate weak software credits from stronger mission-critical names.
-- **Pluralsight** is the best historical workout anchor, even if much of the bad news is already recognized.
+2. **Finastra**
+   - scale alone makes it important
+   - likely bellwether for software private-credit refinancing and marks
+
+3. **Kaseya**
+   - sticky category on paper, which makes any weakness more informative
+   - useful test of integration / pricing / sponsor-ownership strain
+
+4. **RealPage**
+   - less clean lender-visibility than Medallia / Finastra, but legal overhang could produce mis-marked risk
+
+5. **Zendesk**
+   - customer-support software is a strong AI-pressure category
+   - good test of whether marks are still giving too much credit to recurring-revenue labels
+
+## Memo format
+Each issuer memo should answer:
+- what the company does and why lenders likely financed it
+- why this could be a problem for BDC unsecured bond investors
+- what the hidden-mark-risk thesis is
+- what evidence points to weakening credit quality
+- what type of lender pain would likely show up first
+- what would falsify the bearish thesis

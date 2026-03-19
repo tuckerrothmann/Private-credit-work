@@ -1,0 +1,26 @@
+issuer,segment,sponsor_or_owner,watchlist_bucket,public_financing_signal,health_view,confidence_view,key_reason,next_step
+Medallia,Experience management software,Thoma Bravo,highest-signal,Confirmed direct lending / recurring-revenue unitranche,2,4,Current software private-credit stress case with reported markdowns,Map lender marks and any public BDC holdings
+Pluralsight,Tech learning software,Vista / lender-led outcome,highest-signal,Confirmed private-credit-backed deal and restructuring,1,5,Best public software workout case study,Build timeline of debt raise to lender takeover
+Finastra,Financial software,Vista Equity Partners,highest-signal,Confirmed large private loan,2,4,Record software private-credit loan and refi bellwether,Track refinance / amend activity and lender marks
+Kaseya,IT management / MSP software,Insight Partners / TPG,highest-signal,Confirmed large private-credit debt / refi reporting,2,3,Large leveraged software credit worth deep follow-up,Collect debt timeline and operating pressure signals
+Coupa,Spend management software,Thoma Bravo,highest-signal,Reported private-credit support for buyout,3,3,Large-cap software LBO with enterprise-spend sensitivity,Confirm lender mix and any amendments
+Anaplan,Enterprise planning software,Thoma Bravo,highest-signal,Public direct-lender financing references,3,3,Important planning-software credit with large LBO financing,Pull financing docs and ownership timeline
+Zendesk,Customer support software,Hellman & Friedman / Permira,highest-signal,Reported private-credit support for buyout,3,3,Customer-support software faces AI/product pressure,Confirm capital structure and any refi activity
+Avalara,Tax compliance software,Vista Equity Partners,highest-signal,Reported private-credit support for buyout,3,3,Compliance software is a good test of mission-critical recovery quality,Confirm debt terms and lender group
+RealPage,Property management software,Thoma Bravo,secondary,Likely leveraged / acquisition facilities publicly cited,3,2,Recurring revenue plus regulatory overhang,Confirm debt stack and monitor legal developments
+Citrix / Cloud Software Group,Enterprise infrastructure software,Vista + Elliott / Evergreen,secondary,Large LBO debt; mixed syndicated/private-credit context,2,3,Useful comp for software LBO financing stress,Map post-buyout structure and maturities
+TIBCO,Data / analytics software,Vista + Elliott / Evergreen,secondary,Indirect via Cloud Software Group structure,2,2,Complex subsidiary value / carve-up issues could drive recovery,Map subsidiary structure and liens
+Cvent,Event software,Blackstone,secondary,Sponsor-backed but debt stack not yet confirmed,3,2,Cyclical demand and repeated sponsor ownership,Confirm financing and current leverage
+Epicor,ERP software,CD&R,secondary,Sponsor-backed screen name,3,2,Mature ERP can mask weaker growth under leverage,Find debt / lender evidence
+Hyland Software,Content management software,TA Associates,secondary,Sponsor-backed screen name,3,2,Durable product but potentially slower growth and soft collateral,Find debt / lender evidence
+Quest Software,Infrastructure / database software,Francisco Partners / Elliott,secondary,Sponsor-backed screen name,3,2,Older multi-product software portfolio; recovery may depend on breakup value,Find debt / lender evidence
+MRI Software,Real estate software,TA Associates / partners,secondary,Sponsor-backed screen name,3,2,Real-estate linkage could matter under stress,Find debt / lender evidence
+CentralSquare Technologies,Govtech software,Genstar Capital,secondary,Sponsor-backed screen name,3,2,Govtech may look sticky but budgets / integrations matter,Find debt / lender evidence
+Calabrio,Contact-center software,Thoma Bravo,secondary,Sponsor-backed screen name,2,2,AI can pressure contact-center software economics,Find debt / lender evidence
+Alvaria,Contact-center software,Sponsor-backed / merger-derived,secondary,Sponsor-backed screen name,2,1,Potentially vulnerable category with restructuring relevance,Find ownership and debt details
+Cision,PR / communications software,Platinum Equity,secondary,Sponsor-backed screen name,2,2,More discretionary spend profile than core systems-of-record,Find debt / lender evidence
+Genesys,Contact-center / CX software,Permira / Hellman & Friedman,edge,Needs confirmation,3,1,Important segment for AI-driven disruption,Screen public financing evidence
+SailPoint,Identity software,Thoma Bravo,edge,Needs confirmation,4,1,Mission-critical security software could be a strong recovery contrast,Screen public financing evidence
+Instructure,Education software,KKR / Dragoneer / others,edge,Needs confirmation,3,1,Recurring revenue but education budget sensitivity,Screen public financing evidence
+Solera,Automotive / insurance software,Vista Equity Partners,edge,Needs confirmation,3,1,Vertical software with complex end-market exposure,Screen public financing evidence
+Storable,Vertical SaaS,EQT / partners,edge,Needs confirmation,3,1,Useful vertical-SaaS contrast if leverage is meaningful,Screen public financing evidence

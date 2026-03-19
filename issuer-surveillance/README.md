@@ -13,10 +13,23 @@ For each issuer memo:
 - how could that pain transmit into BDC unsecured bond risk?
 
 ## Current contents
+### Foundational project docs
+- `PROJECT_COCKPIT.md` — project goal, lens, and core deliverables
+- `scoring_framework.md` — health / confidence scoring and red-flag framework
+- `bdc_bond_surveillance_framework.md` — bond-investor surveillance lens
+- `ecosystem_and_themes.md` — lender/platform focus and cross-cutting theses
+- `software_issuer_watchlist.md` — initial software-screen universe and rationale
+- `issuer_inventory.csv` — structured issuer inventory with first-pass views
 - `issuer_risk_radar.csv` — ranked first-pass issuer danger list
+- `prioritized_shortlist.md` — deepest follow-up order
+- `memo_queue.md` — recommended live memo sequence
+- `case_studies_medallia_pluralsight.md` — anchor case studies
+- `source_log.md` — initial public-source pack and evidence-quality notes
+
+### Surveillance artifacts and live memos
 - `expanded_watchlist.csv` — broader 25-40 name cross-sector screen
 - `issuer_lender_bdc_matrix.csv` — first-pass issuer / lender / BDC matrix
-- `memo_queue.md` — recommended memo order
+- `risk_buckets.md` — hidden-mark-risk / impairment / precedent split
 - `medallia_memo.md` — first live stress memo
 - `finastra_memo.md`
 - `kaseya_memo.md`

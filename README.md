@@ -1,16 +1,20 @@
-# Private Credit Liquidity Analysis
+# Private Credit Workbench
 
-Focused working repo for reviewing the Cliffwater Corporate Lending Fund (CCLF) liquidity profile, source disclosures, and downside scenarios.
+Focused working repo for two linked tracks:
+1. **CCLF / Cliffwater liquidity analysis**
+2. **issuer-level surveillance for BDC unsecured bond investing**
+
+It is best treated as an analyst workbench, not a finished production system.
 
 ## What is here
 
-This repo currently does three things:
+This repo currently does five things:
 
 1. **Structures key source disclosures** from CCLF shareholder reports.
 2. **Runs a stylized 8-quarter liquidity model** with configurable tender, repayment, default, and unfunded-draw assumptions.
 3. **Presents the output in memo and dashboard form** for fast iteration.
-
-It is best treated as an analyst workbench, not a finished production model.
+4. **Maintains an issuer-surveillance research set** for sponsor-backed / private-credit-financed issuers.
+5. **Connects issuer work to BDC unsecured bond risk** through ranked watchlists, memo queues, and lender/BDC mapping.
 
 Current model defaults are now anchored to the latest disclosed **September 30, 2025** facility / commitment snapshot unless a scenario overrides them.
 
@@ -24,6 +28,7 @@ Current model defaults are now anchored to the latest disclosed **September 30, 
 - `scenario_summary.csv` - compact summary table across saved scenarios
 - `effective_scenarios.json` - exact scenario payload used for the last model run
 - `memo/cclf_liquidity_memo.md` - draft narrative memo / investment framing
+- `issuer-surveillance/` - issuer project cockpit, watchlists, source logs, radar tables, matrix work, and live issuer memos
 - `data/raw/` - original report PDFs and plaintext sidecars
 - `data/processed/source_summary.md` - source-backed disclosure summary
 - `data/processed/repurchase_history.csv` - structured filed repurchase-history table
