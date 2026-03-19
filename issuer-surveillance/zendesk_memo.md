@@ -64,7 +64,8 @@ The Zendesk concern would soften if we saw:
 ## Dated sources / anchors
 - **2022-06-30 — Latham & Watkins:** advises on financings supporting Zendesk's **$10.2 billion** acquisition; describes the deal as the **largest direct-lending leveraged buyout in history** and the ARR financing as the largest ever at the time.
 - **2022-11-22 — Zendesk completion release:** confirms the acquisition closed at approximately **$10.2 billion**.
-- **2022-2023 — project surveillance research and public reporting:** identifies lender relevance including Blackstone, Apollo, Blue Owl, and HPS; also points to at least some Ares / ARCC linkage that should be confirmed directly in public portfolio materials.
+- **2022-2023 — project surveillance research and public reporting:** identifies lender relevance including Blackstone, Apollo, Blue Owl, and HPS; also points to at least some Ares / ARCC linkage.
+- **2026 portfolio evidence — BCRED and Blue Owl Technology Finance:** both publicly list **Zendesk, Inc.** as a first-lien senior secured investment, materially improving this name's direct BDC-surveillance usefulness.
 
 ## Next best additions
 - direct confirmation of any ARCC / Ares vehicle exposure from filings or portfolio schedules

@@ -88,6 +88,7 @@ The Medallia concern would fade if we saw:
 - **2021-08-04 — Latham & Watkins:** financing for Thoma Bravo's acquisition of Medallia; identifies Blackstone Alternative Credit Advisors as lead lender with Apollo, KKR, and Antares; notes the recurring-revenue unitranche was the largest of its kind at the time.
 - **2021-07 / 2021-08 — Medallia / deal announcements:** confirms the transaction value at **$6.4 billion**.
 - **2025-2026 — public market reporting summarized in project research:** indicates Medallia loan markdowns and valuation dispersion across lender vehicles, which is the core reason the name remains the top live software watch.
+- **2026-01-31 — BCRED portfolio page:** lists **Medallia/F1 (Medallia, Inc.)** as a first-lien senior secured investment, strengthening the direct BDC-surveillance relevance.
 
 ## Next best additions
 - dated mark timeline by lender / vehicle

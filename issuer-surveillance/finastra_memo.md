@@ -75,6 +75,7 @@ The Finastra concern would ease if we saw:
 - **2023-09 — Kirkland & Ellis:** confirms the refinancing of existing credit facilities, including a **$4.82 billion senior secured unitranche term loan** and **$500 million revolver**, with more than twenty lenders / borrowers across jurisdictions.
 - **2023-09 — OHA / PR Newswire:** says OHA was lead arranger for the **$5.3 billion** financing, committed more than **$800 million**, and framed the transaction as refinancing maturing syndicated first- and second-lien debt while deleveraging the company.
 - **2025 — public market reporting summarized in project research:** indicates a syndicated refinancing effort / launch, which is the main surveillance catalyst because it can expose the market's true willingness to take out large software private-credit risk.
+- **2026 portfolio evidence — Blue Owl Technology Finance:** lists **Finastra USA, Inc.** as a first-lien senior secured loan, giving the name cleaner public BDC relevance than the earlier matrix reflected.
 
 ## Next best additions
 - explicit 2025 refinancing timeline with dates, size split, and pricing if publicly available

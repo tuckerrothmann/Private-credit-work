@@ -25,6 +25,9 @@ For each issuer memo:
 - `memo_queue.md` — recommended live memo sequence
 - `case_studies_medallia_pluralsight.md` — anchor case studies
 - `source_log.md` — initial public-source pack and evidence-quality notes
+- `medallia_mark_timeline.md` — dated mark-drift reference for Medallia
+- `realpage_legal_regulatory_timeline.md` — scaffolded legal / regulatory timeline for RealPage
+- `zendesk_ai_financing_timeline.md` — financing + AI-risk timeline for Zendesk
 
 ### Surveillance artifacts and live memos
 - `expanded_watchlist.csv` — broader 25-40 name cross-sector screen

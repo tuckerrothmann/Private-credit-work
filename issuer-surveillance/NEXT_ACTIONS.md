@@ -37,11 +37,15 @@ Current status:
 - Kaseya memo refreshed
 - RealPage memo refreshed
 - Zendesk memo refreshed
+- Medallia mark timeline added
+- RealPage legal / regulatory scaffold added
+- Zendesk AI / financing timeline added
+- matrix upgraded with stronger BCRED / OTF / ARCC evidence in key rows
 
 Next up:
-1. matrix-confirmation pass for Medallia / Finastra / Kaseya / Zendesk across visible BDC channels
-2. dated legal / antitrust chronology for RealPage
-3. direct filing-based confirmation of any ARCC / BXSL / BCRED vehicle exposures where project research suggests relevance
+1. direct filing-based confirmation of any ARCC / BXSL / BCRED vehicle exposures where project research suggests relevance
+2. fuller DOJ / antitrust chronology for RealPage
+3. cross-issuer table for public mark drift / pricing evidence where available
 
 ### 3) Keep the buckets clean
 Use `risk_buckets.md` to separate:

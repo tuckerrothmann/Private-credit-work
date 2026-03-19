@@ -101,3 +101,31 @@ Given Tucker's steering, the next source pull should explicitly review public ma
 - GBDC
 
 These should be used as exposure-validation tools, not as the only universe definition.
+## Additional source additions from the latest surveillance pass
+
+### S13. Latham — lenders financing Thoma Bravo's acquisition of RealPage
+- URL: https://www.lw.com/en/news/latham-watkins-advises-lenders-financing-thoma-bravo-acquisition-realpage
+- Use: confirms a **$4.0bn** financing package including first-lien, revolver, and second-lien facilities.
+
+### S14. RealPage completion release
+- URL: https://www.realpage.com/news/thoma-bravo-completes-acquisition-of-realpage/
+- Use: confirms closing and the approximately **$10.2bn** transaction value.
+
+### S15. Latham — financings supporting Zendesk acquisition
+- URL: https://www.lw.com/en/news/latham-advises-on-financings-in-zendesk-billion-acquisition-by-investor-group-led
+- Use: confirms the **largest direct-lending leveraged buyout in history** at the time and the largest-ever ARR financing.
+
+### S16. Zendesk completion release
+- URL: https://www.zendesk.com/newsroom/press-releases/consortium-led-by-hellman-friedman-and-permira-completes-acquisition-of-zendesk/
+- Use: confirms closing and the approximately **$10.2bn** transaction value.
+
+### S17. BCRED portfolio page
+- URL: https://www.bcred.com/portfolio/
+- Use: directly confirms public portfolio holdings relevant to this project, including **Medallia/F1 (Medallia, Inc.)** and **Zendesk (Zendesk, Inc.)** as first-lien senior secured investments.
+
+### S18. Blue Owl Technology Finance portfolio holdings
+- URL: https://www.blueowltechnologyfinance.com/portfolio/portfolio-holdings
+- Use: directly confirms public portfolio holdings relevant to this project, including **Anaplan, Coupa, Finastra USA, and Zendesk** as first-lien senior secured loans.
+
+### S19. Public reporting / search-backed ARCC signal on Zendesk
+- Use: project research indicates ARCC reported a funded and unfunded first-lien Zendesk exposure in public portfolio materials around Q4 2022; this is a strong signal but still worth direct filing confirmation in the repo.
