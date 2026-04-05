@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Streamlit dashboard for CCLF liquidity scenarios."""
+"""Streamlit dashboard for BDC / private-credit liquidity scenarios."""
 from __future__ import annotations
 
 from dataclasses import asdict, replace
@@ -13,7 +13,85 @@ import streamlit as st
 
 from cclf_liquidity_model import ScenarioConfig, run_scenario, summarize
 
-st.set_page_config(page_title="CCLF Liquidity Dashboard", layout="wide")
+st.set_page_config(page_title="BDC Liquidity Dashboard", layout="wide")
+
+# ---------------------------------------------------------------------------
+# Fund profiles  (approximate balance-sheet starting points from public filings)
+# ---------------------------------------------------------------------------
+FUND_PROFILES: Dict[str, Dict[str, object]] = {
+    "CCLF — Cliffwater Corporate Lending": {
+        "nav_start": 31.5e9,
+        "senior_notes": 5.65e9,
+        "senior_credit_outstanding": 1.19e9,
+        "senior_credit_limit": 2.5e9,
+        "distribution_rate": 0.1075,
+        "tender_rate": 0.05,
+        "portfolio_yield": 0.12,
+        "scheduled_repayment_rate": 0.03,
+        "annual_default_rate": 0.02,
+        "loss_given_default": 0.40,
+        "unfunded_commitments": 4.0e9,
+        "unfunded_draw_rate": 0.10,
+        "starting_cash": 0.5e9,
+        "min_cash_buffer": 0.0,
+        "max_leverage": 2.0,
+        "quarters": 8,
+    },
+    "HTGC — Hercules Capital": {
+        "nav_start": 2.8e9,
+        "senior_notes": 1.3e9,
+        "senior_credit_outstanding": 0.5e9,
+        "senior_credit_limit": 1.4e9,
+        "distribution_rate": 0.10,
+        "tender_rate": 0.01,
+        "portfolio_yield": 0.145,
+        "scheduled_repayment_rate": 0.025,
+        "annual_default_rate": 0.03,
+        "loss_given_default": 0.35,
+        "unfunded_commitments": 1.5e9,
+        "unfunded_draw_rate": 0.10,
+        "starting_cash": 0.15e9,
+        "min_cash_buffer": 0.0,
+        "max_leverage": 1.0,
+        "quarters": 8,
+    },
+    "OBDC — Blue Owl Capital Corp.": {
+        "nav_start": 7.5e9,
+        "senior_notes": 2.5e9,
+        "senior_credit_outstanding": 2.0e9,
+        "senior_credit_limit": 4.5e9,
+        "distribution_rate": 0.095,
+        "tender_rate": 0.01,
+        "portfolio_yield": 0.115,
+        "scheduled_repayment_rate": 0.03,
+        "annual_default_rate": 0.02,
+        "loss_given_default": 0.40,
+        "unfunded_commitments": 3.5e9,
+        "unfunded_draw_rate": 0.10,
+        "starting_cash": 0.30e9,
+        "min_cash_buffer": 0.0,
+        "max_leverage": 2.0,
+        "quarters": 8,
+    },
+    "Custom": {
+        "nav_start": 5.0e9,
+        "senior_notes": 1.0e9,
+        "senior_credit_outstanding": 0.5e9,
+        "senior_credit_limit": 2.0e9,
+        "distribution_rate": 0.10,
+        "tender_rate": 0.02,
+        "portfolio_yield": 0.12,
+        "scheduled_repayment_rate": 0.03,
+        "annual_default_rate": 0.02,
+        "loss_given_default": 0.40,
+        "unfunded_commitments": 1.0e9,
+        "unfunded_draw_rate": 0.10,
+        "starting_cash": 0.25e9,
+        "min_cash_buffer": 0.0,
+        "max_leverage": 2.0,
+        "quarters": 8,
+    },
+}
 
 PRESETS: Dict[str, Dict[str, float]] = {
     "Base": {},
@@ -67,7 +145,7 @@ def rows_to_csv(df: pd.DataFrame) -> bytes:
     return buffer.getvalue().encode("utf-8")
 
 
-def build_config(name: str, overrides: Dict[str, float]) -> ScenarioConfig:
+def build_config(name: str, overrides: Dict[str, object]) -> ScenarioConfig:
     return ScenarioConfig.from_dict({"name": name, **overrides})
 
 
@@ -84,7 +162,7 @@ def narrative(summary: Dict[str, float | str], cfg: ScenarioConfig, df: pd.DataF
     total_unfunded = df["Unfunded_Draw_Bn"].sum()
     dominant = max(
         [
-            ("tender activity", total_tenders),
+            ("tender / repurchase activity", total_tenders),
             ("distribution outflows", total_distributions),
             ("credit losses", total_losses),
             ("unfunded commitment draws", total_unfunded),
@@ -97,7 +175,7 @@ def narrative(summary: Dict[str, float | str], cfg: ScenarioConfig, df: pd.DataF
             f"Under the {cfg.name} scenario, liquidity becomes constrained by "
             f"{quarter_label(summary['first_liquidity_shortfall_quarter'])}. Starting cash of {cfg.starting_cash / 1e9:.2f}bn and "
             f"facility headroom of {(cfg.senior_credit_limit - cfg.senior_credit_outstanding) / 1e9:.2f}bn are not sufficient to offset "
-            f"combined pressures from tenders, distributions, credit losses, and unfunded draws. Minimum cash reaches "
+            f"combined pressures from tenders/repurchases, distributions, credit losses, and unfunded draws. Minimum cash reaches "
             f"{summary['min_cash_bn']:.2f}bn and minimum headroom compresses to {summary['min_headroom_bn']:.2f}bn. The dominant stress driver in this run is {dominant}."
         )
     if summary["first_covenant_breach_quarter"] != "none":
@@ -109,13 +187,13 @@ def narrative(summary: Dict[str, float | str], cfg: ScenarioConfig, df: pd.DataF
     return (
         f"The {cfg.name} scenario remains above the modeled liquidity floor throughout the forecast horizon. Ending NAV is "
         f"{summary['ending_nav_bn']:.2f}bn, ending cash is {summary['ending_cash_bn']:.2f}bn, and peak leverage reaches {summary['peak_leverage_x']:.2f}x. "
-        f"Results still depend heavily on tender assumptions ({pct(cfg.tender_rate)} quarterly), repayment pace ({pct(cfg.scheduled_repayment_rate)} quarterly), and default severity ({pct(cfg.loss_given_default)} LGD)."
+        f"Results still depend heavily on tender/repurchase assumptions ({pct(cfg.tender_rate)} quarterly), repayment pace ({pct(cfg.scheduled_repayment_rate)} quarterly), and default severity ({pct(cfg.loss_given_default)} LGD)."
     )
 
 
 def biggest_driver_callout(df: pd.DataFrame) -> str:
     totals = {
-        "Tender outflows": df["Tender_Outflow_Bn"].sum(),
+        "Tender / repurchase outflows": df["Tender_Outflow_Bn"].sum(),
         "Distributions": df["Distributions_Bn"].sum(),
         "Credit losses": df["Credit_Losses_Bn"].sum(),
         "Unfunded draws": df["Unfunded_Draw_Bn"].sum(),
@@ -216,38 +294,98 @@ def build_sensitivity_grid(cfg: ScenarioConfig) -> pd.DataFrame:
 
 
 def render() -> None:
-    st.title("CCLF Liquidity Scenario Dashboard")
-    st.write(
-        "Interactive scenario tool for exploring Cliffwater Corporate Lending Fund liquidity, leverage, and cash-flow sensitivity. "
-        "Negative cash implies liquidity needs beyond currently modeled facility capacity."
-    )
+    st.sidebar.header("Fund & Scenario")
 
-    st.sidebar.header("Scenario Builder")
+    fund_name = st.sidebar.selectbox("Fund", list(FUND_PROFILES.keys()), index=0)
+    profile = FUND_PROFILES[fund_name]
+    ticker = fund_name.split(" — ")[0]
+
+    # Preset stress assumptions layer on top of the fund's balance-sheet profile
     preset_name = st.sidebar.selectbox("Primary preset", list(PRESETS.keys()), index=0)
+    merged: Dict[str, object] = {**profile, **PRESETS[preset_name]}
+
     compare_enabled = st.sidebar.checkbox("Enable comparison scenario", value=True)
     compare_preset_name = st.sidebar.selectbox("Comparison preset", list(PRESETS.keys()), index=2, disabled=not compare_enabled)
 
-    base_cfg = build_config(preset_name, PRESETS[preset_name])
+    st.title(f"{fund_name} — Liquidity Scenario Dashboard")
+    st.write(
+        "Interactive scenario tool for exploring liquidity, leverage, and cash-flow sensitivity. "
+        "Balance-sheet defaults are approximate starting points from recent public filings — adjust in Advanced assumptions. "
+        "Negative cash implies liquidity needs beyond currently modeled facility capacity."
+    )
+
+    if fund_name != "CCLF — Cliffwater Corporate Lending":
+        st.caption(
+            "Note: for exchange-listed BDCs the 'tender / repurchase rate' models share-repurchase activity rather than formal tender offers. "
+            "Set it to ~1-2% for typical listed-BDC repurchase programs."
+        )
 
     st.sidebar.subheader("Core exposed assumptions")
-    quarters = st.sidebar.select_slider("Forecast horizon (quarters)", options=[4, 6, 8, 12, 16], value=base_cfg.quarters)
-    tender_rate = st.sidebar.slider("Tender rate (% of NAV per quarter)", 0.0, 20.0, base_cfg.tender_rate * 100, 0.25) / 100
-    annual_default_rate = st.sidebar.slider("Annual default rate (%)", 0.0, 15.0, base_cfg.annual_default_rate * 100, 0.25) / 100
-    loss_given_default = st.sidebar.slider("Loss given default (%)", 0.0, 80.0, base_cfg.loss_given_default * 100, 1.0) / 100
-    unfunded_draw_rate = st.sidebar.slider("Unfunded draw rate (% of remaining per quarter)", 0.0, 30.0, base_cfg.unfunded_draw_rate * 100, 1.0) / 100
-    portfolio_yield = st.sidebar.slider("Portfolio yield (annual %)", 8.0, 18.0, base_cfg.portfolio_yield * 100, 0.25) / 100
-    distribution_rate = st.sidebar.slider("Distribution rate (annual %)", 0.0, 15.0, base_cfg.distribution_rate * 100, 0.25) / 100
+    quarters = st.sidebar.select_slider(
+        "Forecast horizon (quarters)", options=[4, 6, 8, 12, 16],
+        value=int(merged["quarters"]), key=f"{ticker}_quarters",
+    )
+    tender_rate = st.sidebar.slider(
+        "Tender / repurchase rate (% of NAV per quarter)",
+        0.0, 20.0, float(merged["tender_rate"]) * 100, 0.25, key=f"{ticker}_tender",
+    ) / 100
+    annual_default_rate = st.sidebar.slider(
+        "Annual default rate (%)",
+        0.0, 15.0, float(merged["annual_default_rate"]) * 100, 0.25, key=f"{ticker}_default",
+    ) / 100
+    loss_given_default = st.sidebar.slider(
+        "Loss given default (%)",
+        0.0, 80.0, float(merged["loss_given_default"]) * 100, 1.0, key=f"{ticker}_lgd",
+    ) / 100
+    unfunded_draw_rate = st.sidebar.slider(
+        "Unfunded draw rate (% of remaining per quarter)",
+        0.0, 30.0, float(merged["unfunded_draw_rate"]) * 100, 1.0, key=f"{ticker}_unfunded_draw",
+    ) / 100
+    portfolio_yield = st.sidebar.slider(
+        "Portfolio yield (annual %)",
+        8.0, 20.0, float(merged["portfolio_yield"]) * 100, 0.25, key=f"{ticker}_yield",
+    ) / 100
+    distribution_rate = st.sidebar.slider(
+        "Distribution rate (annual %)",
+        0.0, 15.0, float(merged["distribution_rate"]) * 100, 0.25, key=f"{ticker}_dist",
+    ) / 100
 
     with st.sidebar.expander("Advanced assumptions"):
-        nav_start = st.number_input("Starting NAV ($bn)", min_value=1.0, value=base_cfg.nav_start / 1e9, step=0.5)
-        starting_cash = st.number_input("Starting cash ($bn)", min_value=0.0, value=base_cfg.starting_cash / 1e9, step=0.1)
-        senior_notes = st.number_input("Senior notes ($bn)", min_value=0.0, value=base_cfg.senior_notes / 1e9, step=0.1)
-        facility_out = st.number_input("Facility drawn ($bn)", min_value=0.0, value=base_cfg.senior_credit_outstanding / 1e9, step=0.1)
-        facility_limit = st.number_input("Facility limit ($bn)", min_value=0.0, value=base_cfg.senior_credit_limit / 1e9, step=0.1)
-        scheduled_repayment_rate = st.slider("Scheduled repayment rate (% of NAV per quarter)", 0.0, 10.0, base_cfg.scheduled_repayment_rate * 100, 0.25) / 100
-        unfunded_commitments = st.number_input("Unfunded commitments ($bn)", min_value=0.0, value=base_cfg.unfunded_commitments / 1e9, step=0.1)
-        min_cash_buffer = st.number_input("Minimum cash buffer ($bn)", min_value=0.0, value=base_cfg.min_cash_buffer / 1e9, step=0.1)
-        max_leverage = st.slider("Max leverage (x)", 0.5, 4.0, base_cfg.max_leverage, 0.05)
+        nav_start = st.number_input(
+            "Starting NAV ($bn)", min_value=0.1,
+            value=float(merged["nav_start"]) / 1e9, step=0.5, key=f"{ticker}_nav",
+        )
+        starting_cash = st.number_input(
+            "Starting cash ($bn)", min_value=0.0,
+            value=float(merged["starting_cash"]) / 1e9, step=0.05, key=f"{ticker}_cash",
+        )
+        senior_notes = st.number_input(
+            "Senior notes / bonds ($bn)", min_value=0.0,
+            value=float(merged["senior_notes"]) / 1e9, step=0.1, key=f"{ticker}_notes",
+        )
+        facility_out = st.number_input(
+            "Facility drawn ($bn)", min_value=0.0,
+            value=float(merged["senior_credit_outstanding"]) / 1e9, step=0.1, key=f"{ticker}_fac_out",
+        )
+        facility_limit = st.number_input(
+            "Facility limit ($bn)", min_value=0.0,
+            value=float(merged["senior_credit_limit"]) / 1e9, step=0.1, key=f"{ticker}_fac_lim",
+        )
+        scheduled_repayment_rate = st.slider(
+            "Scheduled repayment rate (% of NAV per quarter)",
+            0.0, 10.0, float(merged["scheduled_repayment_rate"]) * 100, 0.25, key=f"{ticker}_repay",
+        ) / 100
+        unfunded_commitments = st.number_input(
+            "Unfunded commitments ($bn)", min_value=0.0,
+            value=float(merged["unfunded_commitments"]) / 1e9, step=0.1, key=f"{ticker}_unfunded",
+        )
+        min_cash_buffer = st.number_input(
+            "Minimum cash buffer ($bn)", min_value=0.0,
+            value=float(merged["min_cash_buffer"]) / 1e9, step=0.05, key=f"{ticker}_min_cash",
+        )
+        max_leverage = st.slider(
+            "Max leverage (x)", 0.5, 4.0, float(merged["max_leverage"]), 0.05, key=f"{ticker}_lev",
+        )
 
     primary_cfg = ScenarioConfig(
         name=preset_name,
@@ -339,7 +477,7 @@ def render() -> None:
             st.download_button(
                 label="Download primary scenario CSV",
                 data=rows_to_csv(primary_df),
-                file_name=f"{primary_cfg.name.lower().replace(' ', '_')}_scenario.csv",
+                file_name=f"{ticker.lower()}_{primary_cfg.name.lower().replace(' ', '_')}_scenario.csv",
                 mime="text/csv",
             )
         with dl2:
@@ -347,7 +485,7 @@ def render() -> None:
                 st.download_button(
                     label="Download comparison scenario CSV",
                     data=rows_to_csv(compare_df),
-                    file_name=f"{compare_cfg.name.lower().replace(' ', '_')}_scenario.csv",
+                    file_name=f"{ticker.lower()}_{compare_cfg.name.lower().replace(' ', '_')}_scenario.csv",
                     mime="text/csv",
                 )
 
@@ -377,14 +515,16 @@ def render() -> None:
             st.markdown(
                 """
                 - This dashboard is a scenario engine, not a precise forecast.
+                - Balance-sheet defaults are approximate starting points derived from public filings; adjust them in Advanced assumptions.
+                - For listed BDCs (e.g. HTGC, OBDC), the "tender / repurchase rate" models share-repurchase activity, not formal tender programs.
                 - Asset liquidity is approximated at a portfolio level using repayment and draw assumptions.
-                - Tender activity, repayment pace, default severity, and distribution policy are the dominant sensitivities.
-                - Financing terms and asset-cash-flow behavior should be tightened further as more source disclosures are structured.
+                - Tender/repurchase activity, repayment pace, default severity, and distribution policy are the dominant sensitivities.
+                - Financing terms and asset cash-flow behavior should be tightened further as more source disclosures are structured.
                 """
             )
 
     with tab4:
-        st.subheader("Tender/default sensitivity heatmap")
+        st.subheader("Tender / repurchase / default sensitivity heatmap")
         sensitivity_df = build_sensitivity_grid(primary_cfg)
         heatmap = sensitivity_df.pivot(index="Default rate", columns="Tender rate", values="Shortfall quarter score")
         fig = px.imshow(
