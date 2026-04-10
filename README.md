@@ -115,9 +115,64 @@ python -m unittest discover -s tests -v
 - The PDF extraction tools require `pdfminer.six`.
 - `cliffwater_blocks.jsonl` is newline-delimited JSON for easy inspection or downstream loading.
 
+## BDC Universe & Red Flag Screener
+
+### Run the screener
+
+```bash
+# Screen all funds, show RED and ORANGE tier only
+python red_flag_screener.py --tier RED ORANGE
+
+# Output full results to CSV
+python red_flag_screener.py --csv data/processed/screener_results.csv
+
+# Set minimum score threshold
+python red_flag_screener.py --min-score 4
+```
+
+**Risk tiers:** GREEN (0–3) · YELLOW (4–6) · ORANGE (7–10) · RED (11+)
+
+### Collect live EDGAR data
+
+```bash
+# Look up a CIK
+python edgar_collector.py --lookup ARCC
+
+# Show recent 10-K/10-Q filings
+python edgar_collector.py --filings PSEC
+
+# Refresh full universe XBRL metrics
+python edgar_collector.py
+
+# Refresh specific tickers only
+python edgar_collector.py --tickers TPVG FSK PNNT
+```
+
+EDGAR data is cached in `data/edgar_cache/` for 24 hours (pass `--force-refresh` to bypass).
+
+### Universe file
+
+`data/bdc_universe.json` contains ~21 funds covering:
+- 17 publicly-traded BDCs (filed 10-K/10-Q with EDGAR XBRL)
+- 2 large private-credit interval funds (CCLFX, BCRED)
+- 1 non-traded REIT reference case (BREIT)
+
+Metrics include NAV, leverage, NII coverage, PIK income %, non-accrual rates,
+price/NAV, and quarterly flow data. Balance-sheet fields are refreshed from EDGAR XBRL
+automatically; NII coverage, PIK %, and non-accrual rates require manual updates from filings.
+
+## Dashboard tabs
+
+| Tab | Content |
+|---|---|
+| Fund Scenario | Single-fund 8-quarter liquidity projection with scenario presets |
+| Market Overview | Cross-fund comparison charts (NII coverage, PIK %, NAV trajectory) |
+| Red Flag Screener | Scored risk table and flag frequency analysis |
+| EDGAR Filings | Live filing lookup and XBRL metric extraction per ticker |
+
 ## Recommended next upgrades
 
-- move from heuristic text extraction to structured disclosure parsing
-- add richer financing-stack and maturity-ladder inputs
-- build scenario comparison charts or a lightweight dashboard
+- automated PDF parsing of 10-Q non-accrual disclosures to keep non-accrual rates current
+- full EDGAR XBRL trend analysis (8-quarter rolling NII coverage series)
 - add CI to run tests automatically on push
+- alert/notification system when a fund crosses a risk-tier threshold

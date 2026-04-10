@@ -1,3 +1,5 @@
-scenario,min_cash_bn,ending_cash_bn,ending_nav_bn,max_facility_utilization_bn,min_headroom_bn,peak_leverage_x,first_liquidity_shortfall_quarter,first_covenant_breach_quarter
-Baseline,-4.157850098990288,-4.157850098990288,21.09385171401071,2.5,0.0,0.38636850730237676,3,none
-Stressed,-14.60777260930723,-14.60777260930723,12.732920614444089,2.5,0.0,0.6400731023764279,1,none
+scenario,min_cash_bn,ending_cash_bn,ending_nav_bn,max_facility_utilization_bn,min_headroom_bn,peak_leverage_x,first_liquidity_shortfall_quarter,first_covenant_breach_quarter,cumulative_nii_cash_bn,cumulative_distributions_bn,cumulative_credit_losses_bn,cumulative_net_flows_bn,nii_distribution_coverage
+Calibrated Baseline,0.0,2.075899340481636,26.55530785595449,0.615093841419942,1.8849061585800582,0.22448748986972855,none,none,4.3377,5.6718,0.3811,0.0,0.7648
+Tide Turning (Current),-0.7564867468645139,-0.7564867468645139,21.787711380267947,2.5,0.0,0.3740640702346118,5,none,4.1168,5.2097,0.35,-5.0374,0.7902
+Mild Stress,-6.105675207045047,-6.105675207045047,17.78740689006528,2.5,0.0,0.45818932744783514,2,none,3.3528,4.7949,0.8223,-8.3455,0.6992
+Severe Stress (2009-analog),-15.348160123169219,-15.348160123169219,9.837552440715248,2.5,0.0,0.8284580996253827,1,none,1.9365,3.837,1.9682,-14.8404,0.5047
