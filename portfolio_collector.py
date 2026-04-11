@@ -61,15 +61,20 @@ UNIVERSE_PATH   = Path("data/bdc_universe.json")
 SOI_HEADINGS = [
     "schedule of investments",
     "consolidated schedule of investments",
+    "condensed consolidated schedule of investments",
     "schedule of portfolio investments",
-    "portfolio of investments",
+    # NOTE: "portfolio of investments" intentionally omitted — too broad,
+    # matches descriptive prose like "changes in the value of our portfolio of investments"
 ]
 
 # Column header patterns → standardised field name
 COL_PATTERNS = {
-    r"portfolio\s*company|issuer|investment|borrower|company\s*name": "issuer",
-    r"industry|sector|type\s*of\s*business":                          "industry",
-    r"investment\s*type|security\s*type|asset\s*type|type":           "invest_type",
+    # "investment" removed — a column labeled "Investment" maps to invest_type, not issuer.
+    # "company" added (bare word, start-anchored) for filings like OBDC that use "Company".
+    r"portfolio\s*company|issuer|borrower|company\s*name|\bcompany\b": "issuer",
+    r"industry|sector|type\s*of\s*business":                           "industry",
+    # "^investment$" added so a bare "Investment" or "Investments" column → invest_type
+    r"investment\s*type|security\s*type|asset\s*type|^investments?$|^type$": "invest_type",
     r"interest\s*rate|rate|coupon|spread":                            "rate_str",
     r"maturity|due\s*date|expiry":                                    "maturity",
     r"principal|par|face\s*amount|notional":                          "par_str",
@@ -259,7 +264,81 @@ def _map_col_headers(headers: list[str]) -> dict[int, str]:
                 if field_name not in mapping.values():  # first match wins
                     mapping[i] = field_name
                 break
+    # Col-0 override: in SOI tables, column 0 is always the portfolio-company/issuer column.
+    # Some funds use "Investments" (e.g. SCM) or "Investments (1)(19)" (e.g. BXSL) as the
+    # col-0 header.  The bare "Investments" accidentally maps to invest_type via ^investments?$
+    # while the footnoted variant goes unmapped.  Both should be treated as the issuer column.
+    if headers:
+        h0 = headers[0].lower().strip() if headers else ""
+        if re.match(r'investments?\b', h0) and "type" not in h0 and "activity" not in h0:
+            # Regardless of whether col 0 was mapped to invest_type or not mapped at all,
+            # override to issuer when the header starts with "investment(s)".
+            mapping[0] = "issuer"
     return mapping
+
+
+def _recalibrate_col_map(col_map: dict[int, str], data_rows: list[list[str]]) -> dict[int, str]:
+    """Shift numeric column pointers if the header-mapped positions are consistently empty.
+
+    Some iXBRL filings use merged header cells that span multiple <td> columns while
+    the data rows fill them with individual cells — causing a systematic off-by-N offset
+    for cost/fv/par/maturity columns.  This function samples up to 10 data rows and, for
+    each mapped numeric field, searches adjacent columns (+1, +2, +3) if the mapped
+    position is empty in most rows.
+    """
+    NUMERIC_FIELDS = ("par_str", "cost_str", "fv_str")
+    DATE_FIELDS    = ("maturity",)
+
+    sample = [r for r in data_rows[:30] if len([c for c in r if c.strip()]) >= 3][:10]
+    if not sample:
+        return col_map
+
+    new_map = dict(col_map)
+    changed_cols: set[int] = set()  # positions already reassigned
+
+    def _score(idx: int, field: str) -> int:
+        vals = [r[idx] if idx < len(r) else "" for r in sample]
+        if field in DATE_FIELDS:
+            return sum(1 for v in vals if re.search(r'\d{1,2}[/\-]\d{1,4}', v))
+        return sum(1 for v in vals if _clean_num(v) is not None)
+
+    for field in NUMERIC_FIELDS + DATE_FIELDS:
+        # Find where this field currently sits in new_map
+        col_idx = next((k for k, v in new_map.items() if v == field), None)
+
+        if col_idx is not None and col_idx in changed_cols:
+            continue  # already moved — don't move it again
+
+        if col_idx is None:
+            # Field was displaced when a prior field was remapped to this position.
+            # Use the original col_map position as the search anchor.
+            col_idx = next((k for k, v in col_map.items() if v == field), None)
+            if col_idx is None:
+                continue
+            current_score = 0  # displaced: treat original position as score 0
+        else:
+            current_score = _score(col_idx, field)
+            if current_score >= len(sample) * 0.25:
+                continue  # good enough — no recalibration needed
+
+        # Search adjacent columns (wider range for Workiva iXBRL with many empty spacer cells)
+        best_idx, best_score = col_idx, current_score
+        for offset in (1, 2, 3, 4, -1, -2):
+            alt = col_idx + offset
+            if alt < 0 or alt in new_map or alt in changed_cols:
+                continue
+            s = _score(alt, field)
+            if s > best_score:
+                best_score, best_idx = s, alt
+
+        if best_idx != col_idx and best_score > current_score:
+            # Remove old mapping only if it still belongs to this field
+            if col_idx in new_map and new_map.get(col_idx) == field:
+                del new_map[col_idx]
+            new_map[best_idx] = field
+            changed_cols.add(best_idx)
+
+    return new_map
 
 
 def _parse_rate(rate_str: str) -> tuple[str, Optional[int], bool]:
@@ -301,25 +380,72 @@ def _is_non_accrual(row_text: str, na_footnote_marks: set[str] | None = None) ->
     return False
 
 
-def _extract_footnote_legend(soup: BeautifulSoup, soi_tag: Tag) -> dict[str, str]:
+def _extract_footnote_legend(soup: BeautifulSoup, soi_tag: Tag,
+                             html_text: str = "") -> dict[str, str]:
     """Extract footnote legend from the SOI section.
 
-    Returns {marker: meaning} e.g. {"(1)": "non-accrual", "(2)": "PIK"}.
-    Searches the text near the SOI table for footnote definitions.
+    Returns {marker: meaning} e.g. {"(7)": "non-accrual", "(2)": "PIK"}.
+
+    Uses three strategies in order of reliability:
+    1. Span-sibling scan on the full soup: finds <span>(N)</span> where the
+       parent element's text is just the marker + definition (iXBRL style).
+    2. Regex on raw HTML text after the SOI heading (inline definitions).
+    3. Tag-based scan with larger limit (fallback for traditional HTML).
     """
     legend: dict[str, str] = {}
-    # Look for paragraphs/cells after the SOI tables that look like footnotes
-    candidates = soi_tag.find_all_next(["p", "div", "td", "li"], limit=200)
-    for tag in candidates:
-        text = tag.get_text(separator=" ").strip()
-        if len(text) > 400:
+
+    # ── Strategy 1: span-sibling pattern (handles iXBRL inline footnotes) ──
+    # In iXBRL filings the legend looks like:
+    #   <p><span>(7)</span><span>Debt is on non-accrual status...</span></p>
+    # The distinguishing feature: the PARENT element text starts with "(N)"
+    # immediately followed by a substantial definition (not table row content).
+    for span in soup.find_all("span"):
+        t = span.get_text().strip()
+        m = re.fullmatch(r'\((\d{1,2})\)', t)
+        if not m:
             continue
-        # Pattern: "(1) Non-accrual" or "(a) Loans on non-accrual status"
-        m = re.match(r'^\(?([a-z0-9]{1,2})\)?\s+(.+)$', text, re.IGNORECASE)
-        if m:
-            marker = f"({m.group(1)})"
-            meaning = m.group(2).lower()
-            legend[marker] = meaning
+        marker = f"({m.group(1)})"
+        if marker in legend:
+            continue
+        # Get the text of the parent element (span + siblings combined)
+        parent_text = span.parent.get_text(separator="").strip() if span.parent else ""
+        # Must start with the marker and have a real definition (10-600 chars total)
+        if parent_text.startswith(t) and 10 < len(parent_text) < 700:
+            definition = parent_text[len(t):].strip().lower()
+            if len(definition) > 5:
+                legend[marker] = definition
+
+    # ── Strategy 2: regex on raw HTML after SOI heading ───────────────────
+    if not legend and html_text:
+        soi_pos = html_text.lower().find("schedule of investments")
+        if soi_pos >= 0:
+            chunk = html_text[soi_pos: soi_pos + 3_500_000]
+            # Look for "(N)text" patterns concatenated with no space (iXBRL joined)
+            # or "(N) text" with a space
+            for m in re.finditer(
+                r'\((\d{1,2})\)\s{0,2}([A-Z][^<\n]{10,400})',
+                chunk
+            ):
+                marker  = f"({m.group(1)})"
+                meaning = m.group(2).strip().lower()
+                if marker not in legend:
+                    legend[marker] = meaning
+
+    # ── Strategy 3: tag-based scan (traditional HTML fallback) ────────────
+    if not legend and soi_tag is not None:
+        for tag in soi_tag.find_all_next(
+            ["p", "div", "td", "li"], limit=5000
+        ):
+            text = tag.get_text(separator=" ").strip()
+            if not text or len(text) > 600:
+                continue
+            m = re.match(r'^\(?([a-z0-9]{1,2})\)?\s+(.+)$', text, re.IGNORECASE)
+            if m and 5 < len(m.group(2)) < 600:
+                marker  = f"({m.group(1)})"
+                meaning = m.group(2).lower()
+                if marker not in legend:
+                    legend[marker] = meaning
+
     return legend
 
 
@@ -344,17 +470,73 @@ def _pik_footnote_marks_from_legend(legend: dict[str, str]) -> set[str]:
     return marks
 
 
-def _clean_issuer_name(raw: str) -> tuple[str, str]:
-    """Split 'Company Name - Instrument Type (footnote)' into (name, instrument_type)."""
-    # Remove trailing footnote references like "(1)", "(a)", "(7)"
-    raw = re.sub(r'\s*\(\d+\)\s*$', '', raw).strip()
-    raw = re.sub(r'\s*\([a-z]\)\s*$', '', raw, flags=re.IGNORECASE).strip()
+def _clean_issuer_name(raw: str) -> tuple[str, str, set[str]]:
+    """Split 'Company Name (footnotes) - Instrument Type' → (name, instrument_type, markers).
+
+    Returns the cleaned name, any embedded instrument type, and the set of
+    footnote markers found (e.g. {"(1)", "(7)"}) so callers can check NA/PIK flags.
+    """
+    # Collect all trailing/embedded footnote markers before stripping them
+    markers: set[str] = set(re.findall(r'\(\d{1,2}\)', raw))
+    markers |= set(re.findall(r'\([a-z]\)', raw, re.IGNORECASE))
+
+    # Remove ALL footnote references from the name (not just trailing)
+    cleaned = re.sub(r'\s*\(\d{1,2}\)\s*', ' ', raw).strip()
+    cleaned = re.sub(r'\s*\([a-z]\)\s*', ' ', cleaned, flags=re.IGNORECASE).strip()
+    cleaned = re.sub(r'\s+', ' ', cleaned).strip()
 
     # Split on " - " to separate company from instrument type
-    if " - " in raw:
-        parts = raw.split(" - ", 1)
-        return parts[0].strip(), parts[1].strip()
-    return raw.strip(), ""
+    if " - " in cleaned:
+        parts = cleaned.split(" - ", 1)
+        return parts[0].strip(), parts[1].strip(), markers
+    return cleaned.strip(), "", markers
+
+
+# Matches strings that look like investment-type labels rather than company names.
+# Used to prevent instrument-type sub-headers from polluting current_issuer.
+_TYPE_LABEL_RE = re.compile(
+    r'^(first lien|second lien|third lien|senior secured|junior secured|'
+    r'subordinated|mezzanine|unitranche|bridge loan|delayed draw|'
+    r'term loan( [a-z0-9][-]?)?|revolving loan|revolving credit|'
+    r'revolver|priority revolver|super senior revolver|'
+    r'last.out|first.out|'
+    r'llc interest|lp interest|membership interest|partnership interest|partnership unit|'
+    r'equity interest|residual interest|income note|income unit|structured note|'
+    r'floating rate note|fixed rate note|unsecured note|secured note|unsecured facility|'
+    r'unsecured debt|debt investment|equity investment|credit investment|'
+    r'specialty finance|non-qualifying|'
+    r'common equity|common stock|common unit|'
+    r'preferred equity|preferred stock|preferred unit|'
+    r'class [a-z0-9].*(unit|share|stock|warrant)|'
+    r'series [a-z0-9].*(preferred|common|warrant|stock|unit)|'
+    r'senior [a-z0-9].*(preferred|common|unit)|'
+    r'extended series|'
+    r'controlled.{0,20}affiliated|affiliated.{0,20}controlled)',
+    re.IGNORECASE
+)
+
+# Used to post-filter na_issuers / pik_issuers: strip entries that look like
+# generic section/type labels that entered via col[0] in certain iXBRL filings.
+_GENERIC_LABEL_RE = re.compile(
+    r'\b(debt investments?|equity investments?|credit investments?|'
+    r'non[- ]qualifying|controlled.{0,15}affiliated|affiliated.{0,15}controlled|'
+    r'specialty finance|'
+    r'first lien|second lien|third lien|senior secured|junior secured|'
+    r'subordinated|mezzanine|unitranche|bridge loan|'
+    r'term loan|revolving|delayed draw|'
+    r'llc (interest|units?)|lp (interest|units?)|membership interest|partnership (interest|unit)|'
+    r'common (unit|equity|stock)|preferred (unit|equity|stock)|'
+    r'class [a-z0-9][-. ]*(common|preferred|unit|share|warrant)|'
+    r'series [a-z0-9][-. ]*(preferred|common|warrant|stock)|'
+    r'senior [a-z0-9][-. ]*(preferred|common|unit)|'
+    r'extended series .{0,10}warrants?|'
+    r'^warrants?$|^one stop|one.stop (debt|loan|first|senior)|'
+    r'\(continued\)$|continued\)$|'
+    r'unsecured (note|facility|debt)|secured note|'
+    r'senior convertible note|convertible note|'
+    r'floating rate note|fixed rate note|income note|structured note)\b',
+    re.IGNORECASE
+)
 
 
 def _is_equity_investment(invest_type: str) -> bool:
@@ -368,37 +550,107 @@ def _find_soi_section(soup: BeautifulSoup) -> Optional[Tag]:
 
     Handles both traditional HTML heading tags and modern iXBRL <span>/<p> elements
     used in SEC inline XBRL filings.
+
+    Tags *inside* a <table> element are skipped in all passes — in iXBRL filings
+    (e.g. ARCC, BXSL) the SOI heading text is repeated in every table header row,
+    so the first match would otherwise land inside the SOI table itself rather than
+    before it.
     """
+    def _in_table(tag) -> bool:
+        return tag.find_parent("table") is not None
+
     # First pass: traditional heading tags (fast, preferred)
-    heading_tags = soup.find_all(["h1", "h2", "h3", "h4", "h5", "b", "strong"])
-    for tag in heading_tags:
+    for tag in soup.find_all(["h1", "h2", "h3", "h4", "h5", "b", "strong"]):
+        if _in_table(tag):
+            continue
         text = tag.get_text(separator=" ").lower().strip()
         if any(h in text for h in SOI_HEADINGS) and len(text) < 150:
             return tag
+
+    def _is_standalone_heading(text: str) -> bool:
+        """True if one of the SOI headings is the primary content of the text
+        (not embedded inside a longer prose sentence like 'See the schedule...')."""
+        for h in SOI_HEADINGS:
+            if h not in text:
+                continue
+            # Require the heading to comprise at least 60% of the text, OR
+            # be at the very start/end of the text (allowing minor suffixes like dates).
+            ratio = len(h) / max(len(text), 1)
+            if ratio >= 0.60 or text.startswith(h) or text.rstrip().endswith(h):
+                return True
+        return False
 
     # Second pass: <p> tags (common in older filings)
     for tag in soup.find_all("p"):
-        text = tag.get_text(separator=" ").lower().strip()
-        if any(h in text for h in SOI_HEADINGS) and len(text) < 150:
-            return tag
-
-    # Third pass: <span> tags (iXBRL / modern EDGAR filings)
-    # Filter to spans with font-weight:bold or that are standalone heading-like spans
-    for tag in soup.find_all("span"):
-        text = tag.get_text(separator=" ").lower().strip()
-        if any(h in text for h in SOI_HEADINGS) and 10 < len(text) < 150:
-            # Prefer spans that look like headings (bold styling or short text)
-            style = tag.get("style", "")
-            if "bold" in style or "font-weight" in style or len(text) < 80:
-                return tag
-
-    # Fourth pass: any tag containing exact SOI text (last resort)
-    for tag in soup.find_all(True):
-        if tag.name in ("script", "style"):
+        if _in_table(tag):
             continue
         text = tag.get_text(separator=" ").lower().strip()
-        if any(h in text for h in SOI_HEADINGS) and len(text) < 120:
+        if _is_standalone_heading(text) and len(text) < 150:
             return tag
+
+    # Signals that indicate a cross-reference prose sentence rather than a real heading
+    _CROSS_REF_SIGNALS = (
+        "for more information", "see the consolidated", "see the schedule",
+        "see our consolidated", "see note", "in our consolidated financial statements",
+        "please refer", "as further described", "described in note",
+        "incorporated by reference", "see item", "as of the date",
+        "in our financial statements", "in the financial statements",
+    )
+
+    def _is_cross_ref(tag) -> bool:
+        """True if this tag or its parent element reads like a cross-reference sentence."""
+        own_text = tag.get_text(separator=" ").lower()
+        if any(s in own_text for s in _CROSS_REF_SIGNALS):
+            return True
+        parent_text = tag.parent.get_text(separator=" ").lower() if tag.parent else ""
+        if any(s in parent_text for s in _CROSS_REF_SIGNALS):
+            return True
+        return False
+
+    # Third pass: <span> tags (iXBRL / modern EDGAR filings), not inside tables
+    for tag in soup.find_all("span"):
+        if _in_table(tag):
+            continue
+        text = tag.get_text(separator=" ").lower().strip()
+        if _is_standalone_heading(text) and 10 < len(text) < 150:
+            if _is_cross_ref(tag):
+                continue
+            style = tag.get("style", "")
+            # Check specifically for bold weight (700 or "bold"), not just any font-weight
+            is_bold = ("font-weight:700" in style or "font-weight: 700" in style
+                       or "font-weight:bold" in style or "font-weight: bold" in style
+                       or "font-weight:800" in style or "font-weight:900" in style)
+            if is_bold or len(text) < 80:
+                return tag
+
+    # Fourth pass: any non-table, non-script tag (last resort)
+    # Use _is_standalone_heading to avoid picking up cross-reference prose
+    for tag in soup.find_all(True):
+        if tag.name in ("script", "style", "table", "tr", "td", "th"):
+            continue
+        if _in_table(tag):
+            continue
+        text = tag.get_text(separator=" ").lower().strip()
+        if _is_standalone_heading(text) and len(text) < 150:
+            if not _is_cross_ref(tag):
+                return tag
+
+    # Fifth pass: heading may be INSIDE the SOI table itself (e.g. BXSL where the
+    # section title is a merged header row).  Return the in-table tag so the caller
+    # can detect it and start from that table rather than the next one.
+    for tag in soup.find_all(["span", "div", "b", "strong", "p"]):
+        if not _in_table(tag):
+            continue
+        text = tag.get_text(separator=" ").lower().strip()
+        if _is_standalone_heading(text) and 10 < len(text) < 150:
+            if not _is_cross_ref(tag):
+                style = tag.get("style", "")
+                is_bold = ("font-weight:700" in style or "font-weight: 700" in style
+                           or "font-weight:bold" in style or "font-weight: bold" in style
+                           or "font-weight:800" in style or "font-weight:900" in style
+                           or tag.name in ("b", "strong"))
+                if is_bold or len(text) < 80:
+                    return tag
 
     return None
 
@@ -513,18 +765,27 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
         return []
 
     # Extract footnote legend to detect fund-specific non-accrual / PIK markers
-    legend = _extract_footnote_legend(soup, soi_tag)
+    legend = _extract_footnote_legend(soup, soi_tag, html_text=html)
     na_marks  = _na_footnote_marks_from_legend(legend)
     pik_marks = _pik_footnote_marks_from_legend(legend)
-    if verbose and (na_marks or pik_marks):
-        print(f"    Footnote legend: NA={na_marks}  PIK={pik_marks}")
+    if verbose:
+        print(f"    Footnote legend ({len(legend)} entries): NA={na_marks}  PIK={pik_marks}")
+        if legend:
+            for mk, mv in sorted(legend.items()):
+                print(f"      {mk}: {mv[:80]}")
 
     # Gather tables after the SOI heading (take up to 3 to handle multi-page SOIs)
     investments: list[Investment] = []
     tables_processed = 0
     found_content = False
+    # Issuer-level NA/PIK tracking — accumulates across all tables so that issuers
+    # whose markers appear in par-only rows (column-shift artefact) are still flagged.
+    na_issuers:  set[str] = set()
+    pik_issuers: set[str] = set()
 
-    # Walk forward from the SOI heading to find tables
+    # Walk forward from the SOI heading to find tables.
+    # Always use find_next — even when the SOI heading is inside a table row
+    # (e.g. BXSL title row), the next nested/sibling table is the SOI content table.
     sibling = soi_tag.find_next("table")
     while sibling and tables_processed < 60:
         rows = _extract_table_rows(sibling)
@@ -549,6 +810,21 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             tables_processed += 1
             continue
 
+        # Recalibrate column positions ONLY when FV/cost columns appear misaligned.
+        # Applying unconditionally breaks tables that already have correct mappings.
+        # Heuristic: sample a few data rows — if the mapped FV column has < 20% hit
+        # rate, the header is likely offset from the data cells (Workiva iXBRL pattern).
+        _fv_col  = next((k for k, v in col_map.items() if v == "fv_str"), None)
+        _smpl    = [r for r in rows[data_start:data_start + 20]
+                    if any(c.strip() for c in r)][:8]
+        _fv_hits = sum(
+            1 for r in _smpl
+            if _fv_col is not None and _fv_col < len(r)
+            and _clean_num(r[_fv_col].strip()) is not None
+        ) if _smpl else 0
+        if not _smpl or _fv_hits < len(_smpl) * 0.20:
+            col_map = _recalibrate_col_map(col_map, rows[data_start:data_start + 30])
+
         # Does this table look like an SOI? Need at least cost or fv col
         has_value_col = "cost_str" in col_map.values() or "fv_str" in col_map.values()
         if not has_value_col:
@@ -560,6 +836,7 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
         current_issuer  = ""
         current_industry = ""
         current_type    = ""
+        current_issuer_markers: set[str] = set()  # carry-forward of issuer footnote marks
 
         for row in rows[data_start:]:
             if not any(row):
@@ -568,23 +845,63 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             # Try to detect section headers (no numeric data, just text)
             non_empty = [c for c in row if c.strip()]
             if len(non_empty) == 1:
-                # Might be an industry/sector sub-header
                 txt = non_empty[0].strip()
-                if len(txt) < 80 and not re.search(r'[\d,\$\(\)]', txt):
+                _txt_low = txt.lower()
+                # "(continued)" labels and known section separators → always industry, never issuer
+                _is_section_label = (
+                    re.search(r'\(continued\)', txt, re.IGNORECASE)
+                    or _txt_low.startswith("first lien debt")
+                    or _txt_low.startswith("second lien debt")
+                    or _txt_low.startswith("controlled")
+                    or _txt_low.startswith("non-controlled")
+                    or _txt_low == "equity"
+                    or _txt_low == "warrants"
+                )
+                if _is_section_label or (len(txt) < 80 and not re.search(r'[\d,\$\(\)]', txt)):
+                    # Plain industry/sector sub-header — update carry-forward
                     current_industry = txt
+                else:
+                    # Could be an issuer name-only row (iXBRL multi-row layout) OR an
+                    # investment-type label (e.g. "First lien senior secured loan(28)").
+                    # Investment-type labels must not become current_issuer — they would
+                    # pollute carry-forward and cause all subsequent positions to be
+                    # misidentified (and potentially mass-NA-flagged).
+                    _clean, _, _solo_markers = _clean_issuer_name(txt)
+                    if _clean:
+                        if _TYPE_LABEL_RE.match(_clean) or _GENERIC_LABEL_RE.search(_clean):
+                            # It's an instrument-type sub-header, not a company name
+                            current_type = _clean
+                        else:
+                            current_issuer = _clean
+                            current_issuer_markers = _solo_markers
+                            _row_text_solo = txt
+                            _row_is_na = _is_non_accrual(_row_text_solo, na_marks) or bool(
+                                na_marks and _solo_markers and (_solo_markers & na_marks)
+                            )
+                            if _row_is_na:
+                                na_issuers.add(_clean)
+                            if pik_marks and (
+                                any(m in _row_text_solo for m in pik_marks)
+                                or bool(_solo_markers & pik_marks)
+                            ):
+                                pik_issuers.add(_clean)
                 continue
 
-            # Try "Total" sentinel — stop when we see totals row
+            # "Total" row handling:
+            #   - Known end-of-table totals → break
+            #   - Industry / sector subtotals → skip (continue) without breaking
+            #     e.g. "Total Internet/Software — 12.3%" should not stop the loop
             first_cell = row[0].strip().lower() if row else ""
             _TOTAL_PATTERNS = (
                 "total investments", "total debt", "total equity", "total portfolio",
                 "total first lien", "total second lien", "total subordinated",
                 "total preferred", "total secured", "total unsecured",
             )
-            if first_cell.startswith("total") and (
-                len(non_empty) <= 4 or any(first_cell.startswith(p) for p in _TOTAL_PATTERNS)
-            ):
-                break  # End of this SOI table section
+            if first_cell.startswith("total"):
+                if any(first_cell.startswith(p) for p in _TOTAL_PATTERNS):
+                    break   # End of this SOI table section
+                else:
+                    continue  # Section subtotal — skip row, keep processing
 
             # Map cells to fields
             inv = Investment(
@@ -602,17 +919,33 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
                 setattr(inv, field_name, val)
 
             # Clean issuer: strip footnote markers and split off instrument type
+            issuer_markers: set[str] = set()
             if inv.issuer:
-                clean_name, embedded_type = _clean_issuer_name(inv.issuer)
+                clean_name, embedded_type, issuer_markers = _clean_issuer_name(inv.issuer)
                 inv.issuer = clean_name
                 if embedded_type and not inv.invest_type:
                     inv.invest_type = embedded_type
 
+            # Guard: if the issuer cell actually contains an investment-type label
+            # (e.g. "First lien senior secured loan", "LLC Interest"), treat it as
+            # invest_type and fall through to carry-forward for the real issuer name.
+            # This prevents instrument-type sub-headers from polluting current_issuer
+            # and causing mass NA false-positives via na_issuers carry-forward.
+            if inv.issuer and _TYPE_LABEL_RE.match(inv.issuer):
+                if not inv.invest_type:
+                    inv.invest_type = inv.issuer
+                current_type = inv.invest_type
+                inv.issuer = ""  # fall through to carry-forward below
+
             # Use carry-forward for issuer / industry if blank
             if not inv.issuer and current_issuer:
                 inv.issuer = current_issuer
+                # Inherit the markers from the name row (the data rows won't have them)
+                if not issuer_markers:
+                    issuer_markers = current_issuer_markers
             elif inv.issuer:
                 current_issuer = inv.issuer
+                current_issuer_markers = issuer_markers  # save for data rows below
 
             if not inv.industry:
                 inv.industry = current_industry
@@ -621,6 +954,115 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
 
             if not inv.invest_type and current_type:
                 inv.invest_type = current_type
+
+            # Dollar-sign cell bypass: iXBRL filings sometimes insert a bare "$" cell
+            # immediately before the monetary value (e.g. BXSL Format-A rows).
+            # When a mapped field contains just "$", advance to the next parseable cell.
+            # Track if cost_str was a "$" that got bypassed — used later in FV recovery.
+            _cost_was_dollar_sign = False
+            for _ds_field in ("par_str", "cost_str", "fv_str"):
+                _ds_val = getattr(inv, _ds_field)
+                if _ds_val == "$":
+                    _ds_col = next((k for k, v in col_map.items() if v == _ds_field), None)
+                    if _ds_col is not None:
+                        for _dc in range(1, 5):
+                            _nxt_c = _ds_col + _dc
+                            _nxt = row[_nxt_c].strip() if _nxt_c < len(row) else ""
+                            if _nxt and _nxt != "$" and _clean_num(_nxt) is not None:
+                                setattr(inv, _ds_field, _nxt)
+                                if _ds_field == "cost_str":
+                                    _cost_was_dollar_sign = True
+                                break
+                        else:
+                            setattr(inv, _ds_field, "")  # couldn't resolve; clear "$"
+
+            # Targeted column-shift recovery: when par is populated but cost/fv are
+            # non-numeric (empty OR "$"), some iXBRL filings have a colspan artefact
+            # where data cells are 1-3 columns to the right of where the header mapped
+            # them.  _clean_num returns None for dates/rates, so non-numeric neighbors
+            # are safe to probe.
+            _par_ok  = _clean_num(inv.par_str)  is not None
+            _cost_ok = _clean_num(inv.cost_str) is not None
+            _fv_ok   = _clean_num(inv.fv_str)   is not None
+            if inv.par_str and _par_ok and not _cost_ok and not _fv_ok:
+                cost_col = next((k for k, v in col_map.items() if v == "cost_str"), None)
+                fv_col   = next((k for k, v in col_map.items() if v == "fv_str"), None)
+                if cost_col is not None:
+                    for delta in (1, 2, 3):
+                        c = cost_col + delta
+                        alt = row[c].strip() if c < len(row) else ""
+                        if alt and _clean_num(alt) is not None:
+                            inv.cost_str = alt
+                            _cost_ok = True
+                            break
+                if fv_col is not None:
+                    for delta in (1, 2, 3, 4):
+                        c = fv_col + delta
+                        alt = row[c].strip() if c < len(row) else ""
+                        if alt and _clean_num(alt) is not None:
+                            inv.fv_str = alt
+                            _fv_ok = True
+                            break
+
+            # Format-B recovery: when fv is set but cost is not (e.g. BXSL rows where
+            # the FV column contains cost data due to a consistent +2 column shift without
+            # dollar-sign cells), try to find the real FV 2-4 columns further right and
+            # promote the misidentified value to cost.
+            if _fv_ok and not _cost_ok:
+                fv_col = next((k for k, v in col_map.items() if v == "fv_str"), None)
+                if fv_col is not None:
+                    for delta in range(2, 7):
+                        c = fv_col + delta
+                        alt = row[c].strip() if c < len(row) else ""
+                        if alt and _clean_num(alt) is not None:
+                            inv.cost_str = inv.fv_str   # current fv was actually cost
+                            inv.fv_str   = alt          # real FV is here
+                            _cost_ok, _fv_ok = True, True
+                            break
+
+            # Format-A FV recovery: when cost is set but fv is still missing (e.g. BXSL
+            # rows with "$" prefix cells where cost was extracted but FV is 2 more columns
+            # further right past another "$" cell).  Skip any numeric cell that equals the
+            # already-captured cost value to avoid double-capturing cost as FV.
+            if _cost_ok and not _fv_ok:
+                fv_col = next((k for k, v in col_map.items() if v == "fv_str"), None)
+                if fv_col is not None:
+                    for delta in range(1, 9):
+                        c = fv_col + delta
+                        alt = row[c].strip() if c < len(row) else ""
+                        if (alt and alt != "$"
+                                and (not _cost_was_dollar_sign or alt != inv.cost_str)
+                                and _clean_num(alt) is not None):
+                            inv.fv_str = alt
+                            _fv_ok = True
+                            break
+
+            # Maturity recovery: maturity often shifts +1 in iXBRL (same dollar-sign artefact)
+            if not inv.maturity:
+                mat_col = next((k for k, v in col_map.items() if v == "maturity"), None)
+                if mat_col is not None:
+                    for delta in (1, 2, -1):
+                        c = mat_col + delta
+                        if c < 0: continue
+                        nxt = row[c].strip() if c < len(row) else ""
+                        if nxt and re.search(r'\d{1,2}[/\-]\d{1,4}', nxt):
+                            inv.maturity = nxt
+                            break
+
+            # Track NA/PIK issuers from this row BEFORE the value-filter skip.
+            # Some iXBRL filings have a column-shift artefact where the header and data
+            # rows use different <td> widths, so cost/fv land at wrong positions.  Those
+            # rows still carry correct issuer + footnote markers → extract NA/PIK info here.
+            row_is_na = _is_non_accrual(row_text, na_marks)
+            if not row_is_na and na_marks and issuer_markers:
+                row_is_na = bool(issuer_markers & na_marks)
+            if row_is_na and inv.issuer:
+                na_issuers.add(inv.issuer)
+            row_is_pik = bool(pik_marks and (
+                any(m in row_text for m in pik_marks) or bool(issuer_markers & pik_marks)
+            )) if pik_marks else False
+            if row_is_pik and inv.issuer:
+                pik_issuers.add(inv.issuer)
 
             # Skip rows with no meaningful issuer or value
             if not inv.issuer or (not inv.cost_str and not inv.fv_str):
@@ -638,13 +1080,22 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             if raw_pnav is not None:
                 inv.pct_nav = round(raw_pnav, 4)
 
-            # Flags
-            inv.is_non_accrual = _is_non_accrual(row_text, na_marks)
+            # Flags — check row text AND issuer-embedded markers against legend
+            # NA / PIK flags on the captured investment (uses already-computed issuer-level
+            # sets from the pre-skip block above, plus a per-row text check).
+            inv.is_non_accrual = (
+                inv.issuer in na_issuers
+                or _is_non_accrual(row_text, na_marks)
+                or bool(na_marks and issuer_markers and (issuer_markers & na_marks))
+            )
             inv.is_equity      = _is_equity_investment(inv.invest_type)
             base, spread, pik  = _parse_rate(inv.rate_str)
-            # Also check PIK footnote marks
             if not pik and pik_marks:
-                pik = any(m in row_text for m in pik_marks)
+                pik = (
+                    any(m in row_text for m in pik_marks)
+                    or bool(issuer_markers & pik_marks)
+                    or inv.issuer in pik_issuers
+                )
             inv.is_pik         = pik
             inv.rate_base      = base
             inv.spread_bps     = spread
@@ -683,6 +1134,38 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             seen.discard(key)
 
     investments = deduped
+
+    # Post-filter: remove generic section/type labels from na_issuers and pik_issuers.
+    # In some iXBRL filings (e.g. OBDC), investment-type labels like "First lien senior
+    # secured loan" or "Class A Common Units" appear in the issuer column and can pick up
+    # NA markers, polluting the set and causing mass false-positives.
+    # Also remove "(continued)" industry-section carry-forward labels (e.g. BXSL).
+    _continued_re = re.compile(r'\(\s*continued\s*\)', re.IGNORECASE)
+    na_issuers  = {s for s in na_issuers  if not _GENERIC_LABEL_RE.search(s) and not _continued_re.search(s)}
+    pik_issuers = {s for s in pik_issuers if not _GENERIC_LABEL_RE.search(s) and not _continued_re.search(s)}
+
+    # Apply issuer-level NA/PIK flags accumulated from par-only rows (column-shift artefact).
+    # This ensures issuers whose markers appeared in misaligned rows still get flagged
+    # on the complete positions that DO have cost/fv data.
+    if verbose:
+        print(f"  [na_issuers] {sorted(na_issuers)}")
+    if na_issuers or pik_issuers:
+        for inv in investments:
+            if inv.issuer in na_issuers:
+                inv.is_non_accrual = True
+            if inv.issuer in pik_issuers:
+                inv.is_pik = True
+
+    # Final pass: clear NA/PIK flags from positions whose "issuer" is a generic
+    # section/type label (e.g. "Warrants", "Senior convertible notes", or
+    # industry "(continued)" labels). These are misidentified via carry-forward.
+    for inv in investments:
+        if inv.issuer and (
+            _GENERIC_LABEL_RE.search(inv.issuer)
+            or _continued_re.search(inv.issuer)
+        ):
+            inv.is_non_accrual = False
+            inv.is_pik = False
 
     # Sanity-check scale: if median fv_mm or cost_mm among non-equity positions is
     # implausibly large (>5000, i.e. $5B per single debt position), the filing likely
@@ -1022,6 +1505,59 @@ def _stress_tier(score: int) -> str:
     elif score >= 1:
         return "YELLOW"
     return "GREEN"
+
+
+# ---------------------------------------------------------------------------
+# Live NA-rate computation (for red_flag_screener integration)
+# ---------------------------------------------------------------------------
+
+def compute_live_na_rates(
+    cache_dir: Path = PORTFOLIO_CACHE,
+) -> dict[str, float]:
+    """Compute non-accrual rate (NA FV / total FV) for each fund from cached SOI data.
+
+    For each ticker, uses only the most recent cached period.  Returns a dict
+    mapping ticker -> rate (0.0–1.0).  Tickers with no FV data are excluded.
+
+    Suitable for injecting live nonaccrual_pct_fair_value into the screener
+    in place of the static value from bdc_universe.json.
+    """
+    # Group cache files by ticker, pick most recent period per ticker
+    ticker_files: dict[str, Path] = {}
+    for fpath in sorted(cache_dir.glob("*.json")):
+        if fpath.name.startswith("_"):
+            continue
+        # File names are like TICKER_YYYY-MM-DD.json
+        stem = fpath.stem  # e.g. "ARCC_2024-12-31"
+        parts = stem.split("_", 1)
+        if len(parts) != 2:
+            continue
+        ticker, period = parts[0].upper(), parts[1]
+        # Keep most recent period (string compare works for YYYY-MM-DD)
+        if ticker not in ticker_files or period > ticker_files[ticker].stem.split("_", 1)[1]:
+            ticker_files[ticker] = fpath
+
+    result: dict[str, float] = {}
+    for ticker, fpath in ticker_files.items():
+        try:
+            positions = json.loads(fpath.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+
+        total_fv = 0.0
+        na_fv = 0.0
+        for pos in positions:
+            fv = pos.get("fv_mm")
+            if fv is None or fv <= 0:
+                continue
+            total_fv += fv
+            if pos.get("is_non_accrual"):
+                na_fv += fv
+
+        if total_fv > 0:
+            result[ticker] = round(na_fv / total_fv, 6)
+
+    return result
 
 
 # ---------------------------------------------------------------------------

@@ -310,6 +310,42 @@ def load_universe_with_trends(
         return funds
 
 
+def enrich_funds_with_live_na(
+    funds: list[dict[str, Any]],
+    cache_dir: Path | str | None = None,
+) -> list[dict[str, Any]]:
+    """Overwrite nonaccrual_pct_fair_value in each fund dict using live SOI cache data.
+
+    Tickers without cache data, or tickers with known unreliable NA parsing,
+    retain their existing (static) value.
+    """
+    # Tickers where NA detection is known to be unreliable due to parsing issues:
+    # OBDC/GBDC: col_map assigns wrong issuer names → false zero NA
+    # FSK/SCM: non-standard footnote markers → zero NA detected
+    # TCPC: col_map issues → zero NA detected
+    # PFLT: most-recent cache is 10-Q (shows 0 NA); 10-K shows 147 NA but is older
+    _UNRELIABLE_NA = {"OBDC", "GBDC", "FSK", "SCM", "TCPC", "PFLT"}
+
+    try:
+        from portfolio_collector import compute_live_na_rates
+        from pathlib import Path as _Path
+        kw = {"cache_dir": _Path(cache_dir)} if cache_dir else {}
+        live = compute_live_na_rates(**kw)
+    except Exception as exc:
+        print(f"[live-na] Warning: could not compute live NA rates: {exc}")
+        return funds
+
+    enriched = []
+    for fund in funds:
+        ticker = fund.get("ticker", "").upper()
+        if ticker in live and ticker not in _UNRELIABLE_NA:
+            fund = dict(fund)
+            fund["nonaccrual_pct_fair_value"] = live[ticker]
+            fund["_na_source"] = "live"
+        enriched.append(fund)
+    return enriched
+
+
 def screen_universe(
     funds: list[dict[str, Any]],
     min_score: int = 0,
@@ -454,12 +490,20 @@ def main() -> None:
                         help="Write results table to CSV.")
     parser.add_argument("--no-trends", action="store_true",
                         help="Skip trend signal enrichment (static metrics only).")
+    parser.add_argument("--live-na", action="store_true",
+                        help="Override static non-accrual rates with live values from SOI cache.")
     args = parser.parse_args()
 
     if args.no_trends:
         funds = load_universe(args.universe)
     else:
         funds = load_universe_with_trends(args.universe)
+
+    if args.live_na:
+        funds = enrich_funds_with_live_na(funds)
+        live_count = sum(1 for f in funds if f.get("_na_source") == "live")
+        print(f"[live-na] Injected live NA rates for {live_count} ticker(s) from SOI cache.\n")
+
     scores = screen_universe(funds, min_score=args.min_score, tiers=args.tier)
 
     tier_labels = {"RED": "[RED]   ", "ORANGE": "[ORANGE]", "YELLOW": "[YELLOW]", "GREEN": "[GREEN] "}
