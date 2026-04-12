@@ -466,10 +466,15 @@ def send_email(subject: str, body: str, to_addr: str) -> bool:
         msg["From"]    = from_
         msg["To"]      = to_addr
 
-        with smtplib.SMTP(host, port) as smtp:
-            smtp.starttls()
-            smtp.login(user, pw)
-            smtp.sendmail(from_, [to_addr], msg.as_string())
+        if port == 465:
+            with smtplib.SMTP_SSL(host, port) as smtp:
+                smtp.login(user, pw)
+                smtp.sendmail(from_, [to_addr], msg.as_string())
+        else:
+            with smtplib.SMTP(host, port) as smtp:
+                smtp.starttls()
+                smtp.login(user, pw)
+                smtp.sendmail(from_, [to_addr], msg.as_string())
 
         print(f"[email] Digest sent to {to_addr}")
         return True
