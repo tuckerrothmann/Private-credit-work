@@ -1,223 +1,204 @@
 # Private Credit Workbench
 
-Focused working repo for two linked tracks:
-1. **CCLF / Cliffwater liquidity analysis**
-2. **issuer-level surveillance for BDC unsecured bond investing**
+A local-first analytical platform for monitoring Business Development Companies (BDCs) and private credit interval funds. Built for an investor who needs to track credit quality, distribution sustainability, and valuation across a 27-fund universe — without paying for Bloomberg or FactSet.
 
-It is best treated as an analyst workbench, not a finished production system.
+---
 
-## What is here
+## What it does
 
-This repo currently does five things:
+| Capability | Module | Description |
+|---|---|---|
+| **Risk screening** | `red_flag_screener.py` | 10-dimension composite risk score (0–18) per fund; RED / ORANGE / YELLOW / GREEN tiers |
+| **Trade signals** | `trade_signals.py` | 4×4 signal matrix (risk × valuation) → STRONG_BUY / BUY / HOLD / MONITOR / CAUTION / REDUCE / AVOID |
+| **Live prices** | `price_feed.py` | yfinance-backed P/NAV discount tracker; 4-hour cache |
+| **Distribution model** | `distribution_model.py` | 8-quarter NII coverage projection, SOFR rate sensitivity, peer percentile rankings |
+| **Portfolio collector** | `portfolio_collector.py` | Parses EDGAR 10-K/10-Q SOI tables; extracts non-accrual, PIK, and fair-value data for each fund; builds cross-fund borrower database |
+| **MD&A extractor** | `filing_text_extractor.py` | Scrapes Item 7 prose; parses NA count, NA %FV, named companies |
+| **EDGAR history** | `portfolio_collector.py --build-db` | 8-quarter rolling XBRL trend series (NII coverage, NAV, leverage) stored as Parquet per ticker |
+| **Dashboard** | `dashboard.py` | 8-tab Streamlit app covering all of the above |
 
-1. **Structures key source disclosures** from CCLF shareholder reports.
-2. **Runs a stylized 8-quarter liquidity model** with configurable tender, repayment, default, and unfunded-draw assumptions.
-3. **Presents the output in memo and dashboard form** for fast iteration.
-4. **Maintains an issuer-surveillance research set** for sponsor-backed / private-credit-financed issuers.
-5. **Connects issuer work to BDC unsecured bond risk** through ranked watchlists, memo queues, and lender/BDC mapping.
-
-Current model defaults are now anchored to the latest disclosed **September 30, 2025** facility / commitment snapshot unless a scenario overrides them.
-
-## Repo layout
-
-- `cclf_liquidity_model.py` - config-driven liquidity scenario model
-- `dashboard.py` - Streamlit dashboard for interactive scenario analysis
-- `scenarios/default_scenarios.json` - default scenario assumptions
-- `baseline_projection.csv` - latest baseline model output
-- `stressed_projection.csv` - latest stressed model output
-- `scenario_summary.csv` - compact summary table across saved scenarios
-- `effective_scenarios.json` - exact scenario payload used for the last model run
-- `memo/cclf_liquidity_memo.md` - draft narrative memo / investment framing
-- `issuer-surveillance/` - issuer project cockpit, watchlists, source logs, radar tables, matrix work, `NEXT_ACTIONS.md`, and live issuer memos
-- `data/raw/` - original report PDFs and plaintext sidecars
-- `data/processed/source_summary.md` - source-backed disclosure summary
-- `data/processed/repurchase_history.csv` - structured filed repurchase-history table
-- `data/processed/financing_snapshot.csv` - structured facility / unfunded-commitment snapshot table
-- `data/processed/cliffwater_blocks.jsonl` - extracted disclosure blocks for downstream review
-- `data/processed/cclf_senior_securities_section.txt` - extracted senior-securities text section
-- `scripts/extract_cclf_pdf.py` - converts raw report PDFs into plaintext sidecar files
-- `tools/extract_cliffwater.py` - extracts anchor-based disclosure blocks into JSONL
-- `tests/` - regression / smoke tests for the scenario model
+---
 
 ## Quick start
 
-If you're working on the issuer-surveillance track rather than the liquidity model, start with:
-- `issuer-surveillance/README.md`
-- `issuer-surveillance/PROJECT_COCKPIT.md`
-- `issuer-surveillance/issuer_risk_radar.csv`
-- `issuer-surveillance/NEXT_ACTIONS.md`
-
-
-### Create a virtual environment
-
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Windows PowerShell:
-
-```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-### Install dependencies
-
-```bash
+.\.venv\Scripts\Activate.ps1      # Windows
 pip install -r requirements.txt
+
+streamlit run dashboard.py        # launch the dashboard
 ```
 
-## Run the liquidity model
-
-```bash
-python3 cclf_liquidity_model.py
-```
-
-This uses `scenarios/default_scenarios.json` and refreshes:
-- `baseline_projection.csv`
-- `stressed_projection.csv`
-- `scenario_summary.csv`
-- `effective_scenarios.json`
-
-### Run with a custom config or alternate output folder
-
-```bash
-python3 cclf_liquidity_model.py --config scenarios/default_scenarios.json --output-dir outputs
-```
-
-### Quiet mode
-
-```bash
-python3 cclf_liquidity_model.py --quiet
-```
-
-## Run the dashboard
-
-```bash
-streamlit run dashboard.py
-```
-
-The dashboard includes:
-- scenario presets
-- user-adjustable assumptions
-- KPI cards
-- liquidity / leverage charts
-- cash-flow driver charts
-- downloadable scenario CSVs
-- plain-English scenario interpretation
-- sensitivity heatmap for tender / default stress
-- assumptions transparency panel
-
-## Rebuild PDF-derived artifacts
-
-### Plaintext sidecars
-
-```bash
-python3 scripts/extract_cclf_pdf.py
-```
-
-### Anchor-based disclosure extraction
-
-```bash
-python3 tools/extract_cliffwater.py
-```
-
-Default output:
-- `data/processed/cliffwater_blocks.jsonl`
-
-Example with a narrower search window:
-
-```bash
-python3 tools/extract_cliffwater.py --pattern 'CCLFX-Annual-Report.pdf' --window 1200
-```
-
-## Run tests
-
-```bash
-python3 -m unittest discover -s tests -v
-```
-
-## Current analytical framing
-
-A few source-backed points matter most right now:
-
-- CCLF is an **interval fund**, so liquidity is periodic rather than daily.
-- The fund must offer at least **5% quarterly repurchases**, with the board able to set offers between **5% and 25%**.
-- The fund may repurchase an additional **2%** if an offer is oversubscribed; otherwise tenders are prorated.
-- Facility capacity expanded materially in 2025, but **actual borrowings also rose sharply**.
-- **Unfunded commitments are large**, which makes the interaction between tenders, leverage, and commitment funding the key stress question.
-
-See `data/processed/source_summary.md` for the sourced disclosure summary, `data/processed/repurchase_history.csv` for the structured tender history, `data/processed/financing_snapshot.csv` for the facility snapshot table, and `memo/cclf_liquidity_memo.md` for the narrative view.
-
-## Notes and caveats
-
-- The liquidity model itself uses only the Python standard library.
-- The extraction tools and dashboard require third-party packages listed in `requirements.txt`.
-- `cliffwater_blocks.jsonl` is newline-delimited JSON for easy inspection or downstream loading.
-- Historical tender-pressure commentary should distinguish between **filed repurchase percentages visible in source reports** and **Tucker-supplied datapoints about requested participation / fulfillment** that are not yet independently anchored inside the repo.
-
-## BDC Universe & Red Flag Screener
-
-### Run the screener
-
-```bash
-# Screen all funds, show RED and ORANGE tier only
-python red_flag_screener.py --tier RED ORANGE
-
-# Output full results to CSV
-python red_flag_screener.py --csv data/processed/screener_results.csv
-
-# Set minimum score threshold
-python red_flag_screener.py --min-score 4
-```
-
-**Risk tiers:** GREEN (0–3) · YELLOW (4–6) · ORANGE (7–10) · RED (11+)
-
-### Collect live EDGAR data
-
-```bash
-# Look up a CIK
-python edgar_collector.py --lookup ARCC
-
-# Show recent 10-K/10-Q filings
-python edgar_collector.py --filings PSEC
-
-# Refresh full universe XBRL metrics
-python edgar_collector.py
-
-# Refresh specific tickers only
-python edgar_collector.py --tickers TPVG FSK PNNT
-```
-
-EDGAR data is cached in `data/edgar_cache/` for 24 hours (pass `--force-refresh` to bypass).
-
-### Universe file
-
-`data/bdc_universe.json` contains ~21 funds covering:
-- 17 publicly-traded BDCs (filed 10-K/10-Q with EDGAR XBRL)
-- 2 large private-credit interval funds (CCLFX, BCRED)
-- 1 non-traded REIT reference case (BREIT)
-
-Metrics include NAV, leverage, NII coverage, PIK income %, non-accrual rates,
-price/NAV, and quarterly flow data. Balance-sheet fields are refreshed from EDGAR XBRL
-automatically; NII coverage, PIK %, and non-accrual rates require manual updates from filings.
+---
 
 ## Dashboard tabs
 
-| Tab | Content |
+| # | Tab | Key content |
+|---|---|---|
+| 1 | **Fund Scenario** | Single-fund 8-quarter NII/distribution scenario builder with preset stress scenarios |
+| 2 | **Market Overview** | Cross-fund comparison: NII coverage, PIK %, NAV trajectory, leverage |
+| 3 | **Red Flag Screener** | Scored risk table, flag frequency heatmap, asset coverage, live NA rates |
+| 4 | **Historical & Mgmt** | 8-quarter trend charts per ticker (NII coverage, NAV change, leverage); management profile cards |
+| 5 | **EDGAR Filings** | Live filing lookup, XBRL metric extraction, filing index browser |
+| 6 | **Portfolio & Borrowers** | SOI-derived portfolio stats, cross-fund borrower exposure, maturity wall |
+| 7 | **Macro & Scenarios** | Live P/NAV waterfall, 8Q sustainability projection with SOFR slider, rate sensitivity, peer radar |
+| 8 | **Trade Signals** | Risk × valuation scatter, signal summary counts, per-fund rationale |
+
+---
+
+## CLI tools
+
+### Red flag screener
+
+```bash
+python red_flag_screener.py                     # full universe, all tiers
+python red_flag_screener.py --tier RED ORANGE   # elevated risk only
+python red_flag_screener.py --live-na           # enrich with live SOI non-accrual rates
+python red_flag_screener.py --csv results.csv
+```
+
+**Risk tiers:** GREEN (0–4) · YELLOW (5–7) · ORANGE (8–11) · RED (12+)
+
+### Trade signals
+
+```bash
+python trade_signals.py              # signal table (all 27 funds)
+python trade_signals.py --matrix     # pivot grid showing tickers in each quadrant
+python trade_signals.py --csv out.csv
+```
+
+### Live price feed
+
+```bash
+python price_feed.py                          # refresh all listed BDCs
+python price_feed.py --refresh                # force cache bypass
+python price_feed.py --tickers ARCC MAIN HTGC
+```
+
+### Distribution sustainability model
+
+```bash
+python distribution_model.py                  # 8Q outlook for full universe
+python distribution_model.py --ticker PFLT    # single fund
+python distribution_model.py --sofr-shock 100 # +100 bps scenario
+```
+
+### Portfolio collector
+
+```bash
+python portfolio_collector.py --ticker FSK           # parse two most-recent SOI filings
+python portfolio_collector.py --tickers ARCC MAIN    # multiple tickers
+python portfolio_collector.py --all                  # full universe (slow)
+python portfolio_collector.py --build-db             # rebuild cross-fund borrower DB
+python portfolio_collector.py --borrower "Thrasio"   # look up a borrower across all funds
+```
+
+### MD&A text extractor
+
+```bash
+python filing_text_extractor.py TPVG         # extract NA commentary from most-recent 10-K
+python filing_text_extractor.py --all        # run for full universe
+python filing_text_extractor.py PFLT --raw   # dump full Item 7 text
+```
+
+---
+
+## Scoring dimensions
+
+The red flag screener scores 10 dimensions; each adds 0–3 points:
+
+| Dimension | Key thresholds |
 |---|---|
-| Fund Scenario | Single-fund 8-quarter liquidity projection with scenario presets |
-| Market Overview | Cross-fund comparison charts (NII coverage, PIK %, NAV trajectory) |
-| Red Flag Screener | Scored risk table and flag frequency analysis |
-| EDGAR Filings | Live filing lookup and XBRL metric extraction per ticker |
+| **NII coverage** | <0.70x (3 pts), <0.85x (2 pts), <1.00x (1 pt) |
+| **NAV erosion** | >7% YoY (3 pts), >5% (2 pts), >3% (1 pt) |
+| **Non-accruals** | >12% FV (3 pts), >6% (2 pts), >3% (1 pt) |
+| **PIK creep** | >25% of income (2 pts), >15% (1 pt) |
+| **Leverage** | D/E >1.50x (2 pts), >1.20x (1 pt) |
+| **Leverage headroom** | Asset coverage <1.75x (2 pts), <2.00x (1 pt) |
+| **Distribution** | Cut history (1 pt), uncovered distribution (1 pt) |
+| **P/NAV discount** | >30% (2 pts), >15% (1 pt) |
+| **Coverage trend** | Collapse (2 pts), deteriorating (1 pt) |
+| **Fund-specific** | Interval fund flows, related-party concerns, etc. |
 
-## Recommended next upgrades
+---
 
-- automated PDF/iXBRL parsing of 10-Q non-accrual disclosures to keep non-accrual rates current
-- full EDGAR XBRL trend analysis (8-quarter rolling NII coverage series) — partially complete
-- tighten the CCLF model with more explicit facility-tranche and maturity-ladder inputs
-- add source-backed asset-side liquidity proxies such as repayments, realizations, or sales
-- add CI to run tests automatically on push
-- alert/notification system when a fund crosses a risk-tier threshold
-- package a cleaner investor-facing exhibit pack from dashboard outputs
+## Trade signal matrix
+
+```
+               Deep Disc    Discount    Fair Value    Premium
+               (<0.80x)    (0.80-0.95x) (0.95-1.05x)  (>1.05x)
+Low  (0-4)   STRONG BUY     BUY          HOLD          HOLD
+Mod  (5-7)      BUY        MONITOR      MONITOR        REDUCE
+Elev (8-11)   CAUTION      CAUTION       AVOID         AVOID
+High (12+)     AVOID        AVOID        AVOID         AVOID
+```
+
+---
+
+## Universe (27 funds)
+
+**Listed BDCs (22):** ARCC, BCSF, BXSL, CGBD, CSWC, FSK, GAIN, GBDC, GLAD, GSBD, HTGC, MAIN, OBDC, OCSL, OTF, PFLT, PNNT, PSEC, SCM, SLRC, TCPC, TPVG, TSLX
+
+**Interval / non-traded (5):** BCRED, BREIT, CCLFX, PIMCO-FCI (and TSLX as listed BDC)
+
+All funds have static metrics in `data/bdc_universe.json`. Listed BDCs additionally have:
+- Live market prices (yfinance, 4-hour TTL cache)
+- 2-quarter SOI portfolio snapshots in `data/portfolio_cache/`
+- XBRL 8-quarter trend history in `data/edgar_cache/history/`
+
+---
+
+## Data sources
+
+| Source | What it provides |
+|---|---|
+| EDGAR XBRL API | NAV, leverage, NII, coverage ratios — 8-quarter history |
+| EDGAR filing HTML | SOI tables (non-accrual, PIK, fair value per position) |
+| EDGAR filing HTML | Item 7 MD&A prose (non-accrual % narrative) |
+| yfinance | Daily close prices for listed BDCs |
+| `data/bdc_universe.json` | Static fund metadata; manually updated from filings |
+
+---
+
+## Repo layout
+
+```
+├── dashboard.py               Streamlit app (8 tabs)
+├── red_flag_screener.py       Risk scoring engine + CLI
+├── trade_signals.py           Signal matrix + CLI
+├── price_feed.py              Live P/NAV pricing
+├── distribution_model.py      NII sustainability + rate sensitivity
+├── portfolio_collector.py     SOI parser + borrower DB builder
+├── filing_text_extractor.py   MD&A Item 7 text extractor
+├── requirements.txt
+│
+├── data/
+│   ├── bdc_universe.json              27-fund static metrics
+│   ├── borrower_db.json               Cross-fund borrower exposure DB
+│   ├── price_cache.json               Live price cache (gitignored)
+│   ├── bdc_management_profiles.json   Manager bios and track records
+│   ├── edgar_cache/
+│   │   ├── history/                   Per-ticker 8Q Parquet trend files
+│   │   ├── facts/                     EDGAR XBRL facts (per CIK)
+│   │   └── submissions/               EDGAR submissions (per CIK)
+│   ├── portfolio_cache/               Per-fund SOI JSON snapshots
+│   ├── text_cache/                    MD&A extraction results (gitignored)
+│   ├── raw/                           Source PDFs
+│   └── processed/                     Model outputs, CSVs, memos
+│
+├── scenarios/
+│   └── default_scenarios.json         CCLF liquidity scenario presets
+├── memo/
+│   └── cclf_liquidity_memo.md
+└── issuer-surveillance/               Sponsor-backed issuer tracking
+```
+
+---
+
+## Key known limitations
+
+- Non-accrual rates for FSK, SCM, TCPC, PFLT use MD&A text extraction (SOI footnote format is non-standard); rates are directionally correct but may lag a quarter.
+- OCSL fiscal year ends September 30; latest data is Q4 FY2025 (Sep 2025).
+- Interval fund scores (CCLFX, BCRED, BREIT, PIMCO-FCI) rely entirely on static metrics; no live pricing.
+- NII coverage trend model uses 8-quarter XBRL history; funds added recently (BCSF, GSBD, OCSL, OTF, TSLX) have fewer history points.
+- Price/NAV discounts reflect most recent yfinance close; during market hours intraday moves are not captured until next cache refresh.
