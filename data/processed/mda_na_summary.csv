@@ -1,0 +1,19 @@
+ticker,period,form,found_item7,item7_chars,na_mentions,na_count,na_pct_fv,na_pct_cost,na_fv_mm,na_cost_mm,na_companies,filing_url
+ARCC,2025-12-31,10-K,True,89895,1,,1.2,1.8,,,,https://www.sec.gov/Archives/edgar/data/1287750/000128775026000006/arcc-20251231.htm
+OBDC,2025-12-31,10-K,True,441073,0,,,,,,,https://www.sec.gov/Archives/edgar/data/1655888/000165588826000010/obdc-20251231.htm
+BXSL,2025-12-31,10-K,True,2505,0,,,,,,,https://www.sec.gov/Archives/edgar/data/1736035/000173603526000004/bxsl-20251231.htm
+FSK,2025-12-31,10-K,True,388166,5,,,0.8,,,,https://www.sec.gov/Archives/edgar/data/1422183/000162828026011734/fsk-20251231.htm
+HTGC,2025-12-31,10-K,True,170790,7,,,,,,,https://www.sec.gov/Archives/edgar/data/1280784/000128078426000009/htgc-20251231.htm
+MAIN,2025-12-31,10-K,True,77757,0,,,,,,,https://www.sec.gov/Archives/edgar/data/1396440/000139644026000016/main-20251231.htm
+PSEC,2025-06-30,10-K,True,150813,3,,,,,,,https://www.sec.gov/Archives/edgar/data/1287032/000128703225000232/psec-20250630.htm
+GBDC,2025-09-30,10-K,True,109854,30,8,,,,,Golub Capital,https://www.sec.gov/Archives/edgar/data/1476765/000147676525000096/gbdc-20250930.htm
+PFLT,2025-09-30,10-K,True,167466,6,3,0.2,0.4,,,"Backed Debt and held through PennantPark CLO VI, LLC",https://www.sec.gov/Archives/edgar/data/1504619/000119312525293672/pflt-20250930.htm
+TCPC,2025-12-31,10-K,True,82101,8,14,4.0,9.7,,,,https://www.sec.gov/Archives/edgar/data/1370755/000119312526079299/tcpc-20251231.htm
+TPVG,2025-12-31,10-K,True,76490,3,4,,,17.1,39.7,,https://www.sec.gov/Archives/edgar/data/1580345/000158034526000008/tpvg-20251231.htm
+SLRC,2025-12-31,10-K,True,119178,6,1,,,,,SLR Credit Solutions; Crystal Capital Financial Holdings LLC,https://www.sec.gov/Archives/edgar/data/1418076/000119312526066979/ck0001418076-20251231.htm
+CGBD,2025-12-31,10-K,True,293,33,6,100.0,,30.541,,"Carlyle Credit Solutions; BDC, and certain affiliates of Sixth Street Partners; LLC, Sixth Street Lending Partners; Structured Credit Partners JV, LLC",https://www.sec.gov/Archives/edgar/data/1544206/000154420626000013/csl-20251231.htm
+GAIN,2025-03-31,10-K,True,81802,3,,,,,,"Edge Adhesives Holdings; Atlanta, LLC",https://www.sec.gov/Archives/edgar/data/1321741/000132174125000010/gain-20250331.htm
+GLAD,2025-09-30,10-K,True,79815,2,,1.7,3.6,13.0,,"T Group Acquisition, Inc., Edge Adhesives Holdings; Inc., and WB Xcel Holdings, LLC; T Group Acquisition",https://www.sec.gov/Archives/edgar/data/1143513/000114351325000015/glad-20250930.htm
+SCM,2025-12-31,10-K,True,314721,7,2,4.1,7.5,,,Stellus Capital,https://www.sec.gov/Archives/edgar/data/1551901/000110465926026432/scm-20251231x10k.htm
+PNNT,2025-09-30,10-K,True,143463,4,4,0.1,1.3,,,,https://www.sec.gov/Archives/edgar/data/1383414/000119312525293703/pnnt-20250930.htm
+CSWC,2025-03-31,10-K,True,52249,8,,,,,,,https://www.sec.gov/Archives/edgar/data/17313/000001731325000042/cswc-20250331.htm

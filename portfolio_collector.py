@@ -322,10 +322,17 @@ def _recalibrate_col_map(col_map: dict[int, str], data_rows: list[list[str]]) ->
                 continue  # good enough — no recalibration needed
 
         # Search adjacent columns (wider range for Workiva iXBRL with many empty spacer cells)
+        # fv_str is allowed to displace pct_nav_str from its position — FV is essential;
+        # pct_nav is optional and the two often share the same header-row column index in
+        # filings (e.g. TCPC) where FairValue and "% of Total" are adjacent with a
+        # dollar-sign spacer cell causing a systematic +N offset only in data rows.
+        _DISPLACEABLE = {"pct_nav_str"}
         best_idx, best_score = col_idx, current_score
         for offset in (1, 2, 3, 4, -1, -2):
             alt = col_idx + offset
-            if alt < 0 or alt in new_map or alt in changed_cols:
+            if alt < 0 or alt in changed_cols:
+                continue
+            if alt in new_map and not (field == "fv_str" and new_map[alt] in _DISPLACEABLE):
                 continue
             s = _score(alt, field)
             if s > best_score:
@@ -335,6 +342,9 @@ def _recalibrate_col_map(col_map: dict[int, str], data_rows: list[list[str]]) ->
             # Remove old mapping only if it still belongs to this field
             if col_idx in new_map and new_map.get(col_idx) == field:
                 del new_map[col_idx]
+            # If displacing a lower-priority field (e.g. pct_nav_str), remove it first
+            if best_idx in new_map and new_map[best_idx] in _DISPLACEABLE:
+                del new_map[best_idx]
             new_map[best_idx] = field
             changed_cols.add(best_idx)
 
@@ -703,22 +713,29 @@ def _extract_soi_chunk(html: str, max_bytes: int = 4_000_000) -> str:
             all_positions.append((idx, is_cont))
             start = idx + 1
 
-    # Deduplicate by position (keep is_continued = False if multiple match same pos)
+    # Deduplicate by position.
+    # If both a base heading ("consolidated schedule of investments") and its
+    # "(continued)" variant match at the same position, trust is_cont=True — the
+    # base heading is a prefix of the continued heading so both fire at the same pos.
     pos_map: dict[int, bool] = {}
     for pos, is_cont in all_positions:
-        if pos not in pos_map or not is_cont:
+        if pos not in pos_map:
             pos_map[pos] = is_cont
+        elif is_cont:          # any continued-match wins over a base-match at same pos
+            pos_map[pos] = True
     all_positions = sorted(pos_map.items())
 
     if not all_positions:
         return html[:max_bytes]  # fallback
 
-    # Filter out TOC-style links (those followed by </a> within 200 chars)
+    # Filter out TOC-style links (those followed by </a> within 200 chars and
+    # preceded by href= within 250 chars — some filings wrap the heading in a long
+    # <a href="..."><span style="...">TEXT</span></a> with the href many chars back).
     data_positions: list[tuple[int, bool]] = []
     for pos, is_cont in all_positions:
         window = html[pos:pos + 300].lower()
         is_toc = '</a>' in window[:150] and ('<table of contents' in low[max(0, pos-500):pos]
-                                              or 'href' in html[max(0, pos-100):pos].lower())
+                                              or 'href' in html[max(0, pos-250):pos].lower())
         if not is_toc:
             data_positions.append((pos, is_cont))
 
@@ -750,6 +767,11 @@ def _extract_soi_chunk(html: str, max_bytes: int = 4_000_000) -> str:
 
     # Compute non-overlapping ranges for each data section.
     # Each section runs from this heading to the next heading (or stop_pos).
+    # Use a 500-char symmetric lookback so the <p> / <tr> opening tags before
+    # the heading text are fully included — a 200-char lookback can cut into a
+    # long style="..." attribute mid-string, producing malformed HTML for the
+    # lxml parser (observed with TCPC where the heading <p> tag is ~280 chars).
+    _LOOKBACK = 500
     data_positions_sorted = current_period_positions
     chunks = []
     total_bytes = 0
@@ -757,10 +779,10 @@ def _extract_soi_chunk(html: str, max_bytes: int = 4_000_000) -> str:
     for i, pos in enumerate(data_positions_sorted):
         if total_bytes >= max_bytes:
             break
-        start = max(0, pos - 200)
+        start = max(0, pos - _LOOKBACK)
         # End at the next heading position, the prior-year-SOI boundary, or max_bytes
         if i + 1 < len(data_positions_sorted):
-            raw_end = data_positions_sorted[i + 1] - 200
+            raw_end = data_positions_sorted[i + 1] - _LOOKBACK
         else:
             raw_end = stop_pos  # don't cross into the prior-year SOI
         end = min(raw_end, start + max_bytes)  # hard cap at max_bytes total
@@ -1176,13 +1198,38 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             # Quality filter: skip rows where fv is obviously 0 or noise
             if inv.fv_mm is not None and abs(inv.fv_mm) < 0.0001:
                 continue
-            # Cap implausibly large single-position values (>$5B means parsing artifact)
-            if inv.fv_mm is not None and inv.fv_mm > 5_000:
+            # Cap implausibly large single-position values (>$500B per position is impossible;
+            # the prior threshold of $5B was too low and incorrectly nulled out dollar-scale
+            # filings like TCPC before the median-based scale fix could correct them).
+            if inv.fv_mm is not None and inv.fv_mm > 500_000:
                 inv.fv_mm = None
-            if inv.cost_mm is not None and inv.cost_mm > 5_000:
+            if inv.cost_mm is not None and inv.cost_mm > 500_000:
                 inv.cost_mm = None
 
             investments.append(inv)
+
+        # Per-table scale fix: if the median fv_mm of THIS table's non-equity positions is
+        # implausibly large (>5000, i.e. >$5B per position), the table reports in raw dollars
+        # rather than thousands.  Apply a /1000 correction scoped to just this table so that
+        # mixed-scale tables (e.g. TCPC 10-K with Dec 2025 dollar-scale data alongside notes
+        # tables with smaller values) don't suppress the correction via a diluted global median.
+        _tbl_fvs = [
+            i.fv_mm for i in investments[_tbl_start:]
+            if i.fv_mm is not None and not i.is_equity and i.fv_mm > 0
+        ]
+        if len(_tbl_fvs) >= 3:
+            # Use max rather than median: TCPC-style dollar-scale tables have small positions
+            # ($1-2M raw → fv_mm ~1000-2000) that pull the median below 5000 even when
+            # large positions (fv_mm ~13000) clearly indicate dollar-scale representation.
+            # A max > 5000 signals that at least one position is priced at >$5B, which is
+            # impossible in any real BDC portfolio and therefore a scale indicator.
+            _tbl_max = max(_tbl_fvs)
+            if _tbl_max > 5_000:
+                for i in investments[_tbl_start:]:
+                    if i.fv_mm is not None:
+                        i.fv_mm = round(i.fv_mm * 0.001, 4)
+                    if i.cost_mm is not None:
+                        i.cost_mm = round(i.cost_mm * 0.001, 4)
 
         # Retroactively apply per-table NA/PIK flags to investments from THIS table only.
         # This ensures name-only rows (iXBRL multi-row format) whose NA/PIK markers were
