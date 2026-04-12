@@ -9,3 +9,4 @@ data/price_cache.json
 data/text_cache/
 data/portfolio_cache/_facts_*.json
 data/portfolio_cache/_tickers.json
+data/processed/refresh_digest.md
