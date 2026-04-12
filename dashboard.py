@@ -852,6 +852,164 @@ def _render_peer_ranking(funds: list) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Trade Signals tab
+# ---------------------------------------------------------------------------
+
+@st.cache_data(ttl=300)
+def _load_trade_signals():
+    """Compute trade signals for all funds (cached 5 min)."""
+    try:
+        from trade_signals import compute_signals
+        from red_flag_screener import load_universe, enrich_funds_with_live_na
+        from price_feed import enrich_funds_with_prices
+        funds = enrich_funds_with_prices(enrich_funds_with_live_na(load_universe()))
+        return compute_signals(funds)
+    except Exception as exc:
+        return []
+
+
+def render_trade_signals() -> None:
+    st.title("Trade Signals")
+    st.caption(
+        "Signal = f(risk score, price-to-NAV). "
+        "Not investment advice — a starting point for further diligence."
+    )
+
+    from trade_signals import (
+        SIGNAL_COLOR, SIGNAL_LABEL, SIGNAL_ORDER,
+        _MATRIX, _risk_bucket, _val_bucket,
+        _P2N_DEEP_DISC, _P2N_DISCOUNT, _P2N_PREMIUM,
+    )
+    import plotly.graph_objects as go
+    import pandas as pd
+
+    signals = _load_trade_signals()
+    if not signals:
+        st.warning("Could not load trade signals.")
+        return
+
+    # ── Summary counts ─────────────────────────────────────────────────────
+    from collections import Counter
+    counts = Counter(s.signal for s in signals)
+    cols = st.columns(len(SIGNAL_ORDER))
+    for col, sig in zip(cols, SIGNAL_ORDER):
+        n = counts.get(sig, 0)
+        col.metric(SIGNAL_LABEL[sig], n)
+
+    st.divider()
+
+    # ── Scatter: P/NAV vs Risk Score ────────────────────────────────────────
+    st.subheader("Risk vs. Valuation Map")
+
+    listed   = [s for s in signals if s.listed and s.price_to_nav is not None]
+    unlisted = [s for s in signals if not s.listed or s.price_to_nav is None]
+
+    fig = go.Figure()
+
+    # Quadrant background shading
+    shapes = []
+    # Deep Discount + Low = Strong Buy (green)
+    shapes.append(dict(type="rect", xref="x", yref="y",
+                       x0=0, x1=_P2N_DEEP_DISC, y0=0, y1=4.5,
+                       fillcolor="rgba(0,128,0,0.08)", line_width=0))
+    # Caution zone (Elevated risk, discount)
+    shapes.append(dict(type="rect", xref="x", yref="y",
+                       x0=0, x1=_P2N_DISCOUNT, y0=7.5, y1=11.5,
+                       fillcolor="rgba(255,140,0,0.10)", line_width=0))
+    # Avoid zone (High risk)
+    shapes.append(dict(type="rect", xref="x", yref="y",
+                       x0=0, x1=2.0, y0=11.5, y1=18,
+                       fillcolor="rgba(178,34,34,0.08)", line_width=0))
+
+    # Vertical lines for valuation buckets
+    for xv, label in [(_P2N_DEEP_DISC, "Deep Disc / Disc"), (_P2N_DISCOUNT, "Disc / Fair"), (_P2N_PREMIUM, "Fair / Premium")]:
+        shapes.append(dict(type="line", xref="x", yref="paper",
+                           x0=xv, x1=xv, y0=0, y1=1,
+                           line=dict(color="lightgray", dash="dot", width=1)))
+
+    fig.update_layout(shapes=shapes)
+
+    # Plot each signal group
+    from itertools import groupby
+    for sig in SIGNAL_ORDER:
+        pts = [s for s in listed if s.signal == sig]
+        if not pts:
+            continue
+        fig.add_trace(go.Scatter(
+            x=[s.price_to_nav for s in pts],
+            y=[s.risk_score for s in pts],
+            mode="markers+text",
+            name=SIGNAL_LABEL[sig],
+            text=[s.ticker for s in pts],
+            textposition="top center",
+            textfont=dict(size=10),
+            marker=dict(
+                color=SIGNAL_COLOR[sig],
+                size=14,
+                line=dict(color="white", width=1),
+            ),
+            hovertemplate=(
+                "<b>%{text}</b><br>"
+                "P/NAV: %{x:.3f}x<br>"
+                "Score: %{y}<br>"
+                "<extra></extra>"
+            ),
+        ))
+
+    fig.update_layout(
+        height=520,
+        xaxis=dict(title="Price / NAV", range=[0.35, 1.75], tickformat=".2f"),
+        yaxis=dict(title="Risk Score (0–18)", range=[-0.5, 18.5]),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(t=40, b=40),
+        plot_bgcolor="white",
+    )
+
+    # Axis labels for quadrant zones
+    for x, lbl in [
+        (0.68, "Deep Discount"),
+        (0.875, "Discount"),
+        (1.0, "Fair Value"),
+        (1.30, "Premium"),
+    ]:
+        fig.add_annotation(x=x, y=-0.3, text=lbl, showarrow=False,
+                           font=dict(size=9, color="gray"), yref="y")
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ── Signal table ────────────────────────────────────────────────────────
+    st.subheader("Signal Details")
+
+    from trade_signals import signals_to_dataframe
+    df = signals_to_dataframe(signals)
+
+    # Colour-code Signal column
+    def _sig_style(val):
+        sig_key = {v: k for k, v in SIGNAL_LABEL.items()}.get(val, "")
+        color = SIGNAL_COLOR.get(sig_key, "black")
+        return f"color: {color}; font-weight: bold"
+
+    styled = df.style.applymap(_sig_style, subset=["Signal"])
+    st.dataframe(styled, use_container_width=True, hide_index=True)
+
+    # ── Rationale expander per fund ─────────────────────────────────────────
+    st.subheader("Signal Rationale")
+    for sig in SIGNAL_ORDER:
+        group = [s for s in signals if s.signal == sig]
+        if not group:
+            continue
+        with st.expander(f"{SIGNAL_LABEL[sig]} ({len(group)} fund{'s' if len(group)>1 else ''})",
+                         expanded=sig in ("STRONG_BUY", "BUY")):
+            for s in group:
+                disc = (f"{s.nav_discount_pct:+.1f}%" if s.nav_discount_pct is not None
+                        else "non-listed")
+                st.markdown(
+                    f"**{s.ticker}** — score {s.risk_score}/18, {disc}  \n"
+                    f"*{s.rationale}*"
+                )
+
+
+# ---------------------------------------------------------------------------
 # Macro Scenarios tab
 # ---------------------------------------------------------------------------
 
@@ -2265,10 +2423,10 @@ def render_portfolio() -> None:
 
 def render() -> None:
     # ── Top-level page navigation ────────────────────────────────────────
-    outer_tab1, outer_tab2, outer_tab3, outer_tab4, outer_tab5, outer_tab6, outer_tab7 = st.tabs([
+    outer_tab1, outer_tab2, outer_tab3, outer_tab4, outer_tab5, outer_tab6, outer_tab7, outer_tab8 = st.tabs([
         "Fund Scenario", "Market Overview", "Red Flag Screener",
         "Historical & Mgmt", "EDGAR Filings", "Portfolio & Borrowers",
-        "Macro & Scenarios",
+        "Macro & Scenarios", "Trade Signals",
     ])
 
     with outer_tab2:
@@ -2288,6 +2446,9 @@ def render() -> None:
 
     with outer_tab7:
         render_macro_scenarios()
+
+    with outer_tab8:
+        render_trade_signals()
 
     with outer_tab1:
         _render_fund_scenario()
