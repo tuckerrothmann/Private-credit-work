@@ -504,7 +504,14 @@ def _load_universe_raw() -> list[dict]:
 def _load_universe_with_trends() -> list[dict]:
     if not _UNIVERSE_PATH.exists():
         return []
-    return load_universe_with_trends(_UNIVERSE_PATH, history_dir=_HISTORY_CACHE)
+    funds = load_universe_with_trends(_UNIVERSE_PATH, history_dir=_HISTORY_CACHE)
+    # Inject live prices (4-hr cache via price_feed)
+    try:
+        from price_feed import enrich_funds_with_prices
+        funds = enrich_funds_with_prices(funds)
+    except Exception:
+        pass
+    return funds
 
 
 @st.cache_data(ttl=3600)
@@ -693,6 +700,377 @@ def render_market_overview() -> None:
 
 
 # ---------------------------------------------------------------------------
+# MD&A non-accrual panel (used in screener Fund Detail)
+# ---------------------------------------------------------------------------
+
+def _render_mda_panel(ticker: str) -> None:
+    """Render Item 7 MD&A non-accrual commentary for *ticker* from text cache."""
+    try:
+        from filing_text_extractor import get_mda_na_rates, TEXT_CACHE
+        import json as _json
+
+        # Find the most recent cache file for this ticker
+        cache_dir = TEXT_CACHE
+        pattern = f"{ticker.lower()}_*_mda.json"
+        matches = sorted(cache_dir.glob(pattern), reverse=True)
+        if not matches:
+            return
+
+        cache_path = matches[0]
+        with open(cache_path) as f:
+            data = _json.load(f)
+
+        paragraphs = data.get("nonaccrual_paragraphs", [])
+        stats = {
+            "na_count": data.get("na_count"),
+            "na_pct_fv": data.get("na_pct_fv"),
+            "na_pct_cost": data.get("na_pct_cost"),
+            "na_fv_mm": data.get("na_fv_mm"),
+            "na_cost_mm": data.get("na_cost_mm"),
+            "item7_chars": data.get("item7_chars", 0),
+            "period": data.get("period", ""),
+            "form": data.get("form", ""),
+        }
+
+        if not paragraphs and not any(v is not None for v in [
+            stats["na_count"], stats["na_pct_fv"], stats["na_pct_cost"]
+        ]):
+            return
+
+        st.write("**MD&A Non-Accrual Commentary** (from Item 7, " +
+                 f"{stats['form']} {stats['period']}):")
+
+        # Stat summary row
+        stat_parts = []
+        if stats["na_count"] is not None:
+            stat_parts.append(f"**Count:** {stats['na_count']} investments")
+        if stats["na_pct_fv"] is not None:
+            stat_parts.append(f"**NA % FV:** {stats['na_pct_fv']:.1f}%")
+        if stats["na_pct_cost"] is not None:
+            stat_parts.append(f"**NA % Cost:** {stats['na_pct_cost']:.1f}%")
+        if stats["na_fv_mm"] is not None:
+            stat_parts.append(f"**FV:** ${stats['na_fv_mm']:.1f}M")
+        if stats["na_cost_mm"] is not None:
+            stat_parts.append(f"**Cost:** ${stats['na_cost_mm']:.1f}M")
+        if stat_parts:
+            st.markdown("  |  ".join(stat_parts))
+
+        if stats["item7_chars"] < 2_000:
+            st.caption("Note: Item 7 section was short — results are from full-filing search.")
+
+        for para in paragraphs:
+            st.markdown(f"> {para}")
+
+    except Exception:
+        pass  # MD&A panel is supplementary — never break the screener
+
+
+# ---------------------------------------------------------------------------
+# Peer comparison helper (used in screener tab)
+# ---------------------------------------------------------------------------
+
+def _render_peer_ranking(funds: list) -> None:
+    """Render cross-sectional peer comparison table with percentile ranks."""
+    try:
+        from distribution_model import compute_peer_rankings
+        import numpy as np
+        df = compute_peer_rankings(funds)
+    except Exception as exc:
+        st.warning(f"Peer ranking unavailable: {exc}")
+        return
+
+    st.write(
+        "Each metric shows the raw value and a percentile rank (100 = best in universe). "
+        "Ranks account for direction: high NII coverage = better; high non-accruals = worse."
+    )
+
+    sort_col = st.selectbox(
+        "Sort by metric",
+        ["NII Coverage", "D/E Leverage", "Non-Accrual % FV", "PIK % Income",
+         "NAV Chg YoY", "P/NAV"],
+        index=0,
+        key="peer_sort_col",
+    )
+    sort_pct = sort_col + " Pct"
+    asc = st.checkbox("Sort ascending (worst first)", value=False, key="peer_sort_asc")
+
+    disp_df = df[["Ticker", "Name", "NII Coverage", "D/E Leverage",
+                  "Non-Accrual % FV", "PIK % Income", "NAV Chg YoY", "P/NAV"]].copy()
+
+    # Format raw values
+    def _fmt(col, pct=False, ratio=False):
+        if pct:
+            disp_df[col] = disp_df[col].apply(
+                lambda v: f"{v*100:+.1f}%" if not (v is None or (isinstance(v, float) and np.isnan(v))) else "—"
+            )
+        elif ratio:
+            disp_df[col] = disp_df[col].apply(
+                lambda v: f"{v:.2f}x" if not (v is None or (isinstance(v, float) and np.isnan(v))) else "—"
+            )
+        else:
+            disp_df[col] = disp_df[col].apply(
+                lambda v: f"{v*100:.1f}%" if not (v is None or (isinstance(v, float) and np.isnan(v))) else "—"
+            )
+
+    _fmt("NII Coverage", ratio=True)
+    _fmt("D/E Leverage", ratio=True)
+    _fmt("Non-Accrual % FV")
+    _fmt("PIK % Income")
+    _fmt("NAV Chg YoY", pct=True)
+    _fmt("P/NAV", ratio=True)
+
+    # Sort by percentile column (from original df)
+    if sort_pct in df.columns:
+        order_series = df[sort_pct].fillna(50)
+        disp_df = disp_df.iloc[order_series.argsort().values if asc else order_series.argsort()[::-1].values]
+
+    st.dataframe(disp_df.set_index("Ticker"), use_container_width=True)
+
+    # Radar chart for a selected fund
+    st.write("**Percentile radar — select a fund to visualize**")
+    radar_tick = st.selectbox(
+        "Fund", df["Ticker"].tolist(), key="peer_radar_ticker"
+    )
+    row = df[df["Ticker"] == radar_tick]
+    if not row.empty:
+        pct_cols = [c for c in df.columns if c.endswith(" Pct")]
+        metric_labels = [c.replace(" Pct", "") for c in pct_cols]
+        values = [row[c].values[0] for c in pct_cols]
+        # Close the polygon
+        fig_radar = go.Figure(go.Scatterpolar(
+            r=values + [values[0]],
+            theta=metric_labels + [metric_labels[0]],
+            fill="toself",
+            name=radar_tick,
+        ))
+        fig_radar.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+            title=f"Peer Percentile Profile — {radar_tick}",
+            height=420,
+        )
+        st.plotly_chart(fig_radar, use_container_width=True)
+
+
+# ---------------------------------------------------------------------------
+# Macro Scenarios tab
+# ---------------------------------------------------------------------------
+
+@st.cache_data(ttl=300)
+def _load_distribution_outlooks():
+    """Load distribution outlooks from distribution_model (cached 5 min)."""
+    try:
+        from distribution_model import compute_all_outlooks, load_trend_signals
+        from red_flag_screener import load_universe_with_trends
+        funds = load_universe_with_trends()
+        signals = load_trend_signals()
+        outlooks = compute_all_outlooks(funds, trend_signals=signals)
+        return outlooks, funds
+    except Exception:
+        return {}, []
+
+
+@st.cache_data(ttl=300)
+def _load_live_prices():
+    """Fetch live prices from yfinance (cached 5 min)."""
+    try:
+        from price_feed import get_quotes
+        from red_flag_screener import load_universe
+        funds = load_universe()
+        return get_quotes(funds)
+    except Exception:
+        return {}
+
+
+def render_macro_scenarios() -> None:
+    st.title("Macro & Scenarios")
+    st.write(
+        "Live price/NAV discounts, distribution sustainability projections, "
+        "and SOFR rate-sensitivity analysis across the BDC universe."
+    )
+
+    outlooks, funds = _load_distribution_outlooks()
+    quotes = _load_live_prices()
+
+    # ── Live Prices / NAV Discount ───────────────────────────────────────
+    st.subheader("Live Price vs. NAV")
+    if quotes:
+        import time
+        price_rows = []
+        for t, q in sorted(quotes.items()):
+            disc = q.nav_discount_pct
+            badge = ("🔴 >30% discount" if disc is not None and disc < -30
+                     else "🟠 20-30% discount" if disc is not None and disc < -20
+                     else "🟡 10-20% discount" if disc is not None and disc < -10
+                     else "🟢 Near/above NAV")
+            price_rows.append({
+                "Ticker": t,
+                "Price": f"${q.price:.2f}",
+                "NAV/sh": f"${q.nav_per_share:.2f}" if q.nav_per_share else "—",
+                "P/NAV": f"{q.price_to_nav:.3f}x" if q.price_to_nav else "—",
+                "Disc / Prem": f"{disc:+.1f}%" if disc is not None else "—",
+                "Market Signal": badge,
+            })
+        price_df = pd.DataFrame(price_rows)
+        st.dataframe(price_df.set_index("Ticker"), use_container_width=True)
+
+        # Waterfall chart: discount/premium ranked
+        pct_vals = [(r["Ticker"], q.nav_discount_pct) for t, q in quotes.items()
+                    for r in [next((x for x in price_rows if x["Ticker"] == t), {})]
+                    if q.nav_discount_pct is not None]
+        pct_vals.sort(key=lambda x: x[1])
+        ticks, vals = zip(*pct_vals) if pct_vals else ([], [])
+        colors = ["#DC2626" if v < -30 else "#F97316" if v < -20 else "#EAB308" if v < -10
+                  else "#22C55E" for v in vals]
+        fig_disc = go.Figure(go.Bar(
+            x=list(ticks), y=list(vals),
+            marker_color=colors,
+            text=[f"{v:+.1f}%" for v in vals],
+            textposition="outside",
+        ))
+        fig_disc.add_hline(y=0, line_color="gray")
+        fig_disc.update_layout(
+            title="Price vs. NAV: Discount (negative) / Premium (positive)",
+            yaxis_title="% vs. NAV", height=380,
+        )
+        st.plotly_chart(fig_disc, use_container_width=True)
+        age = min(q.fetched_at for q in quotes.values()) if quotes else 0
+        st.caption(f"Prices via yfinance. Cache age: {(time.time()-age)/60:.0f} min. "
+                   "NAV/sh from most recent public filing — may lag current reported NAV.")
+    else:
+        st.info("Live prices unavailable. Run `python price_feed.py` to populate cache.")
+
+    # ── Distribution Sustainability ──────────────────────────────────────
+    st.divider()
+    st.subheader("Distribution Sustainability")
+    st.write(
+        "Projects NII coverage 8 quarters forward using the trailing trend from EDGAR history. "
+        "Cut risk tiers: 🔴 HIGH = already below 0.85x or breach within 2Q; "
+        "🟠 MEDIUM = below 0.85x or breach within 3Q; 🟡 LOW = breach within 8Q; 🟢 STABLE."
+    )
+    if outlooks:
+        _ORDER = {"HIGH": 0, "MEDIUM": 1, "LOW": 2, "STABLE": 3}
+        sust_rows = []
+        for t, o in sorted(outlooks.items(), key=lambda kv: _ORDER.get(kv[1].cut_risk, 9)):
+            q85 = f"Q{o.quarters_to_moderate_cut}" if o.quarters_to_moderate_cut else ">8Q"
+            q70 = f"Q{o.quarters_to_severe_cut}" if o.quarters_to_severe_cut else ">8Q"
+            risk_label = f"{o.cut_risk_icon} {o.cut_risk}"
+            proj_4q = f"{o.projected_8q[3]:.3f}x" if len(o.projected_8q) >= 4 else "—"
+            sust_rows.append({
+                "Ticker": t,
+                "Current Coverage": f"{o.current_coverage:.3f}x",
+                "Trend /Q": f"{o.coverage_trend_per_q:+.3f}x",
+                "Proj. 4Q": proj_4q,
+                "Breach 0.85x": q85,
+                "Breach 0.70x": q70,
+                "Cut Risk": risk_label,
+                "NII Impact @ -100bps": f"${o.rate_nii_impact_100bps_mm:+.0f}M",
+                "NII Impact @ -200bps": f"${o.rate_nii_impact_200bps_mm:+.0f}M",
+                "Notes": o.notes,
+            })
+        sust_df = pd.DataFrame(sust_rows)
+        st.dataframe(sust_df.set_index("Ticker"), use_container_width=True)
+
+        # Forward coverage chart for a selected fund
+        st.write("**8-Quarter forward projection — select a fund**")
+        sel_tickers = [o.ticker for o in outlooks.values() if o.quarters_to_moderate_cut or o.coverage_trend_per_q < 0]
+        sel_tickers = sorted(outlooks.keys())
+        proj_ticker = st.selectbox("Fund", sel_tickers, key="sust_proj_ticker")
+        if proj_ticker in outlooks:
+            o = outlooks[proj_ticker]
+            rate_delta = st.select_slider(
+                "SOFR scenario (bps)", options=[-300, -200, -150, -100, -50, 0],
+                value=0, key="sust_rate_slider",
+            )
+            quarters = [f"Q+{i+1}" for i in range(8)]
+            base_proj = o.projected_8q
+            rate_adj  = (rate_delta / -100) * o.rate_cov_impact_100bps
+            adj_proj  = [max(0, v + rate_adj) for v in base_proj]
+            fig_proj = go.Figure()
+            fig_proj.add_trace(go.Scatter(
+                x=quarters, y=base_proj,
+                mode="lines+markers", name="Base (no rate change)",
+                line=dict(color="#3B82F6", width=2),
+            ))
+            if rate_delta != 0:
+                fig_proj.add_trace(go.Scatter(
+                    x=quarters, y=adj_proj,
+                    mode="lines+markers", name=f"SOFR {rate_delta:+d}bps",
+                    line=dict(color="#F97316", width=2, dash="dash"),
+                ))
+            fig_proj.add_hline(y=0.85, line_dash="dot", line_color="orange",
+                               annotation_text="0.85x (cut risk)")
+            fig_proj.add_hline(y=0.70, line_dash="dot", line_color="red",
+                               annotation_text="0.70x (severe cut risk)")
+            fig_proj.add_hline(y=1.00, line_dash="dash", line_color="green",
+                               annotation_text="1.00x (fully covered)")
+            fig_proj.update_layout(
+                title=f"{proj_ticker} — NII Coverage Projection",
+                yaxis_title="NII Coverage (x)",
+                yaxis=dict(range=[0, max(max(base_proj), 1.2) + 0.15]),
+                height=380,
+            )
+            st.plotly_chart(fig_proj, use_container_width=True)
+    else:
+        st.info("Distribution outlooks unavailable. Run `python distribution_model.py`.")
+
+    # ── Rate Sensitivity ─────────────────────────────────────────────────
+    st.divider()
+    st.subheader("SOFR Rate Sensitivity")
+    st.write(
+        "NII impact of SOFR rate changes, using each fund's floating-rate asset/liability "
+        "mix. Negative = NII compression (rate decrease). Assumes ~40% of liabilities "
+        "are floating-rate revolving facilities; balance is fixed-rate notes."
+    )
+    if outlooks:
+        rate_rows = []
+        for t, o in sorted(outlooks.items(), key=lambda kv: kv[1].rate_nii_impact_200bps_mm):
+            rate_rows.append({
+                "Ticker": t,
+                "SOFR -50bps NII": f"${o.rate_nii_impact_100bps_mm/2:+.0f}M",
+                "SOFR -100bps NII": f"${o.rate_nii_impact_100bps_mm:+.0f}M",
+                "SOFR -200bps NII": f"${o.rate_nii_impact_200bps_mm:+.0f}M",
+                "Cov. Δ @ -100bps": f"{o.rate_cov_impact_100bps:+.3f}x",
+                "Cov. Δ @ -200bps": f"{o.rate_cov_impact_200bps:+.3f}x",
+            })
+        rate_df = pd.DataFrame(rate_rows)
+        st.dataframe(rate_df.set_index("Ticker"), use_container_width=True)
+
+        # Stacked bar: NII impact by fund under -100bps and -200bps
+        tickers_r = [r["Ticker"] for r in rate_rows]
+        nii_100   = [outlooks[t].rate_nii_impact_100bps_mm for t in tickers_r]
+        nii_200   = [outlooks[t].rate_nii_impact_200bps_mm for t in tickers_r]
+        # Sort by magnitude
+        sorted_pairs = sorted(zip(tickers_r, nii_200), key=lambda x: x[1])
+        tickers_s, _ = zip(*sorted_pairs) if sorted_pairs else ([], [])
+        nii100_s = [outlooks[t].rate_nii_impact_100bps_mm for t in tickers_s]
+        nii200_s = [outlooks[t].rate_nii_impact_200bps_mm for t in tickers_s]
+        extra_s  = [nii200_s[i] - nii100_s[i] for i in range(len(tickers_s))]
+        fig_rate = go.Figure()
+        fig_rate.add_trace(go.Bar(
+            name="SOFR -100bps", x=list(tickers_s), y=nii100_s,
+            marker_color="#F97316",
+        ))
+        fig_rate.add_trace(go.Bar(
+            name="Additional -100bps", x=list(tickers_s), y=extra_s,
+            base=nii100_s, marker_color="#DC2626",
+        ))
+        fig_rate.update_layout(
+            barmode="stack",
+            title="NII Impact Under Rate Decline Scenarios (most exposed at left)",
+            yaxis_title="NII Change ($M)",
+            height=400,
+        )
+        st.plotly_chart(fig_rate, use_container_width=True)
+        st.caption(
+            "Floating rate asset exposure per bdc_universe.json estimates. "
+            "For precise sensitivity, refer to each fund's 10-K 'Quantitative Disclosures "
+            "about Market Risk' (Item 7A)."
+        )
+    else:
+        st.info("Rate sensitivity unavailable. Ensure distribution_model.py is available.")
+
+
+# ---------------------------------------------------------------------------
 # Red Flag Screener tab
 # ---------------------------------------------------------------------------
 
@@ -727,6 +1105,8 @@ def render_screener() -> None:
 | Market Discount | 2 | P/NAV <0.75 |
 | Flow Pressure | 1 | Net quarterly outflow >1% NAV |
 | Flow Pressure | 2 | Net quarterly outflow >3% NAV |
+| Leverage Headroom | 1 | Asset coverage <200% (limited regulatory buffer) |
+| Leverage Headroom | 2 | Asset coverage <175% (tight — only 25% above 150% minimum) |
 | Manual Flags | +1 ea | Related party, prior distribution cuts, etc. |
 | **Trend Deterioration** | 1 | Coverage declining >0.20× or leverage creep >0.20× |
 | **Trend Deterioration** | 2 | Coverage collapse >0.40×, leverage surge >0.40×, or NAV declining >2%/Q |
@@ -784,7 +1164,7 @@ def render_screener() -> None:
     # Color-code by tier
     display_cols = [
         "Ticker", "Name", "Tier Badge", "Score", "PIK %", "NII Cov.",
-        "NAV Chg YoY", "Non-Accruals (FV)", "D/E", "P/NAV", "Net Flow (Qtly)",
+        "NAV Chg YoY", "Non-Accruals (FV)", "D/E", "Asset Cov.", "P/NAV", "Net Flow (Qtly)",
     ]
     st.dataframe(
         df_filtered[display_cols].set_index("Ticker"),
@@ -871,6 +1251,11 @@ def render_screener() -> None:
     else:
         st.info("Trend signals not available. Run `python bdc_historical.py --all` to build parquet history.")
 
+    # Peer comparison table
+    st.divider()
+    with st.expander("Peer Comparison — cross-sectional rankings", expanded=False):
+        _render_peer_ranking(funds)
+
     # Detail for selected fund
     st.divider()
     st.subheader("Fund Detail")
@@ -949,6 +1334,9 @@ def render_screener() -> None:
                         label = FLAG_LABELS.get(f"trend_{tf}", tf.replace("_", " ").title())
                         icon = "🔴" if "collapse" in tf or "freefall" in tf or "surge" in tf else "🟠"
                         st.markdown(f"- {icon} {label}")
+
+            # MD&A non-accrual commentary
+            _render_mda_panel(selected_score.ticker)
 
     st.caption(
         "All metrics sourced from public filings. Composite scores are heuristic indicators "
@@ -1877,9 +2265,10 @@ def render_portfolio() -> None:
 
 def render() -> None:
     # ── Top-level page navigation ────────────────────────────────────────
-    outer_tab1, outer_tab2, outer_tab3, outer_tab4, outer_tab5, outer_tab6 = st.tabs([
+    outer_tab1, outer_tab2, outer_tab3, outer_tab4, outer_tab5, outer_tab6, outer_tab7 = st.tabs([
         "Fund Scenario", "Market Overview", "Red Flag Screener",
         "Historical & Mgmt", "EDGAR Filings", "Portfolio & Borrowers",
+        "Macro & Scenarios",
     ])
 
     with outer_tab2:
@@ -1896,6 +2285,9 @@ def render() -> None:
 
     with outer_tab6:
         render_portfolio()
+
+    with outer_tab7:
+        render_macro_scenarios()
 
     with outer_tab1:
         _render_fund_scenario()

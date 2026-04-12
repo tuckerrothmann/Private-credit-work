@@ -104,6 +104,9 @@ FLAG_DEFINITIONS = [
     ("trend_nav_declining",         "NAV declining >2%/quarter recently",        "trend"),
     ("trend_nav_accelerating",      "Rate of NAV decline worsening",            "trend"),
     ("trend_dual_deterioration",    "Coverage AND leverage both deteriorating",  "trend"),
+    # Leverage headroom flags (regulatory asset-coverage buffer)
+    ("headroom_tight",    "Asset coverage <175% — tight regulatory buffer",   "critical"),
+    ("headroom_limited",  "Asset coverage <200% — limited regulatory buffer", "moderate"),
 ]
 
 FLAG_LABELS = {k: label for k, label, _ in FLAG_DEFINITIONS}
@@ -188,6 +191,24 @@ def score_fund(metrics: dict[str, Any]) -> dict[str, Any]:
             _add("flow_pressure", 2, "net_outflow_mild", "net_outflow_severe")
         elif net_flow <= -0.01:
             _add("flow_pressure", 1, "net_outflow_mild")
+
+    # Leverage headroom: BDC regulatory minimum is 150% asset coverage (assets/debt)
+    # Derive from D/E as primary — asset_cov = 1 + 1/D_E = (nav+debt)/debt
+    # Fall back to gross_assets/debt when D/E is unavailable.
+    _de = metrics.get("leverage_de")
+    _gross = metrics.get("gross_assets_bn")
+    _debt  = metrics.get("total_debt_bn")
+    if _de and float(_de) > 0:
+        asset_cov_ratio = 1.0 + 1.0 / float(_de)
+    elif _gross and _debt and float(_debt) > 0:
+        asset_cov_ratio = float(_gross) / float(_debt)
+    else:
+        asset_cov_ratio = None
+    if asset_cov_ratio is not None:
+        if asset_cov_ratio < 1.75:
+            _add("leverage_headroom", 2, "headroom_tight", "headroom_limited")
+        elif asset_cov_ratio < 2.00:
+            _add("leverage_headroom", 1, "headroom_limited")
 
     # Manual override flags — each adds 1 composite point and the flag itself
     overrides = metrics.get("red_flag_overrides", {})
@@ -314,10 +335,11 @@ def enrich_funds_with_live_na(
     funds: list[dict[str, Any]],
     cache_dir: Path | str | None = None,
 ) -> list[dict[str, Any]]:
-    """Overwrite nonaccrual_pct_fair_value in each fund dict using live SOI cache data.
+    """Overwrite nonaccrual_pct_fair_value in each fund dict using live SOI cache data,
+    supplemented by MD&A text-extracted rates for tickers with unreliable SOI parsing.
 
     Tickers without cache data, or tickers with known unreliable NA parsing,
-    retain their existing (static) value.
+    retain their existing (static) value unless MD&A extraction has a valid rate.
     """
     # Tickers where NA detection is known to be unreliable due to parsing issues:
     # FSK/SCM: non-standard footnote markers → zero NA detected
@@ -333,15 +355,26 @@ def enrich_funds_with_live_na(
         live = compute_live_na_rates(**kw)
     except Exception as exc:
         print(f"[live-na] Warning: could not compute live NA rates: {exc}")
-        return funds
+        live = {}
+
+    # Load MD&A-extracted NA rates as supplement for unreliable SOI tickers
+    mda_rates: dict[str, float] = {}
+    try:
+        from filing_text_extractor import get_mda_na_rates
+        mda_rates = get_mda_na_rates()
+    except Exception as exc:
+        print(f"[live-na] Warning: could not load MD&A NA rates: {exc}")
 
     enriched = []
     for fund in funds:
         ticker = fund.get("ticker", "").upper()
+        fund = dict(fund)
         if ticker in live and ticker not in _UNRELIABLE_NA:
-            fund = dict(fund)
             fund["nonaccrual_pct_fair_value"] = live[ticker]
             fund["_na_source"] = "live"
+        elif ticker in _UNRELIABLE_NA and ticker in mda_rates:
+            fund["nonaccrual_pct_fair_value"] = mda_rates[ticker]
+            fund["_na_source"] = "mda_text"
         enriched.append(fund)
     return enriched
 
@@ -411,6 +444,7 @@ def screen_to_dataframe(scores: list[FundScore]) -> "pd.DataFrame":  # type: ign
             "Non-Accruals (FV)": _pct(s.metrics.get("nonaccrual_pct_fair_value")),
             "D/E": _ratio(s.metrics.get("leverage_de")),
             "P/NAV": _ratio(s.metrics.get("price_to_nav")),
+            "Asset Cov.": _asset_cov(s.metrics.get("gross_assets_bn"), s.metrics.get("total_debt_bn"), s.metrics.get("leverage_de")),
             "Net Flow (Qtly)": _pct(s.metrics.get("net_flow_quarterly")),
             "Flags": "; ".join(s.flag_labels()),
             "Analyst Notes (excerpt)": s.analyst_notes[:120] + ("..." if len(s.analyst_notes) > 120 else ""),
@@ -429,6 +463,17 @@ def _ratio(v: Any) -> str:
     try:
         return f"{float(v):.2f}x"
     except (TypeError, ValueError):
+        return "—"
+
+
+def _asset_cov(gross: Any, debt: Any, de: Any = None) -> str:
+    try:
+        if de is not None and float(de) > 0:
+            v = 1.0 + 1.0 / float(de)
+        else:
+            v = float(gross) / float(debt)
+        return f"{v * 100:.0f}%"
+    except (TypeError, ValueError, ZeroDivisionError):
         return "—"
 
 

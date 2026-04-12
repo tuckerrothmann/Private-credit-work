@@ -3,3 +3,9 @@ __pycache__/
 .venv/
 .env
 .DS_Store
+
+# Transient cache files — regenerated on demand
+data/price_cache.json
+data/text_cache/
+data/portfolio_cache/_facts_*.json
+data/portfolio_cache/_tickers.json

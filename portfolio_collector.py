@@ -81,6 +81,8 @@ COL_PATTERNS = {
     r"amortized\s*cost|cost\s*basis|cost":                            "cost_str",
     r"fair\s*value|value|fmv":                                        "fv_str",
     r"% of net assets|%\s*of\s*nav|%\s*net\s*assets|%\s*of\s*total": "pct_nav_str",
+    # Dedicated footnote column (e.g. FSK which uses "Footnotes" as a column header)
+    r"^footnotes?$":                                                   "footnote_col",
 }
 
 
@@ -103,6 +105,7 @@ class Investment:
     cost_str:       str  = ""
     fv_str:         str  = ""
     pct_nav_str:    str  = ""
+    footnote_col:   str  = ""     # raw text of dedicated footnote column (e.g. FSK "(ac)(v)(z)")
 
     # Derived
     cost_mm:        Optional[float] = None   # cost in $M
@@ -407,19 +410,16 @@ def _extract_footnote_legend(soup: BeautifulSoup, soi_tag: Tag,
     # ── Strategy 1: span-sibling pattern (handles iXBRL inline footnotes) ──
     # In iXBRL filings the legend looks like:
     #   <p><span>(7)</span><span>Debt is on non-accrual status...</span></p>
-    # The distinguishing feature: the PARENT element text starts with "(N)"
-    # immediately followed by a substantial definition (not table row content).
+    # Also handles alpha markers: (z), (aa), (ab) etc.
     for span in soup.find_all("span"):
         t = span.get_text().strip()
-        m = re.fullmatch(r'\((\d{1,2})\)', t)
+        m = re.fullmatch(r'\(([a-z0-9]{1,3})\)', t, re.IGNORECASE)
         if not m:
             continue
-        marker = f"({m.group(1)})"
+        marker = f"({m.group(1).lower()})"
         if marker in legend:
             continue
-        # Get the text of the parent element (span + siblings combined)
         parent_text = span.parent.get_text(separator="").strip() if span.parent else ""
-        # Must start with the marker and have a real definition (10-600 chars total)
         if parent_text.startswith(t) and 10 < len(parent_text) < 700:
             definition = parent_text[len(t):].strip().lower()
             if len(definition) > 5:
@@ -430,13 +430,12 @@ def _extract_footnote_legend(soup: BeautifulSoup, soi_tag: Tag,
         soi_pos = html_text.lower().find("schedule of investments")
         if soi_pos >= 0:
             chunk = html_text[soi_pos: soi_pos + 3_500_000]
-            # Look for "(N)text" patterns concatenated with no space (iXBRL joined)
-            # or "(N) text" with a space
+            # Handles both numeric (1) and alpha (z)/(aa) markers
             for m in re.finditer(
-                r'\((\d{1,2})\)\s{0,2}([A-Z][^<\n]{10,400})',
-                chunk
+                r'\(([a-z0-9]{1,3})\)\s{0,2}([A-Z][^<\n]{10,400})',
+                chunk, re.IGNORECASE
             ):
-                marker  = f"({m.group(1)})"
+                marker  = f"({m.group(1).lower()})"
                 meaning = m.group(2).strip().lower()
                 if marker not in legend:
                     legend[marker] = meaning
@@ -449,12 +448,35 @@ def _extract_footnote_legend(soup: BeautifulSoup, soi_tag: Tag,
             text = tag.get_text(separator=" ").strip()
             if not text or len(text) > 600:
                 continue
-            m = re.match(r'^\(?([a-z0-9]{1,2})\)?\s+(.+)$', text, re.IGNORECASE)
+            m = re.match(r'^\(?([a-z0-9]{1,3})\)?\s+(.+)$', text, re.IGNORECASE)
             if m and 5 < len(m.group(2)) < 600:
-                marker  = f"({m.group(1)})"
+                marker  = f"({m.group(1).lower()})"
                 meaning = m.group(2).lower()
                 if marker not in legend:
                     legend[marker] = meaning
+
+    # ── Strategy 4: concatenated multi-entry legend (FSK-style) ──────────
+    # Some funds put all footnote definitions in one block:
+    #   "(z) Asset is on non-accrual status. (aa) Security is Level 1/2..."
+    # Strategy 3 skips these blocks because they exceed 600 chars.
+    # Strategy 4 finds such blocks and splits on the marker pattern.
+    if not legend and soi_tag is not None:
+        _MULTI_MARKER_RE = re.compile(
+            r'\(([a-z]{1,3})\)\s+([^()]{5,300}?)(?=\s*\([a-z]|$)',
+            re.IGNORECASE
+        )
+        for tag in soi_tag.find_all_next(["p", "div", "td", "span", "li"], limit=8000):
+            text = tag.get_text(separator=" ").strip()
+            if len(text) < 30 or len(text) > 5000:
+                continue
+            pairs = _MULTI_MARKER_RE.findall(text)
+            if len(pairs) >= 2:  # must look like a multi-entry legend
+                for marker_char, definition in pairs:
+                    mk = f"({marker_char.lower()})"
+                    if mk not in legend:
+                        legend[mk] = definition.strip().lower()
+                if legend:
+                    break
 
     return legend
 
@@ -487,12 +509,13 @@ def _clean_issuer_name(raw: str) -> tuple[str, str, set[str]]:
     footnote markers found (e.g. {"(1)", "(7)"}) so callers can check NA/PIK flags.
     """
     # Collect all trailing/embedded footnote markers before stripping them
+    # Handles numeric (1)-(99), single-letter (a)-(z), and multi-char (aa)/(ab)/(z) etc.
     markers: set[str] = set(re.findall(r'\(\d{1,2}\)', raw))
-    markers |= set(re.findall(r'\([a-z]\)', raw, re.IGNORECASE))
+    markers |= set(re.findall(r'\([a-z]{1,3}\)', raw, re.IGNORECASE))
 
     # Remove ALL footnote references from the name (not just trailing)
     cleaned = re.sub(r'\s*\(\d{1,2}\)\s*', ' ', raw).strip()
-    cleaned = re.sub(r'\s*\([a-z]\)\s*', ' ', cleaned, flags=re.IGNORECASE).strip()
+    cleaned = re.sub(r'\s*\([a-z]{1,3}\)\s*', ' ', cleaned, flags=re.IGNORECASE).strip()
     cleaned = re.sub(r'\s+', ' ', cleaned).strip()
 
     # Split on " - " to separate company from instrument type
@@ -1018,6 +1041,12 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
                 inv.issuer = clean_name
                 if embedded_type and not inv.invest_type:
                     inv.invest_type = embedded_type
+
+            # Also extract markers from dedicated footnote column (e.g. FSK uses a
+            # "Footnotes" column with concatenated markers like "(ac)(v)(y)(z)")
+            if inv.footnote_col:
+                foot_markers = set(re.findall(r'\([a-z0-9]{1,3}\)', inv.footnote_col, re.IGNORECASE))
+                issuer_markers |= foot_markers
 
             # Guard: if the issuer cell actually contains an investment-type label
             # (e.g. "First lien senior secured loan", "LLC Interest"), treat it as

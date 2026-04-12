@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Curated universe of publicly-traded BDCs and large private-credit interval funds. Static metrics populated from most-recent available public filings (10-K, 10-Q, N-2, N-CSR). All monetary figures in $ billions unless noted. Rates in decimal. Update as new filings are released.",
-    "last_reviewed": "2026-04-09",
+    "last_reviewed": "2026-04-12",
     "maintainer": "private-credit-work",
     "edgar_refresh": "2026-04-09"
   },
@@ -34,7 +34,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "EDGAR XBRL",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.87,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "OBDC",
@@ -64,7 +66,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.98,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "BXSL",
@@ -94,7 +98,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.99,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "FSK",
@@ -127,7 +133,9 @@
       },
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.88,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "HTGC",
@@ -157,7 +165,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.78,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "MAIN",
@@ -187,7 +197,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "manual estimate (EDGAR period mismatch)",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.84,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "PSEC",
@@ -222,7 +234,9 @@
       },
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.72,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "GBDC",
@@ -252,7 +266,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.93,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "PFLT",
@@ -284,7 +300,9 @@
       },
       "_nii_cov_source": "EDGAR XBRL rolling 4Q trailing (bdc_historical)",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 1.0,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "TCPC",
@@ -310,14 +328,16 @@
       "nonaccrual_pct_cost": 0.085,
       "nav_change_yoy_pct": -0.05,
       "price_to_nav": 0.84,
-      "analyst_notes": "Distribution not fully covered by NII \u00e2\u20ac\u201d partially funded from portfolio repayments. Elevated non-accruals. NAV declined 5% YoY. Trading at 16% discount. PIK income elevated at 15% of income \u00e2\u20ac\u201d signals borrower stress.",
+      "analyst_notes": "Distribution not fully covered by NII â€” partially funded from portfolio repayments. Elevated non-accruals. NAV declined 5% YoY. Trading at 16% discount. PIK income elevated at 15% of income â€” signals borrower stress.",
       "red_flag_overrides": {
         "distribution_not_nii_covered": true,
         "elevated_nonaccruals": true
       },
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.91,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "TPVG",
@@ -343,7 +363,7 @@
       "nonaccrual_pct_cost": 0.19,
       "nav_change_yoy_pct": -0.22,
       "price_to_nav": 0.68,
-      "analyst_notes": "Severe distress signals. NAV down 22% YoY \u00e2\u20ac\u201d dramatic erosion. Non-accrual rate of 12% fair value / 19% cost is among the worst in the sector. PIK income 20%+ signals widespread borrower distress. Venture tech lender hit hard by 2022-24 startup funding collapse. Distribution barely covered; cut risk is high. Deep 32% discount to NAV.",
+      "analyst_notes": "Severe distress signals. NAV down 22% YoY â€” dramatic erosion. Non-accrual rate of 12% fair value / 19% cost is among the worst in the sector. PIK income 20%+ signals widespread borrower distress. Venture tech lender hit hard by 2022-24 startup funding collapse. Distribution barely covered; cut risk is high. Deep 32% discount to NAV.",
       "red_flag_overrides": {
         "severe_nav_erosion": true,
         "critical_nonaccruals": true,
@@ -352,7 +372,9 @@
       },
       "_nii_cov_source": "manual estimate",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.71,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "SLRC",
@@ -382,7 +404,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.88,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "CGBD",
@@ -412,7 +436,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.94,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "GAIN",
@@ -442,7 +468,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "manual estimate (EDGAR period mismatch)",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.8,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "GLAD",
@@ -457,7 +485,7 @@
       "nav_bn": 0.477,
       "nav_per_share": 21.1269,
       "gross_assets_bn": 0.9228,
-      "total_debt_bn": 0.8,
+      "total_debt_bn": 0.4452,
       "leverage_de": 0.9333,
       "distribution_rate_annual": 0.086,
       "nii_per_share_quarterly": 0.3,
@@ -472,7 +500,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.87,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "SCM",
@@ -502,7 +532,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.86,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "PNNT",
@@ -517,7 +549,7 @@
       "nav_bn": 0.457,
       "nav_per_share": 7.0025,
       "gross_assets_bn": 1.2935,
-      "total_debt_bn": 1.2,
+      "total_debt_bn": 0.8359,
       "leverage_de": 1.829,
       "distribution_rate_annual": 0.084,
       "nii_per_share_quarterly": 0.15,
@@ -532,7 +564,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "EDGAR XBRL",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.85,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "CCLFX",
@@ -561,14 +595,16 @@
       "quarterly_redemption_rate": 0.08,
       "quarterly_subscription_rate": 0.055,
       "net_flow_quarterly": -0.025,
-      "analyst_notes": "Largest non-traded private credit interval fund. Q1 2026: first sustained net redemption period in fund history ($2.5B redemptions vs $1.7B subscriptions). NII covers only ~77% of distributions \u00e2\u20ac\u201d gap funded from repayments and facility. Very low leverage (0.24x). Low default losses historically. The 'tide turning' is the central risk.",
+      "analyst_notes": "Largest non-traded private credit interval fund. Q1 2026: first sustained net redemption period in fund history ($2.5B redemptions vs $1.7B subscriptions). NII covers only ~77% of distributions â€” gap funded from repayments and facility. Very low leverage (0.24x). Low default losses historically. The 'tide turning' is the central risk.",
       "red_flag_overrides": {
         "net_redemption_period": true,
         "distribution_not_nii_covered": true
       },
       "_nii_cov_source": "manual estimate",
       "_pik_source": "manual estimate",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.91,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "CSWC",
@@ -598,7 +634,9 @@
       "red_flag_overrides": {},
       "_nii_cov_source": "estimated from public filings",
       "_pik_source": "estimated from 10-Q",
-      "edgar_as_of": null
+      "edgar_as_of": null,
+      "floating_rate_pct": 0.88,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "BCRED",
@@ -628,7 +666,9 @@
       "quarterly_subscription_rate": 0.06,
       "net_flow_quarterly": 0.01,
       "analyst_notes": "Blackstone's flagship private credit interval fund. Very large ($50B+ NAV). Blackstone has historically managed redemption gates effectively (precedent from BREIT). Strong parent backing. Limited public disclosure makes precision difficult.",
-      "red_flag_overrides": {}
+      "red_flag_overrides": {},
+      "floating_rate_pct": 0.9,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "PIMCO-FCI",
@@ -658,7 +698,9 @@
       "quarterly_subscription_rate": 0.05,
       "net_flow_quarterly": 0.0,
       "analyst_notes": "PIMCO-managed multi-sector credit interval fund mixing liquid and illiquid credit. PIMCO's strong brand and portfolio management. Less concentrated in illiquid middle market than pure BDCs.",
-      "red_flag_overrides": {}
+      "red_flag_overrides": {},
+      "floating_rate_pct": 0.75,
+      "_float_rate_source": "estimated"
     },
     {
       "ticker": "BREIT",
@@ -690,7 +732,156 @@
       "analyst_notes": "Reference case: largest non-traded vehicle. Experienced prolonged redemption queue 2022-2024. Blackstone eventually stabilized via institutional investment (UCB endowment, etc.) and gated redemptions. Template for how large interval/non-traded funds manage liquidity stress.",
       "red_flag_overrides": {
         "redemption_gate_history": true
-      }
+      },
+      "floating_rate_pct": 0.6,
+      "_float_rate_source": "estimated"
+    },
+    {
+      "ticker": "OTF",
+      "name": "Blue Owl Technology Finance Corp",
+      "type": "listed_bdc",
+      "sector_focus": "technology_lending",
+      "manager": "Blue Owl Credit Advisors",
+      "externally_managed": true,
+      "sec_cik": "1747777",
+      "as_of": "2025-12-31",
+      "source": "OTF 10-K Dec 2025; EDGAR XBRL",
+      "nav_bn": 8.042,
+      "nav_per_share": 17.329,
+      "gross_assets_bn": 14.715,
+      "total_debt_bn": 6.288,
+      "leverage_de": 0.782,
+      "nii_coverage": 0.9538,
+      "pik_pct_of_income": null,
+      "nonaccrual_pct_fair_value": null,
+      "nonaccrual_pct_cost": null,
+      "nav_change_yoy_pct": 0.0142,
+      "price_to_nav": null,
+      "analyst_notes": "Large tech-focused BDC ($14.7B assets) managed by Blue Owl alongside OBDC. Low leverage (0.78x D/E). NII coverage below 1.0x (0.86x from XBRL) warrants monitoring — may include special distributions. No non-accrual disclosures found in MD&A.",
+      "red_flag_overrides": {},
+      "_nii_cov_source": "EDGAR XBRL annual — verify against filing",
+      "_pik_source": null,
+      "floating_rate_pct": 0.97,
+      "_float_rate_source": "estimated",
+      "_historical_source": "bdc_historical parquet Q4-2025"
+    },
+    {
+      "ticker": "BCSF",
+      "name": "Bain Capital Specialty Finance, Inc.",
+      "type": "listed_bdc",
+      "sector_focus": "diversified_middle_market",
+      "manager": "Bain Capital Credit",
+      "externally_managed": true,
+      "sec_cik": "1655050",
+      "as_of": "2025-12-31",
+      "source": "BCSF 10-K Dec 2025; EDGAR XBRL; MD&A text",
+      "nav_bn": 1.117,
+      "nav_per_share": 17.226,
+      "gross_assets_bn": 2.663,
+      "total_debt_bn": 1.471,
+      "leverage_de": 1.3163,
+      "nii_coverage": 0.5395,
+      "pik_pct_of_income": null,
+      "nonaccrual_pct_fair_value": 0.008,
+      "nonaccrual_pct_cost": 0.015,
+      "nav_change_yoy_pct": -0.0241,
+      "price_to_nav": null,
+      "analyst_notes": "Coverage collapse: rolling 4Q NII coverage dropped from 1.039x (Q1 2024) to 0.540x (Q4 2025) -- a 0.499x deterioration in four quarters. Leverage rising to 1.32x. NAV -2.4% YoY. Pattern mirrors PFLT deterioration and warrants close monitoring. BC Partners managed; external manager aligned to fee income rather than shareholder returns.",
+      "red_flag_overrides": {},
+      "_nii_cov_source": "EDGAR XBRL annual — verify against filing",
+      "_pik_source": null,
+      "floating_rate_pct": 0.93,
+      "_float_rate_source": "estimated",
+      "_historical_source": "bdc_historical parquet Q4-2025"
+    },
+    {
+      "ticker": "GSBD",
+      "name": "Goldman Sachs BDC, Inc.",
+      "type": "listed_bdc",
+      "sector_focus": "diversified_upper_middle_market",
+      "manager": "Goldman Sachs Asset Management",
+      "externally_managed": true,
+      "sec_cik": "1572694",
+      "as_of": "2025-12-31",
+      "source": "GSBD 10-K Dec 2025; EDGAR XBRL",
+      "nav_bn": 1.423,
+      "nav_per_share": 12.641,
+      "gross_assets_bn": 3.383,
+      "total_debt_bn": 1.875,
+      "leverage_de": 1.3174,
+      "nii_coverage": 0.8261,
+      "pik_pct_of_income": null,
+      "nonaccrual_pct_fair_value": null,
+      "nonaccrual_pct_cost": null,
+      "nav_change_yoy_pct": -0.0572,
+      "price_to_nav": null,
+      "analyst_notes": "Goldman Sachs BDC with significant credit deterioration: NAV down 9.5% YoY (March 2025 to December 2025), NII coverage below 1.0x (0.86x). Key risk: meaningful NAV erosion at pace that suggests credit losses. Watch non-accrual disclosure in Item 8.",
+      "red_flag_overrides": {
+        "gsbd_nav_erosion": "NAV -9.5% YoY per XBRL — verify in filing"
+      },
+      "_nii_cov_source": "EDGAR XBRL annual — verify against filing",
+      "_pik_source": null,
+      "floating_rate_pct": 0.95,
+      "_float_rate_source": "estimated",
+      "_historical_source": "bdc_historical parquet Q4-2025"
+    },
+    {
+      "ticker": "OCSL",
+      "name": "Oaktree Specialty Lending Corporation",
+      "type": "listed_bdc",
+      "sector_focus": "diversified_middle_market",
+      "manager": "Oaktree Capital Management",
+      "externally_managed": true,
+      "sec_cik": "1414932",
+      "as_of": "2025-12-31",
+      "source": "OCSL 10-Q Dec 2025; EDGAR XBRL; MD&A text",
+      "nav_bn": 1.436,
+      "nav_per_share": 16.304,
+      "gross_assets_bn": 3.098,
+      "total_debt_bn": 1.61,
+      "leverage_de": 1.121,
+      "nii_coverage": 1.0378,
+      "pik_pct_of_income": null,
+      "nonaccrual_pct_fair_value": null,
+      "nonaccrual_pct_cost": null,
+      "nav_change_yoy_pct": -0.0751,
+      "price_to_nav": null,
+      "analyst_notes": "Oaktree-managed BDC. NAV declined 17% from peak (7.5% YoY). Coverage near 1.0x but declining trend. Significant NAV erosion is primary concern.",
+      "red_flag_overrides": {},
+      "_nii_cov_source": "EDGAR XBRL (10-Q quarterly) — verify",
+      "_pik_source": null,
+      "floating_rate_pct": 0.91,
+      "_float_rate_source": "estimated",
+      "_historical_source": "bdc_historical parquet Q4-2025"
+    },
+    {
+      "ticker": "TSLX",
+      "name": "Sixth Street Specialty Lending, Inc.",
+      "type": "listed_bdc",
+      "sector_focus": "diversified_upper_middle_market",
+      "manager": "Sixth Street Partners",
+      "externally_managed": true,
+      "sec_cik": "1508655",
+      "as_of": "2025-12-31",
+      "source": "TSLX 10-K Dec 2025; EDGAR XBRL",
+      "nav_bn": 1.608,
+      "nav_per_share": 16.976,
+      "gross_assets_bn": 3.422,
+      "total_debt_bn": 1.743,
+      "leverage_de": 1.0843,
+      "nii_coverage": 1.2849,
+      "pik_pct_of_income": null,
+      "nonaccrual_pct_fair_value": null,
+      "nonaccrual_pct_cost": null,
+      "nav_change_yoy_pct": -0.0109,
+      "price_to_nav": null,
+      "analyst_notes": "Sixth Street-managed BDC known for strong credit quality. NII coverage healthy at 1.26x. NAV flat YoY (+0.4%). No non-accrual mentions in MD&A. Premium manager/track record typically commands P/NAV premium. Conservative benchmark: TSLX is a reference-quality fund.",
+      "red_flag_overrides": {},
+      "_nii_cov_source": "EDGAR XBRL annual",
+      "_pik_source": null,
+      "floating_rate_pct": 0.97,
+      "_float_rate_source": "estimated",
+      "_historical_source": "bdc_historical parquet Q4-2025"
     }
   ]
 }
