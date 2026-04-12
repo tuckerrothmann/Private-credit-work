@@ -482,12 +482,37 @@ def _extract_footnote_legend(soup: BeautifulSoup, soi_tag: Tag,
 
 
 def _na_footnote_marks_from_legend(legend: dict[str, str]) -> set[str]:
-    """Return footnote markers whose meaning relates to non-accrual."""
+    """Return footnote markers whose meaning asserts the investment IS on non-accrual.
+
+    Filters out definitions that merely *mention* non-accrual in a negative context
+    (e.g. "interest rate excludes investments on non-accrual status") — these describe
+    a rate-presentation convention, not non-accrual status of the investment itself.
+    """
     marks = set()
-    na_terms = ["non-accrual", "non accrual", "nonaccrual", "accrual basis",
-                "not accruing", "placed on non"]
+    na_terms = ["non-accrual", "non accrual", "nonaccrual", "not accruing", "placed on non"]
+
+    # Phrases that indicate the marker is about something OTHER than the investment
+    # being on non-accrual (e.g. rate-format footnotes that reference excluded NAs)
+    _EXCLUDE_PHRASES = [
+        "excludes", "excluding", "except", "other than",
+        "does not include", "not include",
+    ]
+
     for marker, meaning in legend.items():
-        if any(t in meaning for t in na_terms):
+        if not any(t in meaning for t in na_terms):
+            continue
+        # Skip if the non-accrual mention is inside a negative/exclusionary context
+        # Check within a 60-char window before the first na_term hit
+        skip = False
+        for t in na_terms:
+            pos = meaning.find(t)
+            if pos < 0:
+                continue
+            window = meaning[max(0, pos - 60):pos]
+            if any(ep in window for ep in _EXCLUDE_PHRASES):
+                skip = True
+                break
+        if not skip:
             marks.add(marker)
     return marks
 
@@ -508,10 +533,11 @@ def _clean_issuer_name(raw: str) -> tuple[str, str, set[str]]:
     Returns the cleaned name, any embedded instrument type, and the set of
     footnote markers found (e.g. {"(1)", "(7)"}) so callers can check NA/PIK flags.
     """
-    # Collect all trailing/embedded footnote markers before stripping them
+    # Collect all trailing/embedded footnote markers before stripping them.
     # Handles numeric (1)-(99), single-letter (a)-(z), and multi-char (aa)/(ab)/(z) etc.
-    markers: set[str] = set(re.findall(r'\(\d{1,2}\)', raw))
-    markers |= set(re.findall(r'\([a-z]{1,3}\)', raw, re.IGNORECASE))
+    # Normalize to lowercase so marker sets from the legend (always lowercase) intersect correctly.
+    markers: set[str] = {m.lower() for m in re.findall(r'\(\d{1,2}\)', raw)}
+    markers |= {m.lower() for m in re.findall(r'\([a-z]{1,3}\)', raw, re.IGNORECASE)}
 
     # Remove ALL footnote references from the name (not just trailing)
     cleaned = re.sub(r'\s*\(\d{1,2}\)\s*', ' ', raw).strip()
@@ -1047,6 +1073,17 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             if inv.footnote_col:
                 foot_markers = set(re.findall(r'\([a-z0-9]{1,3}\)', inv.footnote_col, re.IGNORECASE))
                 issuer_markers |= foot_markers
+
+            # Also extract markers from the rate/description string.
+            # Some funds (e.g. GLAD) append footnote markers to the interest-rate cell:
+            #   "S+2.0%, 7.0% Cash, Due 12/2026) (E)(P)"  ← (P) = non-accrual
+            # Only collect markers that are in the known legend to avoid false positives
+            # from numeric-style rate tokens like "(1)" embedded in rate expressions.
+            if inv.rate_str and (na_marks or pik_marks):
+                rate_markers = set(re.findall(r'\([a-z]{1,3}\)', inv.rate_str, re.IGNORECASE))
+                # Keep only those that actually appear in the legend
+                known_marks = (na_marks | pik_marks)
+                issuer_markers |= {m.lower() for m in rate_markers if m.lower() in known_marks}
 
             # Guard: if the issuer cell actually contains an investment-type label
             # (e.g. "First lien senior secured loan", "LLC Interest"), treat it as
