@@ -320,11 +320,11 @@ def enrich_funds_with_live_na(
     retain their existing (static) value.
     """
     # Tickers where NA detection is known to be unreliable due to parsing issues:
-    # OBDC/GBDC: col_map assigns wrong issuer names → false zero NA
     # FSK/SCM: non-standard footnote markers → zero NA detected
     # TCPC: col_map issues → zero NA detected
     # PFLT: most-recent cache is 10-Q (shows 0 NA); 10-K shows 147 NA but is older
-    _UNRELIABLE_NA = {"OBDC", "GBDC", "FSK", "SCM", "TCPC", "PFLT"}
+    # OBDC/GBDC: fixed — issuer detection repaired; live rates now reliable
+    _UNRELIABLE_NA = {"FSK", "SCM", "TCPC", "PFLT"}
 
     try:
         from portfolio_collector import compute_live_na_rates

@@ -683,52 +683,87 @@ def _extract_soi_chunk(html: str, max_bytes: int = 4_000_000) -> str:
     """
     low = html.lower()
 
-    # All positions containing any SOI heading text
-    all_positions: list[int] = []
-    for h in SOI_HEADINGS + ["schedule of investments (continued)",
-                               "schedule of portfolio investments (continued)"]:
+    CONTINUED_HEADINGS = frozenset([
+        "schedule of investments (continued)",
+        "schedule of portfolio investments (continued)",
+        "consolidated schedule of investments (continued)",
+        "schedule of investments — continued",
+        "schedule of investments - continued",
+    ])
+
+    # All positions; also track whether each is a "continued" variant
+    all_positions: list[tuple[int, bool]] = []  # (pos, is_continued)
+    for h in SOI_HEADINGS + list(CONTINUED_HEADINGS):
+        is_cont = h in CONTINUED_HEADINGS
         start = 0
         while True:
             idx = low.find(h, start)
             if idx == -1:
                 break
-            all_positions.append(idx)
+            all_positions.append((idx, is_cont))
             start = idx + 1
 
-    all_positions = sorted(set(all_positions))
+    # Deduplicate by position (keep is_continued = False if multiple match same pos)
+    pos_map: dict[int, bool] = {}
+    for pos, is_cont in all_positions:
+        if pos not in pos_map or not is_cont:
+            pos_map[pos] = is_cont
+    all_positions = sorted(pos_map.items())
 
     if not all_positions:
         return html[:max_bytes]  # fallback
 
     # Filter out TOC-style links (those followed by </a> within 200 chars)
-    data_positions = []
-    for pos in all_positions:
+    data_positions: list[tuple[int, bool]] = []
+    for pos, is_cont in all_positions:
         window = html[pos:pos + 300].lower()
-        # TOC entries usually have </a> right after the text
         is_toc = '</a>' in window[:150] and ('<table of contents' in low[max(0, pos-500):pos]
                                               or 'href' in html[max(0, pos-100):pos].lower())
         if not is_toc:
-            data_positions.append(pos)
+            data_positions.append((pos, is_cont))
 
     if not data_positions:
-        data_positions = all_positions  # fallback
+        data_positions = [(p, c) for p, c in pos_map.items()]
+        data_positions.sort()
+
+    # Find the boundary of the prior-year SOI in 10-K filings.
+    # Strategy: consecutive heading occurrences within 500KB are treated as continuation
+    # pages of the SAME SOI (OBDC-style multi-page iXBRL).  A gap > 500KB from the last
+    # included heading signals a new (prior-year) section — stop there.
+    _MAX_CONTINUATION_GAP = 500_000  # bytes
+    stop_pos: int = len(html)
+    current_period_positions: list[int] = []
+    all_pos_sorted = sorted(pos for pos, _ in data_positions)
+
+    for pos, is_cont in data_positions:
+        if not current_period_positions:
+            current_period_positions.append(pos)
+            continue
+        gap = pos - current_period_positions[-1]
+        if is_cont or gap <= _MAX_CONTINUATION_GAP:
+            # Continuation page — include it
+            current_period_positions.append(pos)
+        else:
+            # Large gap — this is the prior-year SOI; stop before it
+            stop_pos = pos
+            break
 
     # Compute non-overlapping ranges for each data section.
-    # Each section runs from this heading to the next heading (or end).
-    data_positions = sorted(data_positions)
+    # Each section runs from this heading to the next heading (or stop_pos).
+    data_positions_sorted = current_period_positions
     chunks = []
     total_bytes = 0
 
-    for i, pos in enumerate(data_positions):
+    for i, pos in enumerate(data_positions_sorted):
         if total_bytes >= max_bytes:
             break
         start = max(0, pos - 200)
-        # End at the next heading position (so no overlap) or 1MB cap
-        if i + 1 < len(data_positions):
-            raw_end = data_positions[i + 1] - 200
+        # End at the next heading position, the prior-year-SOI boundary, or max_bytes
+        if i + 1 < len(data_positions_sorted):
+            raw_end = data_positions_sorted[i + 1] - 200
         else:
-            raw_end = len(html)
-        end = min(raw_end, start + 1_500_000)  # cap at 1.5MB per section
+            raw_end = stop_pos  # don't cross into the prior-year SOI
+        end = min(raw_end, start + max_bytes)  # hard cap at max_bytes total
         if end <= start:
             continue
         chunks.append(html[start:end])
@@ -825,6 +860,34 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
         if not _smpl or _fv_hits < len(_smpl) * 0.20:
             col_map = _recalibrate_col_map(col_map, rows[data_start:data_start + 30])
 
+        # Auto-detect issuer column when headers didn't expose one (e.g. GBDC where
+        # col 0 is an empty spacer and col 1 holds the company name, both unlabeled).
+        if "issuer" not in col_map.values():
+            _already_mapped = set(col_map.keys())
+            # Sample real data rows (multi-cell, not section headers)
+            _sample_rows = [
+                r for r in rows[data_start:data_start + 40]
+                if len([c for c in r if c.strip()]) >= 3
+            ][:10]
+            # Candidate columns: leftmost that are not already mapped to a numeric field
+            # and that consistently hold non-numeric, non-empty text (company names)
+            _numeric_re = re.compile(r'^[\d\.,\-\+\$\%\(\)\/\s]+$')
+            _date_re    = re.compile(r'\d{1,2}[/\-]\d{2,4}')
+            for _cand in range(min(4, min((len(r) for r in _sample_rows), default=0))):
+                if _cand in _already_mapped:
+                    continue
+                _hits = 0
+                for _sr in _sample_rows:
+                    _v = _sr[_cand].strip() if _cand < len(_sr) else ""
+                    if (len(_v) >= 3
+                            and not _numeric_re.match(_v)
+                            and not _date_re.search(_v)
+                            and not _v.startswith("$")):
+                        _hits += 1
+                if _hits >= max(2, len(_sample_rows) * 0.4):
+                    col_map[_cand] = "issuer"
+                    break
+
         # Does this table look like an SOI? Need at least cost or fv col
         has_value_col = "cost_str" in col_map.values() or "fv_str" in col_map.values()
         if not has_value_col:
@@ -837,6 +900,12 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
         current_industry = ""
         current_type    = ""
         current_issuer_markers: set[str] = set()  # carry-forward of issuer footnote marks
+        # Per-table NA/PIK sets: scoped to the current table so that comparison-period
+        # SOI sections (e.g. prior-year columns in a 10-K) cannot pollute current-period
+        # positions.  global na_issuers/pik_issuers are kept only for verbose logging.
+        _tbl_na:  set[str] = set()
+        _tbl_pik: set[str] = set()
+        _tbl_start = len(investments)  # index of first investment from this table
 
         for row in rows[data_start:]:
             if not any(row):
@@ -879,11 +948,13 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
                                 na_marks and _solo_markers and (_solo_markers & na_marks)
                             )
                             if _row_is_na:
+                                _tbl_na.add(_clean)
                                 na_issuers.add(_clean)
                             if pik_marks and (
                                 any(m in _row_text_solo for m in pik_marks)
                                 or bool(_solo_markers & pik_marks)
                             ):
+                                _tbl_pik.add(_clean)
                                 pik_issuers.add(_clean)
                 continue
 
@@ -1057,11 +1128,13 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             if not row_is_na and na_marks and issuer_markers:
                 row_is_na = bool(issuer_markers & na_marks)
             if row_is_na and inv.issuer:
+                _tbl_na.add(inv.issuer)
                 na_issuers.add(inv.issuer)
             row_is_pik = bool(pik_marks and (
                 any(m in row_text for m in pik_marks) or bool(issuer_markers & pik_marks)
             )) if pik_marks else False
             if row_is_pik and inv.issuer:
+                _tbl_pik.add(inv.issuer)
                 pik_issuers.add(inv.issuer)
 
             # Skip rows with no meaningful issuer or value
@@ -1084,7 +1157,7 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             # NA / PIK flags on the captured investment (uses already-computed issuer-level
             # sets from the pre-skip block above, plus a per-row text check).
             inv.is_non_accrual = (
-                inv.issuer in na_issuers
+                inv.issuer in _tbl_na
                 or _is_non_accrual(row_text, na_marks)
                 or bool(na_marks and issuer_markers and (issuer_markers & na_marks))
             )
@@ -1094,7 +1167,7 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
                 pik = (
                     any(m in row_text for m in pik_marks)
                     or bool(issuer_markers & pik_marks)
-                    or inv.issuer in pik_issuers
+                    or inv.issuer in _tbl_pik
                 )
             inv.is_pik         = pik
             inv.rate_base      = base
@@ -1110,6 +1183,19 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
                 inv.cost_mm = None
 
             investments.append(inv)
+
+        # Retroactively apply per-table NA/PIK flags to investments from THIS table only.
+        # This ensures name-only rows (iXBRL multi-row format) whose NA/PIK markers were
+        # discovered during the loop correctly flag subsequent data rows for the same issuer,
+        # WITHOUT contaminating investments from other SOI periods (e.g. prior-year 10-K).
+        _continued_re_tbl = re.compile(r'\(\s*continued\s*\)', re.IGNORECASE)
+        _tbl_na  = {s for s in _tbl_na  if not _GENERIC_LABEL_RE.search(s) and not _continued_re_tbl.search(s)}
+        _tbl_pik = {s for s in _tbl_pik if not _GENERIC_LABEL_RE.search(s) and not _continued_re_tbl.search(s)}
+        for inv in investments[_tbl_start:]:
+            if inv.issuer in _tbl_na:
+                inv.is_non_accrual = True
+            if inv.issuer in _tbl_pik:
+                inv.is_pik = True
 
         sibling = sibling.find_next("table")
         tables_processed += 1
@@ -1135,26 +1221,14 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
 
     investments = deduped
 
-    # Post-filter: remove generic section/type labels from na_issuers and pik_issuers.
-    # In some iXBRL filings (e.g. OBDC), investment-type labels like "First lien senior
-    # secured loan" or "Class A Common Units" appear in the issuer column and can pick up
-    # NA markers, polluting the set and causing mass false-positives.
-    # Also remove "(continued)" industry-section carry-forward labels (e.g. BXSL).
+    # Post-filter global na_issuers for verbose logging only.
+    # Per-position NA/PIK flags are now applied per-table (above) so there is no
+    # need to override them here.  The global sets are filtered for display only.
     _continued_re = re.compile(r'\(\s*continued\s*\)', re.IGNORECASE)
     na_issuers  = {s for s in na_issuers  if not _GENERIC_LABEL_RE.search(s) and not _continued_re.search(s)}
     pik_issuers = {s for s in pik_issuers if not _GENERIC_LABEL_RE.search(s) and not _continued_re.search(s)}
-
-    # Apply issuer-level NA/PIK flags accumulated from par-only rows (column-shift artefact).
-    # This ensures issuers whose markers appeared in misaligned rows still get flagged
-    # on the complete positions that DO have cost/fv data.
     if verbose:
         print(f"  [na_issuers] {sorted(na_issuers)}")
-    if na_issuers or pik_issuers:
-        for inv in investments:
-            if inv.issuer in na_issuers:
-                inv.is_non_accrual = True
-            if inv.issuer in pik_issuers:
-                inv.is_pik = True
 
     # Final pass: clear NA/PIK flags from positions whose "issuer" is a generic
     # section/type label (e.g. "Warrants", "Senior convertible notes", or
