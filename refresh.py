@@ -328,117 +328,280 @@ def compute_diffs(
 # Digest formatting
 # ---------------------------------------------------------------------------
 
-_TIER_EMOJI = {"RED": "🔴", "ORANGE": "🟠", "YELLOW": "🟡", "GREEN": "🟢"}
-# ASCII fallbacks for email/plain environments
-_TIER_ASCII = {"RED": "[RED]", "ORANGE": "[ORA]", "YELLOW": "[YEL]", "GREEN": "[GRN]"}
+_TIER_COLOR = {
+    "RED":    "#dc2626",
+    "ORANGE": "#ea580c",
+    "YELLOW": "#ca8a04",
+    "GREEN":  "#16a34a",
+}
+_TIER_BG = {
+    "RED":    "#fef2f2",
+    "ORANGE": "#fff7ed",
+    "YELLOW": "#fefce8",
+    "GREEN":  "#f0fdf4",
+}
+
+
+def _tier_badge(tier: str) -> str:
+    color = _TIER_COLOR.get(tier, "#6b7280")
+    bg    = _TIER_BG.get(tier, "#f3f4f6")
+    return (
+        f'<span style="display:inline-block;padding:2px 8px;border-radius:12px;'
+        f'font-size:11px;font-weight:700;letter-spacing:0.06em;'
+        f'color:{color};background:{bg};border:1px solid {color}40;">'
+        f'{tier}</span>'
+    )
+
+
+def _arrow(direction: str) -> str:
+    if direction == "downgraded":
+        return '<span style="color:#dc2626;font-weight:700;">&#x2193;</span>'
+    if direction == "upgraded":
+        return '<span style="color:#16a34a;font-weight:700;">&#x2191;</span>'
+    return ""
 
 
 def format_digest(
-    diffs:        list[ScoreDiff],
-    new_filings:  dict[str, str],
-    run_dt:       str,
-    use_emoji:    bool = True,
-) -> str:
-    tier_tag = _TIER_EMOJI if use_emoji else _TIER_ASCII
+    diffs:       list[ScoreDiff],
+    new_filings: dict[str, str],
+    run_dt:      str,
+) -> tuple[str, str]:
+    """Return (html, plain_text) tuple."""
+    from price_feed import enrich_funds_with_prices
+    from red_flag_screener import load_universe
 
-    changed  = [d for d in diffs if d.score_delta != 0 or d.tier_changed or d.new_flags or d.cleared_flags]
-    same     = [d for d in diffs if d not in changed]
+    changed    = [d for d in diffs if d.score_delta != 0 or d.tier_changed or d.new_flags or d.cleared_flags]
+    same       = [d for d in diffs if d not in changed]
     downgraded = [d for d in changed if d.tier_direction == "downgraded"]
     upgraded   = [d for d in changed if d.tier_direction == "upgraded"]
     score_only = [d for d in changed if not d.tier_changed]
 
-    lines: list[str] = []
-    lines.append(f"# BDC Weekly Refresh Digest — {run_dt}")
-    lines.append("")
-    lines.append(
-        f"**{len(new_filings)} new filings**  |  "
-        f"**{len(changed)} score changes**  |  "
-        f"**{len(downgraded)} tier downgrades**  |  "
-        f"**{len(upgraded)} tier upgrades**"
-    )
-    lines.append("")
-
-    # ── Tier changes ──────────────────────────────────────────────────────
-    if downgraded:
-        lines.append("## Downgrades (watch closely)")
-        for d in downgraded:
-            tag = f"{tier_tag[d.old.tier]} → {tier_tag[d.new.tier]}"
-            delta = f"{d.score_delta:+d} pts" if d.score_delta else "tier only"
-            lines.append(f"- **{d.ticker}** {tag}  score {d.old.score} → {d.new.score} ({delta})")
-            if d.new_flags:
-                lines.append(f"  - New flags: {', '.join(d.new_flags)}")
-            if d.cleared_flags:
-                lines.append(f"  - Cleared: {', '.join(d.cleared_flags)}")
-        lines.append("")
-
-    if upgraded:
-        lines.append("## Upgrades (improvement)")
-        for d in upgraded:
-            tag = f"{tier_tag[d.old.tier]} → {tier_tag[d.new.tier]}"
-            delta = f"{d.score_delta:+d} pts" if d.score_delta else "tier only"
-            lines.append(f"- **{d.ticker}** {tag}  score {d.old.score} → {d.new.score} ({delta})")
-            if d.cleared_flags:
-                lines.append(f"  - Cleared: {', '.join(d.cleared_flags)}")
-            if d.new_flags:
-                lines.append(f"  - New flags: {', '.join(d.new_flags)}")
-        lines.append("")
-
-    # ── Score-only changes ─────────────────────────────────────────────────
-    if score_only:
-        lines.append("## Score changes (same tier)")
-        for d in score_only:
-            delta_s = f"{d.score_delta:+d}"
-            lines.append(f"- **{d.ticker}** {tier_tag[d.new.tier]}  {d.old.score} → {d.new.score} ({delta_s})")
-            if d.new_flags:
-                lines.append(f"  - New: {', '.join(d.new_flags)}")
-            if d.cleared_flags:
-                lines.append(f"  - Cleared: {', '.join(d.cleared_flags)}")
-        lines.append("")
-
-    # ── New filings ────────────────────────────────────────────────────────
-    if new_filings:
-        lines.append("## New filings pulled")
-        for ticker, period in sorted(new_filings.items()):
-            lines.append(f"- **{ticker}** — {period}")
-        lines.append("")
-
-    # ── No change ─────────────────────────────────────────────────────────
-    if same:
-        same_tickers = ", ".join(d.ticker for d in same)
-        lines.append(f"## No change ({len(same)} funds)")
-        lines.append(same_tickers)
-        lines.append("")
-
-    # ── Full scorecard ─────────────────────────────────────────────────────
-    lines.append("## Full scorecard")
-    lines.append("")
-    lines.append("| Ticker | Score | Tier | P/NAV | NA Rate | Key Flags |")
-    lines.append("|--------|------:|------|------:|--------:|-----------|")
-    from price_feed import enrich_funds_with_prices
-    from red_flag_screener import load_universe
     funds_with_prices = {
         f["ticker"]: f
         for f in enrich_funds_with_prices(load_universe())
     }
+
+    # ── HTML ──────────────────────────────────────────────────────────────
+
+    css = """
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+             max-width: 680px; margin: 32px auto; color: #111827;
+             font-size: 14px; line-height: 1.6; background: #ffffff; }
+      h1   { font-size: 20px; font-weight: 700; margin: 0 0 4px; color: #111827; }
+      h2   { font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+             text-transform: uppercase; color: #6b7280; margin: 28px 0 10px;
+             padding-bottom: 6px; border-bottom: 1px solid #e5e7eb; }
+      .meta { font-size: 12px; color: #6b7280; margin-bottom: 24px; }
+      .stats { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+      .stat  { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;
+               padding: 10px 16px; text-align: center; min-width: 100px; }
+      .stat-val { font-size: 22px; font-weight: 700; color: #111827; line-height: 1.1; }
+      .stat-lbl { font-size: 11px; color: #6b7280; text-transform: uppercase;
+                  letter-spacing: 0.05em; margin-top: 2px; }
+      .change-row { display: flex; align-items: baseline; gap: 8px;
+                    padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
+      .ticker { font-weight: 700; font-size: 14px; min-width: 52px; }
+      .score-arrow { color: #6b7280; font-size: 13px; }
+      .flag-list { font-size: 12px; color: #6b7280; margin: 2px 0 6px 60px; }
+      table  { width: 100%; border-collapse: collapse; font-size: 13px; }
+      th     { text-align: left; padding: 6px 10px; background: #f9fafb;
+               border-bottom: 2px solid #e5e7eb; font-weight: 600;
+               font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+               color: #374151; }
+      td     { padding: 7px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+      tr:hover td { background: #f9fafb; }
+      .no-change { font-size: 12px; color: #9ca3af; line-height: 1.8; }
+      .footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid #e5e7eb;
+                font-size: 11px; color: #9ca3af; }
+    </style>
+    """
+
+    def stat_box(val: str, label: str) -> str:
+        return (
+            f'<div class="stat">'
+            f'<div class="stat-val">{val}</div>'
+            f'<div class="stat-lbl">{label}</div>'
+            f'</div>'
+        )
+
+    sections: list[str] = []
+
+    # Header
+    sections.append(
+        f'<h1>BDC Surveillance Digest</h1>'
+        f'<div class="meta">{run_dt} &nbsp;·&nbsp; {len(diffs)} funds scored</div>'
+    )
+
+    # Stats row
+    sections.append(
+        f'<div class="stats">'
+        + stat_box(str(len(new_filings)), "New Filings")
+        + stat_box(str(len(downgraded)), "Downgrades")
+        + stat_box(str(len(upgraded)),   "Upgrades")
+        + stat_box(str(len(score_only)), "Score Moves")
+        + stat_box(str(len(same)),       "Unchanged")
+        + '</div>'
+    )
+
+    # Downgrades
+    if downgraded:
+        rows = []
+        for d in downgraded:
+            delta = f"{d.score_delta:+d} pts" if d.score_delta else "tier only"
+            flags_html = ""
+            if d.new_flags:
+                flags_html += f'<div class="flag-list">&#x25b6; New: {", ".join(d.new_flags)}</div>'
+            if d.cleared_flags:
+                flags_html += f'<div class="flag-list">&#x2713; Cleared: {", ".join(d.cleared_flags)}</div>'
+            rows.append(
+                f'<div class="change-row">'
+                f'{_arrow("downgraded")}'
+                f'<span class="ticker">{d.ticker}</span>'
+                f'{_tier_badge(d.old.tier)} &rarr; {_tier_badge(d.new.tier)}'
+                f'<span class="score-arrow">&nbsp;{d.old.score} &rarr; {d.new.score} &nbsp;({delta})</span>'
+                f'</div>{flags_html}'
+            )
+        sections.append('<h2>Downgrades</h2>' + "".join(rows))
+
+    # Upgrades
+    if upgraded:
+        rows = []
+        for d in upgraded:
+            delta = f"{d.score_delta:+d} pts" if d.score_delta else "tier only"
+            flags_html = ""
+            if d.cleared_flags:
+                flags_html += f'<div class="flag-list">&#x2713; Cleared: {", ".join(d.cleared_flags)}</div>'
+            if d.new_flags:
+                flags_html += f'<div class="flag-list">&#x25b6; New: {", ".join(d.new_flags)}</div>'
+            rows.append(
+                f'<div class="change-row">'
+                f'{_arrow("upgraded")}'
+                f'<span class="ticker">{d.ticker}</span>'
+                f'{_tier_badge(d.old.tier)} &rarr; {_tier_badge(d.new.tier)}'
+                f'<span class="score-arrow">&nbsp;{d.old.score} &rarr; {d.new.score} &nbsp;({delta})</span>'
+                f'</div>{flags_html}'
+            )
+        sections.append('<h2>Upgrades</h2>' + "".join(rows))
+
+    # Score-only changes
+    if score_only:
+        rows = []
+        for d in score_only:
+            flags_html = ""
+            if d.new_flags:
+                flags_html += f'<div class="flag-list">&#x25b6; New: {", ".join(d.new_flags)}</div>'
+            if d.cleared_flags:
+                flags_html += f'<div class="flag-list">&#x2713; Cleared: {", ".join(d.cleared_flags)}</div>'
+            rows.append(
+                f'<div class="change-row">'
+                f'<span class="ticker">{d.ticker}</span>'
+                f'{_tier_badge(d.new.tier)}'
+                f'<span class="score-arrow">&nbsp;{d.old.score} &rarr; {d.new.score} &nbsp;({d.score_delta:+d} pts)</span>'
+                f'</div>{flags_html}'
+            )
+        sections.append('<h2>Score Moves (same tier)</h2>' + "".join(rows))
+
+    # New filings
+    if new_filings:
+        rows = [
+            f'<div class="change-row"><span class="ticker">{t}</span>'
+            f'<span class="score-arrow">{p}</span></div>'
+            for t, p in sorted(new_filings.items())
+        ]
+        sections.append('<h2>New Filings Collected</h2>' + "".join(rows))
+
+    # No change
+    if same:
+        tickers = " &nbsp; ".join(d.ticker for d in same)
+        sections.append(
+            f'<h2>No Change ({len(same)} funds)</h2>'
+            f'<div class="no-change">{tickers}</div>'
+        )
+
+    # Full scorecard table
+    table_rows = []
     for d in sorted(diffs, key=lambda d: (-d.new.score, d.ticker)):
-        r    = d.new
-        fund = funds_with_prices.get(r.ticker, {})
-        p2n  = fund.get("price_to_nav")
+        r     = d.new
+        fund  = funds_with_prices.get(r.ticker, {})
+        p2n   = fund.get("price_to_nav")
+        p2n_s = f"{p2n:.3f}x" if p2n is not None else "—"
+        na_s  = f"{r.na_rate:.1%}" if r.na_rate is not None else "—"
+        flags = ", ".join(r.flags[:3]) + (" …" if len(r.flags) > 3 else "")
+        tier_c = _TIER_COLOR.get(r.tier, "#6b7280")
+        score_style = f'font-weight:700;color:{tier_c};'
+        table_rows.append(
+            f"<tr>"
+            f"<td style='font-weight:600'>{r.ticker}</td>"
+            f"<td style='{score_style}text-align:right'>{r.score}</td>"
+            f"<td>{_tier_badge(r.tier)}</td>"
+            f"<td style='text-align:right;color:#374151'>{p2n_s}</td>"
+            f"<td style='text-align:right;color:#374151'>{na_s}</td>"
+            f"<td style='color:#6b7280;font-size:12px'>{flags}</td>"
+            f"</tr>"
+        )
+    sections.append(
+        '<h2>Full Scorecard</h2>'
+        '<table>'
+        '<thead><tr>'
+        '<th>Ticker</th><th style="text-align:right">Score</th><th>Tier</th>'
+        '<th style="text-align:right">P/NAV</th><th style="text-align:right">NA Rate</th>'
+        '<th>Key Flags</th>'
+        '</tr></thead>'
+        '<tbody>' + "".join(table_rows) + '</tbody>'
+        '</table>'
+    )
+
+    sections.append(
+        '<div class="footer">Private Credit Workbench &bull; automated refresh</div>'
+    )
+
+    html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{css}</head><body>"
+    html += "\n".join(sections)
+    html += "</body></html>"
+
+    # ── Plain-text fallback ───────────────────────────────────────────────
+    plain_lines: list[str] = [
+        f"BDC Surveillance Digest — {run_dt}",
+        f"{len(diffs)} funds  |  {len(downgraded)} downgrades  |  {len(upgraded)} upgrades  |  {len(score_only)} score moves",
+        "",
+    ]
+    if downgraded:
+        plain_lines.append("DOWNGRADES")
+        for d in downgraded:
+            plain_lines.append(f"  {d.ticker}  {d.old.tier} -> {d.new.tier}  ({d.old.score} -> {d.new.score})")
+        plain_lines.append("")
+    if upgraded:
+        plain_lines.append("UPGRADES")
+        for d in upgraded:
+            plain_lines.append(f"  {d.ticker}  {d.old.tier} -> {d.new.tier}  ({d.old.score} -> {d.new.score})")
+        plain_lines.append("")
+    if score_only:
+        plain_lines.append("SCORE MOVES")
+        for d in score_only:
+            plain_lines.append(f"  {d.ticker}  {d.new.tier}  {d.old.score} -> {d.new.score} ({d.score_delta:+d})")
+        plain_lines.append("")
+    plain_lines.append("FULL SCORECARD")
+    plain_lines.append(f"{'Ticker':<8} {'Score':>5}  {'Tier':<8}  {'P/NAV':>7}  {'NA%':>6}  Flags")
+    plain_lines.append("-" * 72)
+    for d in sorted(diffs, key=lambda d: (-d.new.score, d.ticker)):
+        r     = d.new
+        fund  = funds_with_prices.get(r.ticker, {})
+        p2n   = fund.get("price_to_nav")
         p2n_s = f"{p2n:.3f}x" if p2n is not None else "n/a"
         na_s  = f"{r.na_rate:.1%}" if r.na_rate is not None else "n/a"
-        flags = ", ".join(r.flags[:3]) + (" ..." if len(r.flags) > 3 else "")
-        lines.append(f"| {r.ticker:<6} | {r.score:>5} | {tier_tag[r.tier]} | {p2n_s:>7} | {na_s:>7} | {flags} |")
-    lines.append("")
+        flags = ", ".join(r.flags[:3])
+        plain_lines.append(f"{r.ticker:<8} {r.score:>5}  {r.tier:<8}  {p2n_s:>7}  {na_s:>6}  {flags}")
 
-    return "\n".join(lines)
+    return html, "\n".join(plain_lines)
 
 
 # ---------------------------------------------------------------------------
 # Email (optional)
 # ---------------------------------------------------------------------------
 
-def send_email(subject: str, body: str, to_addr: str) -> bool:
-    """Send digest via SMTP. Reads config from environment / .env file."""
+def send_email(subject: str, html: str, plain: str, to_addr: str) -> bool:
+    """Send HTML digest via SMTP. Reads config from environment / .env file."""
     # Load .env if present
     env_path = Path(".env")
     if env_path.exists():
@@ -459,12 +622,15 @@ def send_email(subject: str, body: str, to_addr: str) -> bool:
 
     try:
         import smtplib
+        from email.mime.multipart import MIMEMultipart
         from email.mime.text import MIMEText
 
-        msg = MIMEText(body, "plain")
+        msg = MIMEMultipart("alternative")
         msg["Subject"] = subject
         msg["From"]    = from_
         msg["To"]      = to_addr
+        msg.attach(MIMEText(plain, "plain"))
+        msg.attach(MIMEText(html,  "html"))   # html last = preferred by clients
 
         if port == 465:
             with smtplib.SMTP_SSL(host, port) as smtp:
@@ -528,7 +694,7 @@ def run(
     diffs   = compute_diffs(history, current_scores)
 
     # ── Step 5: Format digest ───────────────────────────────────────────────
-    digest = format_digest(diffs, new_filings, run_dt, use_emoji=False)
+    html_digest, plain_digest = format_digest(diffs, new_filings, run_dt)
 
     # ── Step 6: Print summary ───────────────────────────────────────────────
     changed = [d for d in diffs if d.score_delta != 0 or d.tier_changed or d.new_flags or d.cleared_flags]
@@ -554,7 +720,7 @@ def run(
     if not dry_run:
         save_score_history(current_scores)
         DIGEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-        DIGEST_PATH.write_text(digest, encoding="utf-8")
+        DIGEST_PATH.write_text(html_digest, encoding="utf-8")
         if verbose:
             print(f"\nDigest written to {DIGEST_PATH}")
 
@@ -567,7 +733,7 @@ def run(
             if tier_changes else
             f"BDC Digest: {n_changes} change{'s' if n_changes!=1 else ''} — {run_dt}"
         )
-        send_email(subject, digest, notify)
+        send_email(subject, html_digest, plain_digest, notify)
 
     return diffs
 
