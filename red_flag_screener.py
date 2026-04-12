@@ -21,10 +21,10 @@ Scoring rubric
 9. Trend Deterioration    (0–5): From trend_signals.py momentum analysis
 
 Risk tiers:
-   0–3   GREEN   Routine monitoring
-   4–6   YELLOW  Elevated — watch list
-   7–10  ORANGE  Significant concern — detailed review warranted
-  11+    RED     Critical — potential deterioration / investor harm
+   0–4   GREEN   Routine monitoring
+   5–7   YELLOW  Elevated — watch list
+   8–11  ORANGE  Significant concern — detailed review warranted
+  12+    RED     Critical — potential deterioration / investor harm
 
 Usage
 -----
@@ -233,11 +233,11 @@ def score_fund(metrics: dict[str, Any]) -> dict[str, Any]:
 
     composite = sum(dims.values())
 
-    if composite >= 11:
+    if composite >= 12:
         tier = "RED"
-    elif composite >= 7:
+    elif composite >= 8:
         tier = "ORANGE"
-    elif composite >= 4:
+    elif composite >= 5:
         tier = "YELLOW"
     else:
         tier = "GREEN"
@@ -373,7 +373,9 @@ def enrich_funds_with_live_na(
             fund["nonaccrual_pct_fair_value"] = live[ticker]
             fund["_na_source"] = "live"
         elif ticker in _UNRELIABLE_NA and ticker in mda_rates:
-            fund["nonaccrual_pct_fair_value"] = mda_rates[ticker]
+            # MD&A rates are stored as percentages (e.g. 4.1 = 4.1%);
+            # scorer expects decimals (e.g. 0.041); divide by 100.
+            fund["nonaccrual_pct_fair_value"] = mda_rates[ticker] / 100.0
             fund["_na_source"] = "mda_text"
         enriched.append(fund)
     return enriched
