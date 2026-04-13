@@ -2185,6 +2185,148 @@ def render_portfolio() -> None:
     else:
         st.info(f"No issuers held by {min_funds_filter}+ funds in current data.")
 
+    # ── Concentration heatmap ─────────────────────────────────────────────
+    st.divider()
+    st.subheader("Borrower × Fund Concentration Heatmap")
+    st.write(
+        "Each cell shows the FV held by that fund in that borrower. "
+        "Red shading = non-accrual at that fund. Asterisk (*) = PIK. "
+        "Sorted by number of funds holding the position, then by total FV."
+    )
+
+    import numpy as np
+
+    heatmap_top_n = st.slider("Borrowers to display", 10, 60, 30, key="heatmap_top_n")
+    heatmap_min_funds = st.slider("Minimum funds holding borrower", 2, 6, 2, key="heatmap_min_funds")
+
+    # Build per-borrower records with latest-period FV per fund
+    heatmap_recs: list[dict] = []
+    for rec in borrowers.values():
+        if rec["fund_count"] < heatmap_min_funds:
+            continue
+        apps = rec.get("appearances", [])
+        latest: dict[str, dict] = {}
+        for a in apps:
+            f = a["fund"]
+            if f not in latest or a.get("period", "") > latest[f].get("period", ""):
+                latest[f] = a
+        total_fv = sum((v.get("fv_mm") or v.get("cost_mm") or 0) for v in latest.values())
+        heatmap_recs.append({
+            "name":       rec["canonical_name"],
+            "fund_count": rec["fund_count"],
+            "total_fv":   total_fv,
+            "latest":     latest,
+            "na_funds":   set(rec.get("non_accrual_funds", [])),
+            "pik_funds":  set(rec.get("pik_funds", [])),
+            "is_na_any":  rec.get("is_non_accrual_any", False),
+        })
+
+    heatmap_recs.sort(key=lambda r: (-r["fund_count"], -r["total_fv"]))
+    top_recs = heatmap_recs[:heatmap_top_n]
+
+    if not top_recs:
+        st.info("No borrowers match the current filters.")
+    else:
+        # Key risks callout
+        na_multi = [r for r in top_recs if r["is_na_any"] and r["fund_count"] >= 2]
+        if na_multi:
+            worst = sorted(na_multi, key=lambda r: (-r["fund_count"], -r["total_fv"]))[:4]
+            lines = [f"**{r['name']}** — NA at {', '.join(sorted(r['na_funds']))}  (${r['total_fv']:.0f}M across {r['fund_count']} funds)"
+                     for r in worst]
+            st.warning(
+                "⚠️ **Non-accrual positions in multiple funds:**\n\n" + "\n\n".join(lines)
+            )
+
+        # Matrix dimensions
+        all_funds_h = sorted({f for r in top_recs for f in r["latest"]})
+        n_rows, n_cols = len(top_recs), len(all_funds_h)
+        fund_idx = {f: j for j, f in enumerate(all_funds_h)}
+
+        fv_mat   = np.zeros((n_rows, n_cols))
+        na_mat   = np.zeros((n_rows, n_cols))
+        text_mat = [[""] * n_cols for _ in range(n_rows)]
+        hover_mat = [[""] * n_cols for _ in range(n_rows)]
+
+        for i, rec in enumerate(top_recs):
+            for fund, app in rec["latest"].items():
+                j = fund_idx.get(fund)
+                if j is None:
+                    continue
+                fv = (app.get("fv_mm") or app.get("cost_mm") or 0)
+                # Use a tiny non-zero sentinel so "held but no FV" still colours the cell
+                fv_mat[i, j] = fv if fv > 0 else 0.01
+                if fund in rec["na_funds"]:
+                    na_mat[i, j] = 1
+
+                cell = f"${fv:.1f}M" if fv > 0 else "✓"
+                if fund in rec["pik_funds"]:
+                    cell += "*"
+                text_mat[i][j] = cell
+
+                tags = []
+                if fund in rec["na_funds"]:
+                    tags.append("NON-ACCRUAL")
+                if fund in rec["pik_funds"]:
+                    tags.append("PIK")
+                tag_str = "  [" + " / ".join(tags) + "]" if tags else ""
+                hover_mat[i][j] = f"{rec['name']}<br>{fund}: ${fv:.1f}M{tag_str}"
+
+        row_labels = [
+            (r["name"][:38] + "…" if len(r["name"]) > 38 else r["name"])
+            + f"  ({r['fund_count']})"
+            for r in top_recs
+        ]
+
+        fig_conc = go.Figure()
+
+        # Base heatmap: FV intensity
+        fig_conc.add_trace(go.Heatmap(
+            z=fv_mat,
+            x=all_funds_h,
+            y=row_labels,
+            text=text_mat,
+            hovertext=hover_mat,
+            hoverinfo="text",
+            texttemplate="%{text}",
+            textfont={"size": 9},
+            colorscale=[[0, "#f8fafc"], [0.001, "#bfdbfe"], [0.3, "#3b82f6"], [1, "#1e3a8a"]],
+            showscale=True,
+            colorbar=dict(title="FV ($M)", thickness=12, len=0.6),
+            zmin=0,
+        ))
+
+        # NA overlay: red tint
+        if na_mat.any():
+            fig_conc.add_trace(go.Heatmap(
+                z=na_mat,
+                x=all_funds_h,
+                y=row_labels,
+                colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(220,38,38,0.35)"]],
+                showscale=False,
+                hoverinfo="skip",
+                zmin=0, zmax=1,
+            ))
+
+        fig_conc.update_layout(
+            height=max(420, n_rows * 21 + 130),
+            margin=dict(l=10, r=10, t=50, b=10),
+            title=dict(
+                text="Borrower × Fund Exposure  |  Colour = FV ($M)  |  * = PIK  |  Red = Non-Accrual",
+                font=dict(size=13),
+            ),
+            xaxis=dict(side="top", tickfont=dict(size=11)),
+            yaxis=dict(autorange="reversed", tickfont=dict(size=10)),
+        )
+        st.plotly_chart(fig_conc, use_container_width=True)
+
+        # Summary stats below the chart
+        c1, c2, c3 = st.columns(3)
+        top_fv = max(top_recs, key=lambda r: r["total_fv"])
+        most_funds = top_recs[0]  # already sorted by fund_count desc
+        c1.metric("Most widely held", most_funds["name"][:28], f"{most_funds['fund_count']} funds")
+        c2.metric("Largest aggregate FV", top_fv["name"][:28], f"${top_fv['total_fv']:.0f}M")
+        c3.metric("NA borrowers in 2+ funds", str(len(na_multi)))
+
     # ── Borrower stress tiers ─────────────────────────────────────────────
     st.divider()
     st.subheader("Borrower Stress Tiers")
