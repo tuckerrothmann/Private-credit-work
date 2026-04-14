@@ -10070,7 +10070,7 @@
     "fv_mm": 195.525,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -10664,7 +10664,7 @@
     "fv_mm": 94.335,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -11038,7 +11038,7 @@
     "fv_mm": 1.273,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -11324,7 +11324,7 @@
     "fv_mm": 124.84,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -11676,7 +11676,7 @@
     "fv_mm": 1.226,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -13326,7 +13326,7 @@
     "fv_mm": 3.577,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -13656,7 +13656,7 @@
     "fv_mm": 51.438,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -14096,7 +14096,7 @@
     "fv_mm": 196.306,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -14954,7 +14954,7 @@
     "fv_mm": 38.072,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": true,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -15240,7 +15240,7 @@
     "fv_mm": 0.448,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -15394,7 +15394,7 @@
     "fv_mm": 1.297,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": true,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -15438,7 +15438,7 @@
     "fv_mm": 1.276,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -15724,7 +15724,7 @@
     "fv_mm": 4.882,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": true,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -15746,7 +15746,7 @@
     "fv_mm": 1.544,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": true,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -15790,7 +15790,7 @@
     "fv_mm": 13.132,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": true,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -15812,7 +15812,7 @@
     "fv_mm": 3.092,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": true,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -16120,7 +16120,7 @@
     "fv_mm": 4.771,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": true,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -16142,7 +16142,7 @@
     "fv_mm": 158.824,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": true,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -16274,7 +16274,7 @@
     "fv_mm": 45.105,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -16296,7 +16296,7 @@
     "fv_mm": 45.63,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -16428,7 +16428,7 @@
     "fv_mm": 30.006,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -16450,7 +16450,7 @@
     "fv_mm": 32.05,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -16582,7 +16582,7 @@
     "fv_mm": 295.476,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "build_time": "2026-04-12T13:20:25.152471",
+    "build_time": "2026-04-14T23:13:54.712720",
     "total_positions": 28855,
     "unique_borrowers": 4628,
     "funds_included": [
@@ -89108,7 +89108,7 @@
           "fv_mm": 7.484,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -137775,7 +137775,7 @@
           "fv_mm": 0.648,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -148309,7 +148309,7 @@
           "fv_mm": 10.1,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -148373,7 +148373,7 @@
           "fv_mm": 10.1,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -169396,7 +169396,7 @@
           "fv_mm": -0.024,
           "pct_nav": null,
           "is_pik": true,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -245366,7 +245366,7 @@
           "fv_mm": 2.847,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -259303,7 +259303,7 @@
           "fv_mm": 195.525,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -259335,7 +259335,7 @@
           "fv_mm": 195.525,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -259348,10 +259348,8 @@
       "total_fv_mm": 956.274,
       "total_cost_mm": 942.52,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Chemicals"
@@ -259361,8 +259359,8 @@
         "First lien senior secured loan"
       ],
       "unrealized_pct": 0.0146,
-      "stress_score": 3,
-      "stress_tier": "ORANGE"
+      "stress_score": 1,
+      "stress_tier": "YELLOW"
     },
     "prophix software (dba pound bid)": {
       "canonical_name": "Prophix Software Inc. (dba Pound Bidco)",
@@ -261051,7 +261049,7 @@
           "fv_mm": 13.278,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -274918,7 +274916,7 @@
           "fv_mm": 0.155,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -274934,7 +274932,7 @@
           "fv_mm": 0.158,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -274946,18 +274944,16 @@
       "total_fv_mm": 0.313,
       "total_cost_mm": 0.284,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "GSBD"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Health Care Technology"
       ],
       "invest_types": [],
       "unrealized_pct": 0.1021,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "octane purchaser (dba office ally)": {
       "canonical_name": "Octane Purchaser, Inc. (dba Office Ally)",
@@ -280444,7 +280440,7 @@
           "fv_mm": 13.349,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -288838,7 +288834,7 @@
           "fv_mm": 11.543,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -288886,7 +288882,7 @@
           "fv_mm": 14.914,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -289138,7 +289134,7 @@
           "fv_mm": 7.072,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -289182,10 +289178,8 @@
       "total_fv_mm": 28.494,
       "total_cost_mm": 28.288,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "GSBD"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Health Care Technology"
@@ -289194,8 +289188,8 @@
         "Unsecured Debt"
       ],
       "unrealized_pct": 0.0073,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "prairie provident resources": {
       "canonical_name": "Prairie Provident Resources, Inc.",
@@ -289228,7 +289222,7 @@
           "fv_mm": 9.237,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -289272,10 +289266,8 @@
       "total_fv_mm": 36.948,
       "total_cost_mm": 7178.45,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "GSBD"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Oil, Gas & Consumable Fuels"
@@ -289284,8 +289276,8 @@
         "Common Stock"
       ],
       "unrealized_pct": -0.9949,
-      "stress_score": 6,
-      "stress_tier": "RED"
+      "stress_score": 4,
+      "stress_tier": "ORANGE"
     },
     "visionsafe parent": {
       "canonical_name": "VisionSafe Parent, LLC",
@@ -289694,7 +289686,7 @@
           "fv_mm": 0.104,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -289834,10 +289826,8 @@
       "total_fv_mm": 70.878,
       "total_cost_mm": 112.832,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "GSBD"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Diversified Consumer Services"
@@ -289847,8 +289837,8 @@
         "Preferred Stock"
       ],
       "unrealized_pct": -0.3718,
-      "stress_score": 4,
-      "stress_tier": "ORANGE"
+      "stress_score": 2,
+      "stress_tier": "YELLOW"
     },
     "streamland media holdings": {
       "canonical_name": "Streamland Media Holdings LLC",
@@ -294482,7 +294472,7 @@
           "fv_mm": 14.216,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -294558,10 +294548,8 @@
       "total_fv_mm": 164.208,
       "total_cost_mm": 156.852,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "GSBD"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Software"
@@ -294570,8 +294558,8 @@
         "Preferred Stock"
       ],
       "unrealized_pct": 0.0469,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "northstar acquisition hold (dba n2y)": {
       "canonical_name": "Northstar Acquisition HoldCo, LLC (dba n2y)",
@@ -334482,7 +334470,7 @@
           "fv_mm": 0.928,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -363021,7 +363009,7 @@
           "fv_mm": 3.975,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -363053,7 +363041,7 @@
           "fv_mm": 3.91,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -363101,7 +363089,7 @@
           "fv_mm": 3.998,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -363133,7 +363121,7 @@
           "fv_mm": 3.91,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -373786,7 +373774,7 @@
           "fv_mm": 94.335,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -373818,7 +373806,7 @@
           "fv_mm": 94.335,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -373991,10 +373979,8 @@
       "total_fv_mm": 273.547,
       "total_cost_mm": 271.195,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Financial services",
@@ -374005,8 +373991,8 @@
         "First lien senior secured loan"
       ],
       "unrealized_pct": 0.0087,
-      "stress_score": 3,
-      "stress_tier": "ORANGE"
+      "stress_score": 1,
+      "stress_tier": "YELLOW"
     },
     "klarna holding ab": {
       "canonical_name": "Klarna Holding AB",
@@ -376020,7 +376006,7 @@
           "fv_mm": 124.84,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -376036,7 +376022,7 @@
           "fv_mm": 124.84,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -376048,10 +376034,8 @@
       "total_fv_mm": 408.075,
       "total_cost_mm": 404.724,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Healthcare equipment and services"
@@ -376060,8 +376044,8 @@
         "First lien senior secured loan"
       ],
       "unrealized_pct": 0.0083,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "perkinelmer us": {
       "canonical_name": "PerkinElmer U.S. LLC",
@@ -377896,7 +377880,7 @@
           "fv_mm": 1.226,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -377928,7 +377912,7 @@
           "fv_mm": 1.226,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -377940,18 +377924,16 @@
       "total_fv_mm": 17.771,
       "total_cost_mm": 17.562,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [],
       "invest_types": [
         "First lien senior secured loan"
       ],
       "unrealized_pct": 0.0119,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "ob hospitalist group": {
       "canonical_name": "OB Hospitalist Group, Inc.",
@@ -382699,7 +382681,7 @@
           "fv_mm": 3.577,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -382731,7 +382713,7 @@
           "fv_mm": 3.577,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -382743,10 +382725,8 @@
       "total_fv_mm": 15.079,
       "total_cost_mm": 13.099,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Internet software and services"
@@ -382756,8 +382736,8 @@
         "First lien senior secured GBP term loan"
       ],
       "unrealized_pct": 0.1512,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "azurite intermediate holdings (dba alteryx)": {
       "canonical_name": "Azurite Intermediate Holdings, Inc. (dba Alteryx, Inc.)",
@@ -384105,7 +384085,7 @@
           "fv_mm": 51.438,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -384137,7 +384117,7 @@
           "fv_mm": 51.438,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -384149,18 +384129,16 @@
       "total_fv_mm": 205.623,
       "total_cost_mm": 204.791,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [],
       "invest_types": [
         "First lien senior secured loan"
       ],
       "unrealized_pct": 0.0041,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "icefall parent (dba engagesmart)": {
       "canonical_name": "Icefall Parent, Inc. (dba EngageSmart)",
@@ -385401,7 +385379,7 @@
           "fv_mm": 196.306,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -385433,7 +385411,7 @@
           "fv_mm": 196.306,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -385445,10 +385423,8 @@
       "total_fv_mm": 810.13,
       "total_cost_mm": 800.564,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Leisure and entertainment"
@@ -385457,8 +385433,8 @@
         "First lien senior secured loan"
       ],
       "unrealized_pct": 0.0119,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "eternal buyer (dba wedgewood weddings)": {
       "canonical_name": "Eternal Buyer, LLC (dba Wedgewood Weddings)",
@@ -388169,7 +388145,7 @@
           "fv_mm": 38.072,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -388201,7 +388177,7 @@
           "fv_mm": 38.072,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         }
@@ -388213,10 +388189,8 @@
       "total_fv_mm": 277.291,
       "total_cost_mm": 218.591,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Automotive services"
@@ -388225,8 +388199,8 @@
         "LP Interest"
       ],
       "unrealized_pct": 0.2685,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "metis hold (dba mavis tire express services)": {
       "canonical_name": "Metis HoldCo, Inc. (dba Mavis Tire Express Services)",
@@ -389421,7 +389395,7 @@
           "fv_mm": 0.448,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -389485,7 +389459,7 @@
           "fv_mm": 0.448,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -390032,7 +390006,7 @@
           "fv_mm": 1.297,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -390064,7 +390038,7 @@
           "fv_mm": 1.297,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         }
@@ -390076,10 +390050,8 @@
       "total_fv_mm": 6.098,
       "total_cost_mm": 3.732,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Healthcare technology"
@@ -390088,8 +390060,8 @@
         "LP Interest"
       ],
       "unrealized_pct": 0.634,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "minerva hold": {
       "canonical_name": "Minerva Holdco, Inc.",
@@ -390282,7 +390254,7 @@
           "fv_mm": 1.276,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -390330,7 +390302,7 @@
           "fv_mm": 1.276,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -390342,10 +390314,8 @@
       "total_fv_mm": 6.0014,
       "total_cost_mm": 37.405,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Healthcare technology"
@@ -390354,8 +390324,8 @@
         "Partnership Units"
       ],
       "unrealized_pct": -0.8396,
-      "stress_score": 5,
-      "stress_tier": "RED"
+      "stress_score": 3,
+      "stress_tier": "ORANGE"
     },
     "sunshine software holdings (dba cornerstone ondemand)": {
       "canonical_name": "Sunshine Software Holdings, Inc. (dba Cornerstone OnDemand, Inc.)",
@@ -391247,7 +391217,7 @@
           "fv_mm": 4.882,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -391279,7 +391249,7 @@
           "fv_mm": 4.882,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         }
@@ -391291,10 +391261,8 @@
       "total_fv_mm": 35.955,
       "total_cost_mm": 21.394,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Internet software and services"
@@ -391303,8 +391271,8 @@
         "LP Interest"
       ],
       "unrealized_pct": 0.6806,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "insight cp (blocker) holdings (dba civicplus)": {
       "canonical_name": "Insight CP (Blocker) Holdings, L.P. (dba CivicPlus, LLC)",
@@ -391337,7 +391305,7 @@
           "fv_mm": 1.544,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -391369,7 +391337,7 @@
           "fv_mm": 1.544,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         }
@@ -391381,10 +391349,8 @@
       "total_fv_mm": 7.477,
       "total_cost_mm": 6.094,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Internet software and services"
@@ -391393,8 +391359,8 @@
         "LP Interest"
       ],
       "unrealized_pct": 0.2269,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "nscale global holdings limited": {
       "canonical_name": "Nscale Global Holdings Limited",
@@ -391516,7 +391482,7 @@
           "fv_mm": 13.132,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -391548,7 +391514,7 @@
           "fv_mm": 13.132,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         }
@@ -391560,10 +391526,8 @@
       "total_fv_mm": 57.782,
       "total_cost_mm": 45.178,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Internet software and services"
@@ -391572,8 +391536,8 @@
         "LP Interest"
       ],
       "unrealized_pct": 0.279,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "project hotel california-invest fund": {
       "canonical_name": "Project Hotel California Co-Invest Fund, L.P.",
@@ -391606,7 +391570,7 @@
           "fv_mm": 3.092,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -391638,7 +391602,7 @@
           "fv_mm": 3.092,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         }
@@ -391650,10 +391614,8 @@
       "total_fv_mm": 19.894,
       "total_cost_mm": 13.738,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Internet software and services"
@@ -391662,8 +391624,8 @@
         "LP Interest"
       ],
       "unrealized_pct": 0.4481,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "thunder top (dba vector solutions)": {
       "canonical_name": "Thunder Topco L.P. (dba Vector Solutions)",
@@ -392764,7 +392726,7 @@
           "fv_mm": 4.771,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -392812,7 +392774,7 @@
           "fv_mm": 4.771,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         }
@@ -392824,10 +392786,8 @@
       "total_fv_mm": 35.7,
       "total_cost_mm": 36.632,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Pharmaceuticals"
@@ -392837,8 +392797,8 @@
         "Preferred equity"
       ],
       "unrealized_pct": -0.0254,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "ideal top": {
       "canonical_name": "Ideal Topco, L.P.",
@@ -393289,7 +393249,7 @@
           "fv_mm": 45.105,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -393305,7 +393265,7 @@
           "fv_mm": 30.006,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -393353,7 +393313,7 @@
           "fv_mm": 45.105,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -393369,7 +393329,7 @@
           "fv_mm": 30.006,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -393381,10 +393341,8 @@
       "total_fv_mm": 371.639,
       "total_cost_mm": 340.871,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Asset based lending and fund finance"
@@ -393396,8 +393354,8 @@
         "LLC Interest"
       ],
       "unrealized_pct": 0.0903,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "aam series 21 aviation feeder": {
       "canonical_name": "AAM Series 2.1 Aviation Feeder, LLC",
@@ -393462,7 +393420,7 @@
           "fv_mm": 45.63,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -393478,7 +393436,7 @@
           "fv_mm": 32.05,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -393542,7 +393500,7 @@
           "fv_mm": 45.63,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -393558,7 +393516,7 @@
           "fv_mm": 32.05,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -393570,10 +393528,8 @@
       "total_fv_mm": 752.6,
       "total_cost_mm": 702.769,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Asset based lending and fund finance"
@@ -393586,8 +393542,8 @@
         "LLC Interest"
       ],
       "unrealized_pct": 0.0709,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "ps operating company (fka qc supply)": {
       "canonical_name": "PS Operating Company LLC (fka QC Supply, LLC)",
@@ -395163,7 +395119,7 @@
           "fv_mm": 295.476,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -395195,7 +395151,7 @@
           "fv_mm": 295.476,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -395207,10 +395163,8 @@
       "total_fv_mm": 1805.936,
       "total_cost_mm": 1816.487,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Joint ventures"
@@ -395220,8 +395174,8 @@
         "LLC interest"
       ],
       "unrealized_pct": -0.0058,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "lsi financing": {
       "canonical_name": "LSI Financing LLC",
@@ -395270,7 +395224,7 @@
           "fv_mm": 158.824,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         },
@@ -395318,7 +395272,7 @@
           "fv_mm": 158.824,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": true,
           "spread_bps": null
         }
@@ -395330,10 +395284,8 @@
       "total_fv_mm": 1176.874,
       "total_cost_mm": 1113.494,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Pharmaceuticals"
@@ -395343,8 +395295,8 @@
         "Common Equity"
       ],
       "unrealized_pct": 0.0569,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "263 %": {
       "canonical_name": "2.63 %",
@@ -396374,7 +396326,7 @@
           "fv_mm": 1.273,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -396390,7 +396342,7 @@
           "fv_mm": 1.273,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         }
@@ -396402,10 +396354,8 @@
       "total_fv_mm": 2.546,
       "total_cost_mm": 2.534,
       "is_pik_any": false,
-      "is_non_accrual_any": true,
-      "non_accrual_funds": [
-        "OBDC"
-      ],
+      "is_non_accrual_any": false,
+      "non_accrual_funds": [],
       "pik_funds": [],
       "industries": [
         "Food and beverage"
@@ -396414,8 +396364,8 @@
         "First lien senior secured loan"
       ],
       "unrealized_pct": 0.0047,
-      "stress_score": 2,
-      "stress_tier": "YELLOW"
+      "stress_score": 0,
+      "stress_tier": "GREEN"
     },
     "tall tree foods": {
       "canonical_name": "Tall Tree Foods, Inc.",
@@ -399603,7 +399553,7 @@
           "fv_mm": 1.622,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -399747,7 +399697,7 @@
           "fv_mm": 1.622,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -451280,7 +451230,7 @@
           "fv_mm": 2.564,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },
@@ -451312,7 +451262,7 @@
           "fv_mm": 2.571,
           "pct_nav": null,
           "is_pik": false,
-          "is_non_accrual": true,
+          "is_non_accrual": false,
           "is_equity": false,
           "spread_bps": null
         },

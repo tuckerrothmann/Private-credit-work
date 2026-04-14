@@ -15,7 +15,7 @@ That is exactly why it is useful as a surveillance name. If this type of credit 
 
 ## Why it matters
 - **$3.7 billion** in senior secured commitments for the 2022 Datto acquisition, with a publicly identified lender group including Golub, Blackstone Credit, Ares, Owl Rock, Oak Hill, Carlyle, and Sixth Street
-- **ARCC holds a 14.62% PIK preferred equity stake** in the holding company (Knockout Intermediate Holdings I) — a subordinated instrument that accrues but does not pay cash, signaling a complex capital structure designed to support the equity story
+- **ARCC holds a PIK preferred equity stake** in the holding company (Knockout Intermediate Holdings I) — Q3 2025: cost $31.8M at 14.62% PIK; Q4 2025: cost grew to $34.1M at 14.35% PIK (cost basis accretes as PIK compounds). A subordinated instrument that accrues but does not pay cash, signaling a complex capital structure designed to support the equity story
 - 2025 refinancing attempt of approximately **$4 billion** is a key surveillance catalyst for how the market views the credit today
 - the "sticky IT platform" narrative is exactly what private-credit underwriting finds most comfortable, making any weakness highly instructive for the broader software-credit book
 
@@ -35,7 +35,8 @@ That is exactly why it is useful as a surveillance name. If this type of credit 
 | CGBD | Q4 2025 (10-K) | Delayed draw term loan | — | — | — | No | No | Filed 10-K |
 | GSBD | Q3 2025 (10-Q) | First lien term loan (10.09%) | 18.6 | 18.8 | **101.1** | No | No | Filed 10-Q |
 | GSBD | Q3 2025 (10-Q) | First lien revolving loan (9.83%) | 0.3 | 0.3 | **104.1** | No | No | Filed 10-Q |
-| ARCC | Q3–Q4 2025 | **Preferred stock** (Knockout Intermediate) | 31.8 | n/a | n/a | **Yes (14.62% PIK)** | No | Filed 10-Q/10-K |
+| ARCC | Q3 2025 (10-Q) | **Preferred stock** (Knockout Intermediate) | 31.8 | n/a | n/a | **Yes (14.62% PIK)** | No | Filed 10-Q |
+| ARCC | Q4 2025 (10-K) | **Preferred stock** (Knockout Intermediate) | 34.1 | n/a | n/a | **Yes (14.35% PIK)** | No | Filed 10-K |
 
 **Key structural observation:** CGBD and GSBD hold first-lien debt marked at par or slight premium. ARCC holds **preferred equity in the holding company** accruing at **14.62% PIK** — a junior, non-cash-pay instrument that sits behind the first-lien debt. This structural complexity is consistent with a capital structure designed to defer equity returns while the business scales. It is also consistent with a structure that may be more levered at the holding company than the first-lien debt marks alone imply.
 
@@ -96,7 +97,8 @@ The Kaseya concern would soften if we saw:
 | 2025 | Public market reporting (project research) | ~$4B refinancing process |
 | Q3–Q4 2025 | CGBD 10-Q/10-K (filed) | First-lien at 101.5 cents; no non-accrual |
 | Q3 2025 | GSBD 10-Q (filed) | First-lien at 101.1 cents; no non-accrual |
-| Q3–Q4 2025 | ARCC 10-Q/10-K (filed) | **14.62% PIK preferred equity** in Knockout Intermediate Holdings I; $31.8M cost |
+| Q3 2025 | ARCC 10-Q (filed) | **14.62% PIK preferred equity** in Knockout Intermediate Holdings I; cost $31.8M |
+| Q4 2025 | ARCC 10-K (filed) | **14.35% PIK preferred equity** in Knockout Intermediate Holdings I; cost $34.1M (PIK accreted from $31.8M) |
 
 ## Next best additions
 - explicit 2025 refinancing timeline, size, spread, and lender clearing behavior

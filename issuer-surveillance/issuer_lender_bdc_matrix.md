@@ -53,13 +53,13 @@
 ### Kaseya
 - **CGBD (TCG BDC / Carlyle Secured Lending):** Q3–Q4 2025 10-Q/10-K. First-lien term loan: cost $36.3M, FV $36.8M. **101.5 cents.** SOFR-based. Maturity June 23, 2029. Plus delayed-draw term loan (unfunded, no FV shown).
 - **GSBD (Goldman Sachs BDC):** Q3 2025 10-Q. First-lien term loan: cost $18.6M, FV $18.8M. **101.1 cents.** Plus revolver: cost $0.3M, FV $0.3M. Maturity June 25, 2029.
-- **ARCC (Ares Capital Corporation):** Q3–Q4 2025. **Preferred stock** in Knockout Intermediate Holdings I (dba Kaseya). Cost $31.8M. Rate **14.62% PIK**. Not debt — equity in the holding company.
+- **ARCC (Ares Capital Corporation):** Q3 2025: cost $31.8M, rate **14.62% PIK**. Q4 2025: cost grew to $34.1M, rate **14.35% PIK** (PIK compounding). **Preferred stock** in Knockout Intermediate Holdings I (dba Kaseya). Not debt — equity in the holding company.
 - **GBDC (Golub Capital BDC):** Confirmed as original 2022 lender via Paul, Weiss announcement (Golub Capital listed). Filing-level confirmation in GBDC schedules not yet verified.
-- **Structural note:** ARCC's PIK preferred equity in the holding company is subordinated to all first-lien debt. PIK means no cash distributions to ARCC on this instrument.
+- **Structural note:** ARCC's PIK preferred equity in the holding company is subordinated to all first-lien debt. PIK means no cash distributions to ARCC on this instrument. Cost basis grew $2.3M from Q3 to Q4 purely from PIK accretion.
 
 ### Zendesk
 - **BXSL (Blackstone Secured Lending):** Q4 2025 10-K. First-lien term loan: cost $1.82M, FV $1.84M. **101.1 cents.** Maturity November 22, 2028. (Small BXSL position — suggests broader syndicate beyond BXSL's slice.)
-- **FSK (FS KKR Capital Corp):** Q3–Q4 2025. Multiple tranches totaling approximately $79.6M cost / $79.1M FV. Multiple SF-rate tranches. Maturity November 22, 2028.
+- **FSK (FS KKR Capital Corp):** Q4 2025 (10-K). Six tranches (SF and SF+500) totaling approximately $158.8M cost / $159.7M FV. Maturity November 22, 2028. All tranches marked near or above par (~100.6¢ avg).
 - **BCRED (Blackstone Private Credit):** Portfolio page (Jan 2026). Listed as Zendesk, Inc. first-lien senior secured.
 - **OTF (Blue Owl Technology Finance):** Portfolio holdings page. Listed as Zendesk, Inc. first-lien senior secured loan.
 - **ARCC (Ares Capital Corporation):** Q4 2022 / 2023 public portfolio materials indicate funded and unfunded first-lien exposure (project research; filing-level confirmation not yet in repo).

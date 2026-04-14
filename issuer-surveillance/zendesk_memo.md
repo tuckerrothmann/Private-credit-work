@@ -29,7 +29,7 @@ But the category also sits unusually close to AI-driven automation risk, which m
 | Fund | Filing period | Position type | Cost ($M) | Fair value ($M) | Mark (¢/$) | PIK? | Non-accrual? | Source |
 |------|--------------|--------------|-----------|-----------------|------------|------|--------------|--------|
 | BXSL | Q4 2025 (10-K) | First lien term loan (SOFR+) | 1.82 | 1.84 | **101.1** | No | No | Filed 10-K |
-| FSK | Q3 2025 (10-Q) | First lien (multiple tranches) | ~79.6 | ~79.1 | ~**99.4** | No | No | Filed 10-Q |
+| FSK | Q4 2025 (10-K) | First lien (6 tranches, SF and SF+500) | ~158.8 | ~159.7 | ~**100.6** | No | No | Filed 10-K |
 | BCRED | Jan 2026 | First lien senior secured | n/a | confirmed | n/a | TBD | No | Portfolio page |
 | Blue Owl (OTF) | 2025–2026 | First lien senior secured | n/a | confirmed | n/a | TBD | No | Portfolio holdings |
 | ARCC | Q4 2022–2023 | First lien (funded + unfunded) | n/a | reported | n/a | TBD | No | Public portfolio (project research) |
@@ -94,7 +94,7 @@ The Zendesk concern would soften if we saw:
 | 2022-06-30 | Latham & Watkins | Largest-ever ARR financing; largest direct-lending LBO in history at the time; $10.2B transaction |
 | 2022-11-22 | Zendesk completion release | Acquisition closes at approximately $10.2 billion |
 | 2022–2023 | Public reporting / project research | Identifies Blackstone, Apollo, Blue Owl, HPS as major lenders; ARCC funded and unfunded first-lien position |
-| Q3–Q4 2025 | FSK 10-Q/10-K (filed) | Multiple Zendesk first-lien tranches, all marked near par, no non-accrual |
+| Q4 2025 | FSK 10-K (filed) | 6 Zendesk first-lien tranches (SF and SF+500), ~$158.8M cost / ~$159.7M FV, all marked near par (avg ~100.6¢), no non-accrual |
 | Q4 2025 | BXSL 10-K (filed) | Zendesk first-lien at 101.1 cents; no non-accrual |
 | 2026-01-31 | BCRED portfolio page | Zendesk, Inc. listed as first-lien senior secured investment |
 | 2025–2026 | Blue Owl Technology Finance portfolio | Zendesk, Inc. listed as first-lien senior secured loan |
