@@ -376,5 +376,96 @@
     ],
     "na_rate": null,
     "as_of": "2025-12-31"
+  },
+  "MSDL": {
+    "ticker": "MSDL",
+    "score": 5,
+    "tier": "YELLOW",
+    "flags": [
+      "coverage_below_085x",
+      "coverage_below_1x",
+      "discount_moderate",
+      "discount_severe",
+      "headroom_limited"
+    ],
+    "na_rate": 0.014,
+    "as_of": "2025-12-31"
+  },
+  "NMFC": {
+    "ticker": "NMFC",
+    "score": 5,
+    "tier": "YELLOW",
+    "flags": [
+      "discount_moderate",
+      "discount_severe",
+      "headroom_limited",
+      "leverage_moderate",
+      "nav_erosion_mild"
+    ],
+    "na_rate": 0.014,
+    "as_of": "2025-12-31"
+  },
+  "MFIC": {
+    "ticker": "MFIC",
+    "score": 6,
+    "tier": "YELLOW",
+    "flags": [
+      "discount_moderate",
+      "headroom_limited",
+      "headroom_tight",
+      "leverage_high",
+      "leverage_moderate",
+      "nav_erosion_mild"
+    ],
+    "na_rate": 0.026,
+    "as_of": "2025-12-31"
+  },
+  "OCCI": {
+    "ticker": "OCCI",
+    "score": 5,
+    "tier": "YELLOW",
+    "flags": [
+      "coverage_below_070x",
+      "coverage_below_085x",
+      "coverage_below_1x",
+      "discount_moderate",
+      "discount_severe"
+    ],
+    "na_rate": null,
+    "as_of": "2025-10-31"
+  },
+  "ASIF": {
+    "ticker": "ASIF",
+    "score": 0,
+    "tier": "GREEN",
+    "flags": [],
+    "na_rate": null,
+    "as_of": "2025-12-31"
+  },
+  "GCRED": {
+    "ticker": "GCRED",
+    "score": 0,
+    "tier": "GREEN",
+    "flags": [],
+    "na_rate": null,
+    "as_of": "2025-09-30"
+  },
+  "HLEND": {
+    "ticker": "HLEND",
+    "score": 0,
+    "tier": "GREEN",
+    "flags": [],
+    "na_rate": null,
+    "as_of": "2025-12-31"
+  },
+  "SSLP": {
+    "ticker": "SSLP",
+    "score": 1,
+    "tier": "GREEN",
+    "flags": [
+      "headroom_limited"
+    ],
+    "na_rate": 0.0,
+    "as_of": "2025-12-31"
   }
 }
