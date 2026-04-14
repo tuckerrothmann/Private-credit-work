@@ -21,7 +21,7 @@
 | Issuer | ARCC | BXSL | BCRED | FSK | OBDC | OTF | GSBD | GBDC | CGBD | OCSL | HTGC |
 |--------|------|------|-------|-----|------|-----|------|------|------|------|------|
 | **Medallia** | No evidence | **Confirmed (filed)** 78.3¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~99¢ PIK | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence |
-| **Finastra** | **Confirmed (filed)** 102¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** NON-ACCRUAL + revolver | **Confirmed (portfolio page)** | No evidence | No evidence | No evidence | **Confirmed (filed)** 98¢ | No evidence |
+| **Finastra** | **Confirmed (filed)** 102¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** revolving ~101¢ | **Confirmed (portfolio page)** | No evidence | **Confirmed (filed)** ~98.8¢ | No evidence | **Confirmed (filed)** 98¢ fixed | No evidence |
 | **Kaseya** | **Confirmed (filed)** PIK preferred equity | No evidence | No evidence | No evidence | No evidence | No evidence | **Confirmed (filed)** 101¢ | **Confirmed (ann't)** | **Confirmed (filed)** 102¢ | No evidence | No evidence |
 | **Zendesk** | **Confirmed (ann't/research)** | **Confirmed (filed)** 101¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~99¢ | No evidence | **Confirmed (portfolio page)** | No evidence | No evidence | No evidence | No evidence | No evidence |
 | **RealPage** | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence |
@@ -41,11 +41,13 @@
 - **Mark dispersion:** 21 percentage points between BXSL (78¢) and FSK (~99¢) as of the same period-end. The Blackstone mark has drifted from approximately 94 (late 2024) to 78 (Q4 2025) per public reporting.
 
 ### Finastra
-- **OBDC (Blue Owl Capital Corporation):** Q3–Q4 2025 10-Q/10-K. First-lien term loan: cost $93.5M, FV $94.3M, **NON-ACCRUAL**. First-lien revolving: cost $27.7M, FV $28.1M, accruing normally. Maturity September 2029.
-- **ARCC (Ares Capital Corporation):** Q3–Q4 2025. First-lien senior secured loan: cost $51.4M, FV $52.6M. **102.3 cents.** No non-accrual. Maturity September 2029. Rate 10.97%.
+- **ARCC (Ares Capital Corporation):** Q3–Q4 2025. First-lien senior secured loan: cost $51.4M, FV $52.6M. **102.3 cents.** No non-accrual. Maturity September 2029. Rate 10.97% (floating).
 - **OCSL (Oaktree Specialty Lending):** FY2025 10-K. First-lien: cost $11.7M, FV $11.5M. **98.3 cents.** No non-accrual. Maturity September 13, 2029. Fixed rate 7.25%.
+- **OBDC (Blue Owl Capital Corporation):** Q3–Q4 2025 10-Q/10-K. First-lien revolving loan: cost $27.5M, FV $27.9M, accruing normally (S+ floating). Estimated term loan exposure of ~$66M additional (implied from parser subtotal row). No non-accrual on either instrument.
+- **GBDC (Golub Capital BDC):** Q3–Q4 2025. "One stop" positions at ~98.7–98.8 cents; small ($2.9M FV in Q4); no non-accrual.
 - **OTF (Blue Owl Technology Finance):** Portfolio holdings page. Listed as Finastra USA first-lien senior secured loan.
-- **Critical finding:** OBDC non-accrual on a term loan carrying value of $94.3M while ARCC accrues at 102 cents on the same September 2029 maturity. Same borrower, same maturity, different accrual treatment.
+- **Mark dispersion note:** The 4-point gap between ARCC (102¢) and OCSL (98¢) reflects **rate structure, not credit quality**. ARCC holds a floating-rate loan at ~11% while OCSL holds a fixed-rate loan at 7.25% — a below-market coupon in the current rate environment that appropriately trades at a discount.
+- **Parser artifact note:** Earlier analysis flagged OBDC as having a $93.5M term loan on non-accrual. Investigation confirmed this was a subtotal row captured by the portfolio parser — key diagnostics: FV above cost (100.9¢), empty rate/par fields, and cent-for-cent identical values across Q3 and Q4 quarter-ends. The non-accrual flag was misapplied via the `_tbl_na` issuer carry-forward. No non-accrual has been confirmed at any Finastra lender.
 
 ### Kaseya
 - **CGBD (TCG BDC / Carlyle Secured Lending):** Q3–Q4 2025 10-Q/10-K. First-lien term loan: cost $36.3M, FV $36.8M. **101.5 cents.** SOFR-based. Maturity June 23, 2029. Plus delayed-draw term loan (unfunded, no FV shown).
@@ -96,8 +98,8 @@
 |--------|--------------------|-----------|----|--------|
 | Medallia | **78.3¢** | Q4 2025 10-K | BXSL | Current; diverges from FSK at 99¢ |
 | Medallia | **~99¢ (PIK active)** | Q4 2025 10-K | FSK | 21-point gap vs. BXSL |
-| Finastra | **Non-accrual** (~101¢ FV) | Q4 2025 10-K | OBDC | Non-accrual on $93.5M term loan |
-| Finastra | **102¢** | Q4 2025 10-K | ARCC | Accruing; diverges from OBDC |
+| Finastra | **102¢** | Q4 2025 10-K | ARCC | Floating rate; accruing; no stress signal |
+| Finastra | **98¢ (fixed 7.25%)** | Q4 2025 10-K | OCSL | Fixed below-market rate; discount reflects rate duration, not credit concern |
 | Kaseya | **102¢** | Q4 2025 10-K | CGBD | Clean first-lien |
 | Kaseya | **PIK preferred** (14.62%) | Q4 2025 10-K | ARCC | Holdco preferred, no cash pay |
 | Zendesk | **101¢** | Q4 2025 10-K | BXSL | Clean; forward AI risk |
@@ -113,7 +115,7 @@
 | Issuer | Risk tier | Primary signal | BDC visibility |
 |--------|-----------|---------------|----------------|
 | Medallia | **Tier 1 — Live stress** | 78¢ mark at BXSL; 21-pt dispersion; PIK at FSK | BXSL, FSK, BCRED |
-| Finastra | **Tier 1 — Accrual event** | OBDC non-accrual on $93.5M term loan | OBDC, ARCC, OCSL, OTF |
+| Finastra | **Tier 2 — Scale / refinancing watch** | $5.3B loan; 2029 maturity; fintech disruption risk; all lenders at par | ARCC, OCSL, OBDC, GBDC, OTF |
 | Pluralsight | **Tier 1 — Historical workout** | PIK debt + equity post-restructuring | ARCC, GSBD |
 | Kaseya | **Tier 2 — Hidden structure** | PIK preferred in holdco; refi catalyst | CGBD, GSBD, ARCC |
 | Zendesk | **Tier 2 — Forward risk** | Broadest BDC visibility; AI category | BXSL, FSK, BCRED, OTF |
@@ -127,7 +129,7 @@
 ## What this matrix enables
 
 1. **BDC-level concentration check** — BXSL appears in Medallia, Zendesk, Anaplan, and Coupa; understanding BXSL's total software exposure helps size the mark-down risk in one vehicle
-2. **Cross-lender divergence tracking** — BXSL vs. FSK on Medallia; OBDC vs. ARCC on Finastra — these are live divergences to resolve over the next 2–4 quarters
+2. **Cross-lender divergence tracking** — BXSL vs. FSK on Medallia is the live 21-point dispersion to watch; ARCC (102¢, floating) vs. OCSL (98¢, fixed 7.25%) on Finastra reflects rate structure rather than credit divergence
 3. **ARCC exposure audit** — ARCC appears in Anaplan (clean), Kaseya (PIK preferred), Pluralsight (PIK debt), and Finastra (accruing) — a mixed picture that warrants monitoring in ARCC's own published disclosures
 4. **Refinancing wall** — October 2028 (Avalara), November 2028 (Zendesk), June–August 2029 (Anaplan, Kaseya, Finastra, Pluralsight) is a concentrated maturity window for this universe
 

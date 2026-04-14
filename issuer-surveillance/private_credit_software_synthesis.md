@@ -21,10 +21,14 @@ This memo synthesizes the full issuer universe into a coherent PM-level framewor
 
 **Key signal:** When two sophisticated institutions mark the same first-lien loan 21 points apart, one of them is more right than the other. BXSL's 78-cent mark represents a $85M unrealized loss against cost. Until that gap closes — either through recovery at FSK's mark or through FSK marking down to BXSL's level — the dispersion is itself the signal.
 
-### Category 2: Accrual event — non-accrual confirmed at a major BDC
-**Finastra** is the most significant new finding in this universe: OBDC placed its **$93.5 million first-lien Finastra term loan on non-accrual** in Q3 2025, and it remained on non-accrual through Q4 2025. At the same time, ARCC carries comparable Finastra first-lien exposure at **102 cents with no non-accrual**. This divergence — one major BDC accruing at premium, another on non-accrual on the same borrower — is a direct, filing-backed indication of credit stress that is not uniformly recognized across the lender group.
+### Category 2: Scale / refinancing surveillance — largest single private-credit deal with 2029 maturity
+**Finastra** is the $5.3 billion private-credit loan that cannot be ignored by size alone. Filing-confirmed exposure across ARCC ($52.6M FV at 102 cents), OCSL ($11.5M FV at 98 cents, fixed rate), OBDC (revolving ~$27.9M FV, accruing), and GBDC (small positions at ~99 cents), plus OTF portfolio-page confirmation. **All confirmed holders are accruing at or near par as of Q4 2025.**
 
-**Key signal:** Non-accrual at OBDC on a $5.3B private-credit loan is not an isolated data point. It is a factual marker that this credit is not performing cleanly, regardless of what other lenders' marks show.
+**On the apparent mark dispersion:** The 4-point gap between ARCC (102¢, floating ~11%) and OCSL (98¢, fixed 7.25%) reflects rate structure rather than credit quality. A 7.25% fixed-rate loan in a 10%+ rate environment appropriately trades at a discount to par — this is interest rate duration, not credit deterioration. When controlled for rate type, the lender consensus is clean.
+
+**Parser artifact disclosure:** During this project's investigation, the portfolio parser initially flagged a $93.5M OBDC entry for Finastra as non-accrual. Subsequent forensic analysis identified this as a subtotal row: the entry had (1) FV above cost at 100.9 cents (inconsistent with non-accrual), (2) empty rate and par fields (consistent with a totals row), and (3) identical cost and FV across Q3 and Q4 quarter-ends (impossible for a real loan). The non-accrual flag was misapplied via the parser's issuer-level carry-forward mechanism. No confirmed non-accrual exists at any Finastra lender.
+
+**Key signal:** A $5.3B private-credit loan maturing in September 2029 — part of the same maturity cluster as Kaseya, Anaplan, and Pluralsight — warrants active monitoring even with clean current marks. The refinancing execution quality in 2028–2029 will be a market signal about private-credit appetite for large leveraged fintech names.
 
 ### Category 3: Capital-structure complexity — hidden stress signals in structure
 **Kaseya** shows clean first-lien marks at CGBD (101.5 cents) and GSBD (101.1 cents), but **ARCC holds a 14.62% PIK preferred equity stake** in the holding company (Knockout Intermediate Holdings I). PIK preferred at 14.62% in a holding company sitting above $3.7B of first-lien debt is not a simple equity kicker — it is a structural signal that the capital stack has multiple layers, the junior layers are accruing without cash payment, and the holding-company leverage picture may be more complex than the first-lien marks alone imply.
@@ -105,11 +109,13 @@ The names most useful for anticipating BDC bond risk combine:
 
 On this basis, the current ranking is:
 1. **Medallia** — live mark stress, PIK activity, 21-point dispersion (confirmed filing)
-2. **Finastra** — confirmed non-accrual at OBDC, divergent treatment across lenders (confirmed filing)
-3. **Kaseya** — holdco PIK preferred complexity, large refinancing catalyst (confirmed filing)
+2. **Kaseya** — holdco PIK preferred complexity, large refinancing catalyst (confirmed filing)
+3. **Finastra** — largest single private-credit loan; $5.3B at 2029 maturity; all lenders at par but scale demands surveillance (confirmed filing)
 4. **Zendesk** — broadest BDC visibility, forward AI risk (confirmed filing)
 5. **Pluralsight** — completed workout, confirmed filing in both PIK debt and equity forms (confirmed filing)
 6. **RealPage** — no confirmed BDC holding, but legal risk template is unique and applicable more broadly
+
+*Finastra was previously ranked #2 based on a parsing artifact that initially appeared as a $93.5M OBDC non-accrual. Investigation confirmed the entry was a subtotal row with a misapplied non-accrual flag. No confirmed non-accrual exists at any Finastra lender; Finastra has been re-ranked to reflect its actual surveillance priority: scale and refinancing risk rather than current credit stress.*
 
 ---
 
@@ -132,8 +138,8 @@ The CCLF liquidity memo covers these dynamics. But the issuer surveillance work 
 |----------|--------|---------|
 | 1 | Source the CCLF 14% tender request datapoint | Most important unconfirmed data point in the project |
 | 2 | Track BXSL Medallia mark in next filed schedule | Confirms whether the 78-cent drift is stabilizing or continuing |
-| 3 | Monitor OBDC for Finastra non-accrual resolution | Whether OBDC cures, restructures, or writes off tells us the direction |
-| 4 | Check for ARCC Finastra accrual status change | If ARCC joins OBDC on non-accrual, it signals broader lender recognition |
+| 3 | Source Finastra 2025 syndicated refinancing outcome | Execution quality is the credit signal — price, size taken out, and what remained with private-credit holders |
+| 4 | Track OBDC portfolio for any new non-accrual credits | With the Finastra parsing artifact resolved, OBDC's actual 2.7% / 1.3% (cost/FV) non-accrual pool needs borrower-level attribution |
 | 5 | Watch FSK Medalllia marks vs. BXSL | Convergence or continued divergence is the tell |
 | 6 | Add Kaseya 2025 refinancing details | Execution quality reveals true market appetite for the credit |
 | 7 | Build cross-issuer mark-drift table | Single view showing cost vs. FV trends across all names over time |
