@@ -138,7 +138,7 @@ def score_fund(metrics: dict[str, Any]) -> dict[str, Any]:
     pik = metrics.get("pik_pct_of_income")
     if pik is not None:
         if pik >= 0.20:
-            _add("pik_creep", 2, "pik_creep_moderate", "pik_creep_severe")
+            _add("pik_creep", 2, "pik_creep_severe")
         elif pik >= 0.10:
             _add("pik_creep", 1, "pik_creep_moderate")
 

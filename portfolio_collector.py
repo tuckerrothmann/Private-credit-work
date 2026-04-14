@@ -1568,8 +1568,20 @@ def build_borrower_db(
       borrowers:  dict[issuer_name, BorrowerRecord]
       meta:       {build_time, funds_included, total_positions}
     """
-    files = sorted(cache_dir.glob("*.json"))
-    files = [f for f in files if not f.name.startswith("_")]
+    # Keep only the most recent period per fund ticker (TICKER_YYYY-MM-DD.json).
+    # Without this, aggregating Q3 + Q4 files would double-count every position.
+    _ticker_files: dict[str, Path] = {}
+    for fpath in sorted(cache_dir.glob("*.json")):
+        if fpath.name.startswith("_"):
+            continue
+        parts = fpath.stem.split("_", 1)
+        if len(parts) != 2:
+            _ticker_files.setdefault(fpath.stem, fpath)
+            continue
+        ticker, period = parts[0].upper(), parts[1]
+        if ticker not in _ticker_files or period > _ticker_files[ticker].stem.split("_", 1)[1]:
+            _ticker_files[ticker] = fpath
+    files = sorted(_ticker_files.values())
 
     # issuer_key -> record
     borrowers: dict[str, dict] = {}
