@@ -22,8 +22,8 @@
 |--------|------|------|-------|-----|------|-----|------|------|------|------|------|
 | **Medallia** | No evidence | **Confirmed (filed)** 78.3¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~99¢ PIK | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence |
 | **Finastra** | **Confirmed (filed)** 102¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** revolving ~101¢ | **Confirmed (portfolio page)** | No evidence | **Confirmed (filed)** ~98.8¢ | No evidence | **Confirmed (filed)** 98¢ fixed | No evidence |
-| **Kaseya** | **Confirmed (filed)** PIK preferred equity | No evidence | No evidence | No evidence | No evidence | No evidence | **Confirmed (filed)** 101¢ | **Confirmed (ann't)** | **Confirmed (filed)** 102¢ | No evidence | No evidence |
-| **Zendesk** | **Confirmed (ann't/research)** | **Confirmed (filed)** 101¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~99¢ | No evidence | **Confirmed (portfolio page)** | No evidence | No evidence | No evidence | No evidence | No evidence |
+| **Kaseya** | **Confirmed (filed)** PIK preferred equity | No evidence | No evidence | No evidence | **Confirmed (filed)** 100¢ pref | No evidence | **Confirmed (filed)** 101¢ | **Confirmed (filed)** 101¢ | **Confirmed (filed)** 102¢ | **Confirmed (filed)** 100¢ | No evidence |
+| **Zendesk** | **Confirmed (filed)** 1st lien + **PIK pref −52%** | **Confirmed (filed)** 101¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~101¢ | **Confirmed (filed)** ~101¢ | **Confirmed (portfolio page)** | No evidence | **Confirmed (filed)** ~100¢ | No evidence | No evidence | No evidence |
 | **RealPage** | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence |
 | **Anaplan** | **Confirmed (filed)** 100¢ | **Confirmed (filed)** 101¢ | No evidence | No evidence | No evidence | **Confirmed (portfolio page)** | No evidence | No evidence | No evidence | No evidence | No evidence |
 | **Avalara** | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | **Confirmed (filed)** 102¢ | **Confirmed (filed)** 101¢ | No evidence |
@@ -51,19 +51,27 @@
 - **Parser artifact note:** The portfolio parser showed a $93.5M OBDC entry with is_non_accrual=true. This is **prior-year (December 31, 2024) comparison-column data** — the Q3 and Q4 2025 10-Q/10-K SOI tables include prior-year comparison columns, and the parser extracted both. The non-accrual on the TLB was real as of December 31, 2024 but was resolved by the August 2025 refinancing. Diagnostics: identical cost/FV across Q3 and Q4, FV above cost (100.9¢), empty rate/par/pct_nav.
 
 ### Kaseya
-- **CGBD (TCG BDC / Carlyle Secured Lending):** Q3–Q4 2025 10-Q/10-K. First-lien term loan: cost $36.3M, FV $36.8M. **101.5 cents.** SOFR-based. Maturity June 23, 2029. Plus delayed-draw term loan (unfunded, no FV shown).
-- **GSBD (Goldman Sachs BDC):** Q3 2025 10-Q. First-lien term loan: cost $18.6M, FV $18.8M. **101.1 cents.** Plus revolver: cost $0.3M, FV $0.3M. Maturity June 25, 2029.
-- **ARCC (Ares Capital Corporation):** Q3 2025: cost $31.8M, rate **14.62% PIK**. Q4 2025: cost grew to $34.1M, rate **14.35% PIK** (PIK compounding). **Preferred stock** in Knockout Intermediate Holdings I (dba Kaseya). Not debt — equity in the holding company.
-- **GBDC (Golub Capital BDC):** Confirmed as original 2022 lender via Paul, Weiss announcement (Golub Capital listed). Filing-level confirmation in GBDC schedules not yet verified.
-- **Structural note:** ARCC's PIK preferred equity in the holding company is subordinated to all first-lien debt. PIK means no cash distributions to ARCC on this instrument. Cost basis grew $2.3M from Q3 to Q4 purely from PIK accretion.
+- **Refinancing completed March 2025:** $3.175B first-lien at **S+325** (7yr, OID 99.5) + $925M second-lien at **S+500** (8yr, OID 99.5) + $535M revolving facility. Lead arranger: Morgan Stanley. Original 2022 private-credit syndicate (S+550) repaid in full. Pricing 225bps tighter on first-lien confirms market comfort.
+- **CGBD (TCG BDC / Carlyle Secured Lending):** Q3–Q4 2025 10-Q/10-K. First-lien: cost $36.3M, FV $36.8M. **101.5 cents.** New BSL paper (post-Mar 2025 refi). Maturity June 23, 2029.
+- **GSBD (Goldman Sachs BDC):** Q4 2025 10-K. First-lien: cost $19.1M, FV $19.4M. **101.1 cents.** New BSL paper.
+- **OBDC (Blue Owl Capital Corporation):** Q4 2025. Perpetual preferred stock (S+): cost $17.4M, FV $17.3M. **99.7 cents.** No non-accrual.
+- **OCSL (Oaktree Specialty Lending):** Q4 2025. First-lien: cost $34.3M, FV $34.2M. **99.5 cents.**
+- **SLRC (SLR Investment Corp):** Q3–Q4 2025. First-lien: cost $33.8M, FV $33.6M. **99.2 cents.** PIK.
+- **TCPC (BlackRock TCP Capital):** Q4 2025. First-lien: cost $9.3M, FV $9.5M. **102.8 cents.**
+- **ARCC (Ares Capital Corporation):** Q3 2025: cost $31.8M, rate **14.62% PIK**. Q4 2025: cost grew to $34.1M, rate **14.35% PIK**. **Holding-company preferred stock** in Knockout Intermediate Holdings I — not refinanced; remains outstanding. Cost basis grew $2.3M Q3→Q4 from PIK accretion.
+- **GBDC (Golub Capital BDC):** Original 2022 lender confirmed via Paul, Weiss announcement. Q3/Q4 2025 shows ~$4M equity/warrant position at ~1600¢ mark — consistent with a small equity co-invest, not a first-lien term loan.
+- **Structural note:** The 2025 refinancing added a new $925M second-lien tranche (S+500) not present in the 2022 structure. ARCC's holding-company PIK preferred ($34.1M accreting) remains outstanding behind the full $4.1B debt stack.
 
 ### Zendesk
-- **BXSL (Blackstone Secured Lending):** Q4 2025 10-K. First-lien term loan: cost $1.82M, FV $1.84M. **101.1 cents.** Maturity November 22, 2028. (Small BXSL position — suggests broader syndicate beyond BXSL's slice.)
-- **FSK (FS KKR Capital Corp):** Q4 2025 (10-K). Six tranches (SF and SF+500) totaling approximately $158.8M cost / $159.7M FV. Maturity November 22, 2028. All tranches marked near or above par (~100.6¢ avg).
+- **ARCC (Ares Capital Corporation) — key mark signal:** ARCC holds a full capital stack in Zoro TopCo (the Zendesk holding company): (1) first-lien term loan (~$36.2M cost, 8.69% floating); (2) **Series A preferred stock (13.50% PIK)**: Q3 FV $27.9M → Q4 FV **$13.4M (−52% Q3→Q4)**; (3) Class A common equity: Q3 FV $2.5M → Q4 FV **−$2.0M (written to zero)**. The 52% preferred equity markdown is the first concrete filing-sourced evidence of capital-structure impairment at Zendesk.
+- **BXSL (Blackstone Secured Lending):** Q4 2025 10-K. First-lien term loan: cost $1.82M, FV $1.84M. **101.0 cents.** Maturity November 22, 2028.
+- **FSK (FS KKR Capital Corp):** Q4 2025 (10-K). Six tranches totaling approximately $158.8M cost / $159.7M FV. ~100.6¢ avg. No non-accrual. Q4 size doubled vs. Q3 ($79.1M) from new originations.
+- **GBDC (Golub Capital BDC):** Q4 2025. First-lien "one stop": ~$28.3M cost / $28.2M FV. **~99.6 cents.**
+- **OBDC (Blue Owl Capital Corporation):** Q4 2025. First-lien: ~$177.9M cost / $180.3M FV. **~101.3 cents.** Slight position growth Q3→Q4.
+- **TCPC (BlackRock TCP Capital):** Q4 2025. First-lien: ~$5.6M cost / $5.8M FV. **~103.6 cents.**
 - **BCRED (Blackstone Private Credit):** Portfolio page (Jan 2026). Listed as Zendesk, Inc. first-lien senior secured.
 - **OTF (Blue Owl Technology Finance):** Portfolio holdings page. Listed as Zendesk, Inc. first-lien senior secured loan.
-- **ARCC (Ares Capital Corporation):** Q4 2022 / 2023 public portfolio materials indicate funded and unfunded first-lien exposure (project research; filing-level confirmation not yet in repo).
-- **Lender group identification:** Latham (June 2022) advises on largest-ever ARR financing and largest-ever direct-lending LBO. Blackstone, Apollo, Blue Owl, and HPS identified as major lenders per public reporting.
+- **Capital-structure pattern:** Equity layers (ARCC preferred −52%, common near zero) are absorbing losses while first-lien lenders (FSK, GBDC, OBDC, BXSL, TCPC) remain at 99–103¢. This is the exact pattern seen at Pluralsight before first-lien marks moved.
 
 ### RealPage
 - **No confirmed BDC portfolio holdings** found in borrower_db.json across the 27-BDC surveillance universe.

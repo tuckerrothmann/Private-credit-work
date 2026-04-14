@@ -88,9 +88,13 @@ As of the most recent data available from the semi-annual report (September 30, 
 
 Executed repurchase percentages have remained below the 5% standard offer size. However, the **dollar volume** has grown substantially as fund NAV increased. Approximately $918M to $1.03B per quarter in repurchases represents a material liquidity demand on a quarterly basis.
 
-**Important open question:** Tucker reported that a recent tender request was approximately **14%**, with only approximately **5–7% fulfilled**. If confirmed, this would imply latent investor demand running at nearly three times the executed level — meaning the pro-rata mechanism is regularly frustrating a substantial majority of the redemption requests tendered. This data point has not yet been independently sourced inside this repo from a primary filing or transfer-agent notice. It should be treated as important but unconfirmed until sourced.
+**Confirmed Q1 2026 data:** In Q1 2026, investors tendered approximately **14% of CCLFX shares** — a record for the fund. The fund capped actual repurchases at **7% of shares outstanding** (the fund's contractual maximum quarterly repurchase offer), meaning approximately **half of all tender requests were not fulfilled**. Confirmed by Bloomberg: "Cliffwater $33 Billion Private Credit Fund Redemptions Reach 14%" (March 11, 2026) and PitchBook: "Redemption requests at Cliffwater private credit fund total 14% of shares in Q1."
 
-**Interpretation:** Executed repurchases understate investor intent to exit. The right metric is **requested repurchases** (how many investors tried to sell), not just executed repurchases (how many were allowed to). If a 14% request versus 5–7% fulfillment datapoint is accurate, it implies persistent pent-up redemption demand that is being rationed rather than satisfied.
+At roughly $33B NAV, a 7% cap implies approximately **$2.3 billion in repurchases executed in Q1 2026**, with an additional $2.3+ billion in tendered redemption requests not fulfilled. The advance Bloomberg report (March 10, 2026: "Cliffwater's $33B fund to see withdrawals over 7%") confirmed the cap would be breached before official results.
+
+**Concurrent secondary portfolio sale:** In approximately early March 2026, PitchBook and Bloomberg confirmed that Cliffwater was working with **Evercore** to sell approximately **$1 billion in first-lien private credit assets** from CCLFX on the secondary market. The proposed structure was a leveraged vehicle (2:1 leverage) holding the assets, with CCLFX retaining ~$9 billion of exposure to the broader pool from which the $1B was drawn.
+
+**Interpretation:** Executed repurchases persistently understate investor intent to exit. The Q1 2026 data confirms that pent-up redemption demand is running at approximately 2× the cap (14% tendered vs. 7% fulfilled) — the quarterly mechanism is rationing, not satisfying, demand. The concurrent secondary portfolio sale suggests that Cliffwater may be generating liquidity from asset dispositions to supplement the normal portfolio repayment flow. This is a structurally important development: an interval fund selling assets to fund redemptions is operating closer to the stress scenario described in this memo than the base-case scenario.
 
 ---
 
@@ -112,8 +116,8 @@ In the base case, portfolio repayments fund these commitments. In a stress case 
 ### 1) The core mismatch is real, not just theoretical
 Even with an interval structure, the fund promises periodic liquidity against a portfolio that is not natively liquid. In a benign environment, repayments fund repurchases and the model works. In a stress environment, the order of events matters: repurchases are quarterly obligations while repayments depend on borrower behavior.
 
-### 2) Executed repurchases may materially understate investor intent
-If the 14% request / 5–7% fulfillment pattern is accurate and recurring, the fund is regularly rationing redemptions. This is legally disclosed and structurally intended by the interval structure — but it does not mean investor liquidity demand is low. It means investor liquidity demand is being managed through the mechanism rather than satisfied.
+### 2) Confirmed: executed repurchases materially understate investor intent
+The Q1 2026 14% tender request (confirmed, Bloomberg March 11, 2026) with 7% fulfillment means the fund is regularly rationing redemptions at a 2:1 ratio. This is legally disclosed and structurally intended by the interval structure — but it does not mean investor liquidity demand is low. It means investor liquidity demand is being managed through the mechanism rather than satisfied. The Q1 2026 data is the clearest confirmation yet that latent exit demand is structurally elevated.
 
 ### 3) Facility utilization jumped sharply in H1 FY2026
 The move from $1.19B drawn at March 31, 2025 to $3.21B drawn at September 30, 2025 is a $2.0B increase in revolving and DDTL usage. Whether this reflects opportunistic deployment into new loans or necessary bridging of commitments and repurchases matters significantly for the liquidity story. The semi-annual report does not make this distinction obvious, and that ambiguity is itself a concern.
@@ -164,7 +168,7 @@ Put differently: this looks more like a **high-yield structured liquidity risk p
 
 ## Highest-value next work items
 
-1. **Source the 14% redemption request data** — find the underlying fund notice or transfer-agent communication that would confirm requested versus executed tender splits on a quarterly basis; this is the single most important open data point in the CCLF analysis
+1. ~~**Source the 14% redemption request data**~~ — **Confirmed** (Bloomberg March 11, 2026; PitchBook). Q1 2026: 14% tendered, 7% executed. The secondary portfolio sale (~$1B via Evercore) is the next confirming datapoint to track.
 2. **Build a senior notes table** — document each outstanding note series: size, coupon, maturity, and outstanding balance; the annual report confirms multiple series but the detailed schedule needs to be extracted and organized
 3. **Add an asset-side liquidity section** — map portfolio repayments, prepayments, and realizations against repurchase and commitment demands to assess whether the fund can self-fund liquidity needs over time
 4. **Model the facility utilization trend** — the $2B H1 FY2026 draw is a significant data point; build a table tracking facility draw and repayment by quarter

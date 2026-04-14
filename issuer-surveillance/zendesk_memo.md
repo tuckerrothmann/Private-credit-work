@@ -1,7 +1,7 @@
 # Zendesk — issuer memo
 
 ## One-line thesis
-Zendesk is one of the cleanest **AI-risk software credit** cases in the set: the largest direct-lending LBO in history at the time of close, with filing-confirmed exposure across BXSL, FSK, BCRED, and Blue Owl Technology Finance — making it one of the few names in this universe where category-level disruption risk can be tracked directly through public BDC marks.
+Zendesk is the clearest current **AI-risk software credit** case in the set: the largest direct-lending LBO in history at the time of close, with filing-confirmed exposure across BXSL, FSK, BCRED, and Blue Owl Technology Finance — and a confirmed first mark signal in ARCC's equity layer, where the Series A preferred stock was marked down **52%** (from $27.9M to $13.4M) between Q3 and Q4 2025, even as first-lien debt at other BDCs remains clean at 100–101¢.
 
 ## What the company does
 Zendesk provides customer-support and customer-service software, including ticketing, workflow automation, knowledge-base tools, and AI-enabled support products. It has historically looked easy to finance because customer-support systems are often embedded in daily operations and linked to high-volume workflow.
@@ -26,15 +26,25 @@ But the category also sits unusually close to AI-driven automation risk, which m
 
 ## Confirmed public BDC portfolio evidence
 
+ARCC's position in Zendesk is a full capital-stack holding: first-lien term loan, Series A preferred stock (13.50% PIK), and Class A common equity. The preferred and equity instruments are at Zoro TopCo, Inc. / Zoro TopCo, LP (the Zendesk holding company). Other BDCs hold only first-lien term loans.
+
 | Fund | Filing period | Position type | Cost ($M) | Fair value ($M) | Mark (¢/$) | PIK? | Non-accrual? | Source |
 |------|--------------|--------------|-----------|-----------------|------------|------|--------------|--------|
-| BXSL | Q4 2025 (10-K) | First lien term loan (SOFR+) | 1.82 | 1.84 | **101.1** | No | No | Filed 10-K |
+| BXSL | Q4 2025 (10-K) | First lien term loan (SOFR+) | 1.82 | 1.84 | **101.0** | No | No | Filed 10-K |
 | FSK | Q4 2025 (10-K) | First lien (6 tranches, SF and SF+500) | ~158.8 | ~159.7 | ~**100.6** | No | No | Filed 10-K |
-| BCRED | Jan 2026 | First lien senior secured | n/a | confirmed | n/a | TBD | No | Portfolio page |
+| GBDC | Q4 2025 (10-K) | First lien ("one stop") | ~28.3 | ~28.2 | **~99.6** | No | No | Filed 10-K |
+| OBDC | Q4 2025 (10-K) | First lien term loan | ~177.9 | ~180.3 | **~101.3** | No | No | Filed 10-K |
+| TCPC | Q4 2025 (10-K) | First lien term loan | ~5.6 | ~5.8 | **~103.6** | No | No | Filed 10-K |
+| BCRED | Jan 2026 | First lien senior secured | n/a | confirmed | n/a | No | No | Portfolio page |
 | Blue Owl (OTF) | 2025–2026 | First lien senior secured | n/a | confirmed | n/a | TBD | No | Portfolio holdings |
-| ARCC | Q4 2022–2023 | First lien (funded + unfunded) | n/a | reported | n/a | TBD | No | Public portfolio (project research) |
+| **ARCC** | **Q3 2025 (10-Q)** | **Series A preferred stock (Zoro TopCo)** | — | **27.9** | n/a | **Yes (13.50% PIK)** | No | Filed 10-Q |
+| **ARCC** | **Q4 2025 (10-K)** | **Series A preferred stock (Zoro TopCo)** | — | **13.4** | n/a | **Yes (13.50% PIK)** | No | Filed 10-K |
+| ARCC | Q3 2025 (10-Q) | First lien term loan | 32.7 | — | ~par | No | No | Filed 10-Q |
+| ARCC | Q4 2025 (10-K) | First lien term loan | 36.2 | — | ~par | No | No | Filed 10-K |
 
-**Observation:** Current filed marks at BXSL and FSK appear clean (at or above par), with no non-accrual flags. The marks are consistent with a credit that has not yet shown the kind of operating or covenant deterioration that forces recognition. This makes Zendesk a forward-looking watch case rather than a current distress signal — but with the most BDC-visible lender group in the universe.
+**Key observation — ARCC preferred stock markdown:** The Series A preferred stock (13.50% PIK) at Zoro TopCo was marked down from **$27.9M to $13.4M** between Q3 and Q4 2025 — a **52% markdown in a single quarter**. The common equity was written from $2.5M to -$2.0M (effectively zero). Meanwhile, ARCC's first-lien term loan and all other BDC first-lien positions remain clean at or above par.
+
+This is a significant early signal: the equity layers in Zendesk's capital structure are absorbing losses **while the first-lien debt remains clean**. This is exactly the pattern the hidden-mark-risk thesis predicts — subordinated impairment precedes first-lien recognition by at least one or more quarters. The 52% preferred equity markdown is the first concrete mark evidence in this universe that AI-related pressure on customer-support software is beginning to flow through into investment valuations.
 
 ## Capital-structure relevance
 Zendesk matters because it is not just a software name in the abstract. It is a very large financed transaction with direct-lending relevance and a category-level question attached to it.
@@ -83,9 +93,9 @@ The Zendesk concern would soften if we saw:
 - little sign of mark pressure despite closer scrutiny of AI-sensitive software credits
 
 ## Working judgment
-- **Hidden mark risk: 4 / 5** — clean current marks but category-level AI risk is real and underappreciated
-- **BDC bond relevance: 4 / 5** — the most filing-confirmed BDC visibility of any single name in the universe (BXSL, FSK, BCRED, OTF, ARCC)
-- **Recovery fragility: 4 / 5** — soft-asset recovery dependent on franchise value in a category under AI pressure
+- **Hidden mark risk: 5 / 5** — ARCC's 52% preferred equity markdown is the first concrete filing-sourced evidence that Zendesk's capital structure is absorbing losses; first-lien debt remains clean but the equity signal strengthens the case materially
+- **BDC bond relevance: 5 / 5** — broadest filing-confirmed BDC visibility in the universe (BXSL, FSK, BCRED, OTF, ARCC, GBDC, OBDC, TCPC); ARCC now the key mark-signal to watch at each quarterly filing
+- **Recovery fragility: 4 / 5** — soft-asset recovery dependent on franchise value in a category under AI pressure; equity impairment already confirmed
 
 ## Dated sources / anchors
 
@@ -94,13 +104,18 @@ The Zendesk concern would soften if we saw:
 | 2022-06-30 | Latham & Watkins | Largest-ever ARR financing; largest direct-lending LBO in history at the time; $10.2B transaction |
 | 2022-11-22 | Zendesk completion release | Acquisition closes at approximately $10.2 billion |
 | 2022–2023 | Public reporting / project research | Identifies Blackstone, Apollo, Blue Owl, HPS as major lenders; ARCC funded and unfunded first-lien position |
+| Q3 2025 | ARCC 10-Q (filed) | Series A preferred stock (Zoro TopCo) FV = **$27.9M**; 13.50% PIK |
+| Q4 2025 | ARCC 10-K (filed) | Series A preferred stock FV = **$13.4M** (−52% Q3→Q4); common equity written to −$2.0M |
 | Q4 2025 | FSK 10-K (filed) | 6 Zendesk first-lien tranches (SF and SF+500), ~$158.8M cost / ~$159.7M FV, all marked near par (avg ~100.6¢), no non-accrual |
-| Q4 2025 | BXSL 10-K (filed) | Zendesk first-lien at 101.1 cents; no non-accrual |
+| Q4 2025 | BXSL 10-K (filed) | Zendesk first-lien at 101.0 cents; no non-accrual |
+| Q4 2025 | GBDC 10-K (filed) | Zendesk first-lien "one stop" ~$28.3M cost / ~$28.2M FV; ~99.6¢ |
+| Q4 2025 | OBDC 10-K (filed) | Zendesk first-lien ~$177.9M cost / ~$180.3M FV; ~101.3¢ |
+| Q4 2025 | TCPC 10-K (filed) | Zendesk first-lien ~$5.6M cost / ~$5.8M FV; ~103.6¢ |
 | 2026-01-31 | BCRED portfolio page | Zendesk, Inc. listed as first-lien senior secured investment |
 | 2025–2026 | Blue Owl Technology Finance portfolio | Zendesk, Inc. listed as first-lien senior secured loan |
 
 ## Next best additions
-- direct confirmation of ARCC's current Zendesk position size and mark from most recent filed schedule
-- dated AI-product / pricing chronology: specific evidence of seat compression, NRR changes, or pricing pressure vs. competitor AI tools
+- next ARCC filing: does the Series A preferred continue to decline, or does a write-off appear?
+- dated AI-product / pricing chronology: specific evidence of seat compression, NRR changes, or pricing pressure vs. competitor AI tools (Intercom Fin, Salesforce Einstein)
 - refinancing terms or any market signals on the 2028 maturity
-- any lender mark divergence if it becomes public, given the broad and visible lender group
+- any first-lien mark movement at FSK, GBDC, or OBDC following the ARCC preferred markdown
