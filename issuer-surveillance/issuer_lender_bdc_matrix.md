@@ -41,13 +41,14 @@
 - **Mark dispersion:** 21 percentage points between BXSL (78¢) and FSK (~99¢) as of the same period-end. The Blackstone mark has drifted from approximately 94 (late 2024) to 78 (Q4 2025) per public reporting.
 
 ### Finastra
-- **ARCC (Ares Capital Corporation):** Q3–Q4 2025. First-lien senior secured loan: cost $51.4M, FV $52.6M. **102.3 cents.** No non-accrual. Maturity September 2029. Rate 10.97% (floating).
+- **Deal lifecycle:** $5.3B private-credit unitranche (SOFR+725) originated September 2023; went on non-accrual at OBDC by Q4 2024; April 2025 syndicated refinancing attempt failed; **August 2025: fully refinanced via $4.195B cross-border syndicated TLB (S+400 / S+700)** — private-credit unitranche repaid in full.
+- **ARCC (Ares Capital Corporation):** Q4 2025 10-K. First-lien senior secured loan: cost $51.4M, FV $52.6M. **102.3 cents.** No non-accrual. Rate 10.97% (floating). Post-refinancing instrument; nature (new syndicated / revolving / residual) to be confirmed.
 - **OCSL (Oaktree Specialty Lending):** FY2025 10-K. First-lien: cost $11.7M, FV $11.5M. **98.3 cents.** No non-accrual. Maturity September 13, 2029. Fixed rate 7.25%.
-- **OBDC (Blue Owl Capital Corporation):** Q3–Q4 2025 10-Q/10-K. First-lien revolving loan: cost $27.5M, FV $27.9M, accruing normally (S+ floating). Estimated term loan exposure of ~$66M additional (implied from parser subtotal row). No non-accrual on either instrument.
-- **GBDC (Golub Capital BDC):** Q3–Q4 2025. "One stop" positions at ~98.7–98.8 cents; small ($2.9M FV in Q4); no non-accrual.
+- **OBDC (Blue Owl Capital Corporation):** Q4 2025 10-K. First-lien revolving loan: cost $27.5M, FV $27.9M, accruing normally. The TLB was on non-accrual at OBDC as of December 31, 2024 and was repaid in August 2025 via the syndicated refinancing. OBDC's remaining exposure is the revolving facility only.
+- **GBDC (Golub Capital BDC):** Q4 2025. "One stop" positions at ~98.8 cents; small (~$2.9M FV); no non-accrual.
 - **OTF (Blue Owl Technology Finance):** Portfolio holdings page. Listed as Finastra USA first-lien senior secured loan.
-- **Mark dispersion note:** The 4-point gap between ARCC (102¢) and OCSL (98¢) reflects **rate structure, not credit quality**. ARCC holds a floating-rate loan at ~11% while OCSL holds a fixed-rate loan at 7.25% — a below-market coupon in the current rate environment that appropriately trades at a discount.
-- **Parser artifact note:** Earlier analysis flagged OBDC as having a $93.5M term loan on non-accrual. Investigation confirmed this was a subtotal row captured by the portfolio parser — key diagnostics: FV above cost (100.9¢), empty rate/par fields, and cent-for-cent identical values across Q3 and Q4 quarter-ends. The non-accrual flag was misapplied via the `_tbl_na` issuer carry-forward. No non-accrual has been confirmed at any Finastra lender.
+- **Mark dispersion note:** The 4-point gap between ARCC (102¢) and OCSL (98¢) reflects rate structure, not credit quality. ARCC floating ~11% vs. OCSL fixed 7.25% — below-market fixed rate discounts appropriately in a high-rate environment.
+- **Parser artifact note:** The portfolio parser showed a $93.5M OBDC entry with is_non_accrual=true. This is **prior-year (December 31, 2024) comparison-column data** — the Q3 and Q4 2025 10-Q/10-K SOI tables include prior-year comparison columns, and the parser extracted both. The non-accrual on the TLB was real as of December 31, 2024 but was resolved by the August 2025 refinancing. Diagnostics: identical cost/FV across Q3 and Q4, FV above cost (100.9¢), empty rate/par/pct_nav.
 
 ### Kaseya
 - **CGBD (TCG BDC / Carlyle Secured Lending):** Q3–Q4 2025 10-Q/10-K. First-lien term loan: cost $36.3M, FV $36.8M. **101.5 cents.** SOFR-based. Maturity June 23, 2029. Plus delayed-draw term loan (unfunded, no FV shown).
@@ -115,7 +116,7 @@
 | Issuer | Risk tier | Primary signal | BDC visibility |
 |--------|-----------|---------------|----------------|
 | Medallia | **Tier 1 — Live stress** | 78¢ mark at BXSL; 21-pt dispersion; PIK at FSK | BXSL, FSK, BCRED |
-| Finastra | **Tier 2 — Scale / refinancing watch** | $5.3B loan; 2029 maturity; fintech disruption risk; all lenders at par | ARCC, OCSL, OBDC, GBDC, OTF |
+| Finastra | **Tier 3 — Completed cycle / historical anchor** | Unitranche repaid Aug 2025 via $4.2B syndicated refi; TLB was non-accrual at OBDC in Q4 2024 | ARCC, OCSL, OBDC (revolver), GBDC, OTF |
 | Pluralsight | **Tier 1 — Historical workout** | PIK debt + equity post-restructuring | ARCC, GSBD |
 | Kaseya | **Tier 2 — Hidden structure** | PIK preferred in holdco; refi catalyst | CGBD, GSBD, ARCC |
 | Zendesk | **Tier 2 — Forward risk** | Broadest BDC visibility; AI category | BXSL, FSK, BCRED, OTF |
