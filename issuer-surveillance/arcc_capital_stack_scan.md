@@ -97,24 +97,34 @@ CentralSquare provides software for government agencies: public safety dispatch,
 
 ---
 
-### Cobalt Buyer Sub / Cobalt Holdings I → **Pharmaceuticals (sector confirmed; operating company name unresolved)**
+### Cobalt Buyer Sub / Cobalt Holdings I → **BioIVT, LLC (Linden Capital Partners)**
 
-**Identity:** Sector confirmed as pharmaceuticals via Golub Capital BDC (GBDC) industry classification. The operating company name is not publicly resolvable from available SEC filing cross-references. "Cobalt" naming is consistent with the pharmaceutical sector (blue cobalt imagery is common in pharma branding). Sponsor identity unknown from public sources.
+**Identity confirmed:** BioIVT, LLC — a leading global provider of biological specimens (tissues, blood, biofluids, immune cells) and value-added services for pharmaceutical drug discovery, toxicology, ADME, and biomarker research. Formerly known as BioreclamationIVT; rebranded as BioIVT circa 2019. HQ: 123 Frost Street, Suite 115, Westbury, NY 11590 (address matched to Cobalt Buyer Sub, Inc. LEI: 254900QMS0GSZ3JBSK21).
 
-**Cross-issuer divergence — critical analytical signal:** GBDC holds the **original LBO co-invest common equity** (cost ~$11K → Q4 2025 FV ~$19.1M), which is appreciating — indicating genuine enterprise value growth at the operating company level. ARCC holds a **later-vintage rescue preferred** (13.75% PIK Series A, cost ~$104.6M → Q4 2025 FV ~−$2.0M), which has been written off entirely. This is NOT contradictory:
-- GBDC's original equity (essentially costless, acquired at LBO close) represents residual enterprise value above all debt
-- ARCC's rescue preferred (issued years after the LBO, at high PIK rate) was a junior capital infusion that sat below GBDC's equity in the recovery waterfall — or was issued at the holdco level where structural subordination trapped it
-- The 13.75% PIK rate signals this was always a high-risk junior capital infusion, priced as distress financing from inception
+**Sponsor:** Linden Capital Partners (Chicago, healthcare-focused PE). Acquired BioIVT from Arsenal Capital Partners + Thompson Street Capital Partners in October 2021 (~$800M+ enterprise value). Arsenal retained a minority rollover stake; management also rolled equity. "Cobalt" was Linden's deal codename.
 
-**Q4 2025 ARCC marks — Cobalt:**
+**LBO entity stack:** Cobalt Holdings I LP → Cobalt Intermediate I Inc → Cobalt Buyer Sub Inc (standard 3-tier LBO holdco structure).
+
+**Financing:** Ares Management Credit Group served as lead lender/agent for the senior secured credit facility. Golub Capital also participated as a lender. This explains both ARCC's multi-layer position (first-lien debt + preferred equity through its role as agent/lead) and GBDC's nominal equity co-invest stub ($11K cost, standard token allocation for a club debt co-investor).
+
+**Business context:** BioIVT's GBDC sector classification ("pharmaceuticals") reflects its end-market — it primarily serves pharmaceutical R&D organizations. BioIVT itself is a specialty life sciences services company (biospecimen supply chain), not a drug manufacturer. Revenue: undisclosed private company.
+
+**Cross-issuer divergence — why GBDC equity is appreciating while ARCC preferred is written off:**
+
+This is a structural subordination story, not a business deterioration story:
+- **GBDC's common equity** ($11K cost → $19.1M FV, appreciating) sits at the **operating company level** — it represents residual enterprise value above all debt. BioIVT has positive EV.
+- **ARCC's preferred equity** (13.75% PIK Series A, $102.1M cost → −$2M FV) sits at the **HoldCo level** (Cobalt Holdings I) — structurally below the operating company's senior secured debt in the waterfall. If EV < senior debt + preferred, the HoldCo preferred is wiped even while OpCo equity remains positive.
+- The 13.75% PIK rate from inception signals this was always priced as high-risk subordinated holdco capital, not a straightforward debt instrument.
+
+**Q4 2025 ARCC marks — BioIVT / Cobalt:**
 
 | Q3 equity FV | Q4 equity FV | Change | Debt mark (Q4) |
 |-------------|-------------|--------|---------------|
 | Series A preferred $102.1M (13.75% PIK) + preferred units $1.4M (8% PIK) = **$103.5M** | All preferred to **−$2M each = −$4M total** | **−$107.5M** | First lien (3 tranches + revolver): **94.8¢** |
 
-**Key signal:** Large preferred write-down ($107M) AND first-lien already below par (94.8¢). When both equity AND debt show impairment, this is a Category 1 credit-quality concern, not a capital-structure optimization. The GBDC equity appreciation confirms the operating company has positive enterprise value — meaning the Cobalt senior credit facility debt (94.8¢) may recover more than the mark implies. The total write-off is concentrated in ARCC's high-PIK junior capital layer.
+**Key signal:** Large preferred write-down ($107M) AND first-lien below par (94.8¢). The 94.8¢ first-lien mark is the more actionable surveillance data point — it suggests the operating company's senior debt is not at par, even though GBDC's equity is appreciating. Either the 94.8¢ reflects a normal private credit discount (not stress) or the EV has compressed enough to create modest first-lien impairment. Given GBDC's rising equity value ($11K → $19.1M), this appears to be HoldCo structural impairment rather than OpCo business failure.
 
-**Open item:** Company name remains unresolved. Recommend cross-referencing GBDC's Q4 2025 10-K schedule of investments filtered to pharmaceuticals sector and $11K–$19M equity positions to identify the operating company.
+**Sources:** Cobalt Buyer Sub Inc LEI 254900QMS0GSZ3JBSK21 (Bloomberg LEI registry); Linden Capital Partners portfolio page (linden.com/portfolio); Arsenal Capital PR Newswire Oct 2021; Ares + Golub confirmed as deal lenders per McGuireWoods/JDSupra healthcare PE deal tracker.
 
 ---
 
@@ -222,6 +232,6 @@ The top 8 names alone represent approximately $869M in equity fair value reducti
 - Company identities confirmed via EDGAR cross-reference, OBDC DBA disclosures, and Moody's/S&P rating commentary:
   - **High Street Buyer** = High Street Insurance Partners / Highstreet Insurance Partners (Abry Partners; insurance brokerage; Traverse City MI; SEC CIK 0002021228)
   - **Cardinal Parent / Packers Software** = Zywave, Inc. (Clearlake Capital + Aurora; insurance SaaS; Milwaukee WI; Moody's Caa2)
-  - **Cobalt Buyer Sub** = Pharmaceuticals sector confirmed (GBDC industry tag); operating company name unresolved
+  - **Cobalt Buyer Sub** = BioIVT, LLC (Linden Capital Partners; biological specimens for pharma R&D; Westbury NY; LEI 254900QMS0GSZ3JBSK21; Oct 2021 LBO ~$800M+ EV; Ares lead lender + Golub co-lender)
   - **Balrog Acquisition** = BakeMark USA, LLC (Clearlake Capital; bakery distribution; confirmed via OBDC DBA disclosure)
 - Updated April 2026
