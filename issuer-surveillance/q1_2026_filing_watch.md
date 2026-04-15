@@ -68,18 +68,21 @@ Three things happened between Q4 2025 filings and the Q1 2026 period that should
 
 ---
 
-## Zywave (Cardinal Parent / Packers Software) — 2027 maturity wall; 99.6¢ 2L is anomalous
+## Zywave (Cardinal Parent / Packers Software) — 99.6¢ 2L is the most anomalous mark in the universe
 
-**BDC holders:** ARCC (confirmed — preferred written off Q3→Q4 2025, 2L at 99.6¢)
+**BDC holders:** ARCC only — sole confirmed holder across 19-BDC surveillance universe. $71.6M 2L at 99.6¢ + $73.7M preferred written to zero. Full memo: `zywave_memo.md`.
+
+**Capital structure context:** ~$450–470M BSL 1L TLB (SOFR+~400bps, Nov 2027) in CLOs/loan funds; ~$150–200M private-credit 2L (SOFR+~730bps, Nov 2028) anchored by ARCC. Moody's July 2025 revolver extension = distressed exchange. S&P CCC+ since June 2023 (negative FCF, SOFR rate shock on L+450 debt).
 
 | What to watch | Threshold that matters | Why |
 |---------------|----------------------|-----|
-| ARCC second-lien mark | Below 95¢? Below 90¢? | November 2027 first-lien maturity is 18 months away from Q4 2025; the 99.6¢ 2L mark is anomalously high for a Caa2-rated credit with a 2027/2028 maturity wall |
-| Refinancing activity | Any public announcement of 1L extension or new financing | Moody's already called the July 2025 revolver extension a distressed exchange; a repeat would be another rating event |
-| Moody's rating action | Any downgrade from Caa2? | Caa2 is already deep junk; Caa3 or Ca would signal Moody's expects imminent default; any downgrade would be a market-moving event |
-| Any additional BDC disclosures | Other BDCs filing positions in Cardinal Parent / Zywave | ARCC is the only confirmed holder; check OBDC, FSK, CGBD in Q1 2026 schedules |
+| ARCC second-lien mark | Any decline from 99.6¢; key thresholds at 95¢, 90¢, 85¢ | Caa2/CCC+ second-lien typically clears at 70–90¢ in arm's-length markets; 99.6¢ is a mark-lagging anomaly that should compress as the 2027 wall approaches |
+| 1L refinancing / A&E announcement | Any extension or new facility before May 2026 | Nov 2027 is 18 months from Q4 2025; if no refi visible by Q2 2026, distressed exchange probability rises sharply |
+| Moody's / S&P rating action | Caa3 downgrade or CCC watch-negative | Caa2 already implies 15–25% default probability over 12 months; further downgrade signals imminent event |
+| Sponsor support signal | Clearlake or Aurora equity injection or written commitment renewal | S&P 2023 stable outlook conditioned on Clearlake written support; Clearlake is simultaneously managing BakeMark + Cornerstone distress |
+| New BDC disclosures | Any other BDC filing a Cardinal Parent / Packers Software position | If a new BDC appears, it signals a secondary market trade or restructuring participation |
 
-**Core thesis:** The 99.6¢ second-lien mark is the most suspicious single data point in the current surveillance universe. A Caa2-rated credit (Moody's definition: "judged to be of poor standing and subject to very high credit risk") with a maturity wall in 18 months should NOT be marked at 99.6¢ by any reasonable valuation. Either: (a) ARCC has structural protections we're not seeing that justify the mark, or (b) the 99.6¢ will compress sharply toward 80¢ or lower in Q1–Q2 2026 as the maturity wall approaches. Watch this closely.
+**Core thesis:** The 99.6¢ 2L mark is the most suspicious data point in the entire surveillance universe. Moody's Caa2 second-lien credits typically trade at 70–90¢ in the secondary market. ARCC is either carrying structural protections that justify near-par (possible but undisclosed), or this mark will compress sharply toward 80–90¢ in Q1–Q2 2026 as the November 2027 wall approaches — exactly the pattern seen at Medallia (BXSL 94→78¢ over 4 quarters) and Cornerstone (from initial BDC marks to current BSL secondary at 78–83¢).
 
 ---
 
