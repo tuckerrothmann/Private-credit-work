@@ -22,9 +22,9 @@ This memo synthesizes the full issuer universe into a coherent PM-level framewor
 
 **Key signal:** This is no longer a forward risk — it is a live forced restructuring event. Non-accrual designation at BXSL or FSK in Q1 2026 filings is the next measurable trigger.
 
-**Cornerstone OnDemand** is the second Category 1 name — confirmed by Q4 2025 10-K filings across four BDCs (ARCC, OBDC, CGBD, PNNT). Clearlake Capital's 2022 ~$5.4B take-private of this talent management software platform shows impairment across **every layer of the capital structure simultaneously**. CGBD marks first-lien at **77–82¢**, ARCC marks second-lien at **91¢** and preferred at **85¢**, OBDC marks second-lien at **94¢** and preferred at **89¢**, while PNNT holds first-lien at par — a mark dispersion identical in structure to BXSL vs. FSK on Medallia. Total confirmed BDC exposure: ~$585M cost / ~$525M FV.
+**Cornerstone OnDemand** is the second Category 1 name — confirmed by Q4 2025 10-K filings across ARCC and OBDC. *(Correction April 2026: earlier versions incorrectly attributed CGBD first-lien marks at 77–82¢ and a PNNT first-lien at par to Cornerstone OnDemand. Those positions are Cornerstone Building Brands and Cornerstone Advisors of Arizona respectively — different companies with similar names.)* Clearlake Capital's 2021 ~$5.2B take-private of this talent management software platform shows impairment in the second-lien and preferred equity layers: ARCC marks second-lien at **91¢** and preferred at **85¢**; OBDC marks second-lien at **94¢** and preferred at **89¢**. The $2.1B first-lien is a **broadly syndicated TLB** (CUSIP 86803YAB92) held by CLOs and loan funds — invisible in BDC filings — trading at approximately **78–83¢** in the secondary leveraged loan market. The October 2026 revolver ($300M) is the near-term forcing event. Total confirmed BDC exposure: ~$583M cost / ~$531M FV (ARCC + OBDC only).
 
-**Key signal:** Cornerstone is at a more advanced stage of impairment than Zendesk: first-lien marks have already moved below 80¢ (CGBD 77.2¢). The talent management software category (HR L&D, performance management) faces AI substitution from Microsoft Viva, Workday Skills Cloud, and LLM-based L&D tools — the same AI compression thesis that applies to Zendesk. See dedicated memo: `cornerstone_ondemand_memo.md`.
+**Key signal:** The BSL market pricing the $2.1B first-lien at 78–83¢ is real-time, arm's-length pricing that leads BDC quarterly marks. ARCC also holds appreciating common equity ($13.6M → $19.9M), indicating the operating company has positive enterprise value — the distress is structural (over-leverage) not operational. See dedicated memo: `cornerstone_ondemand_memo.md`.
 
 ### Category 2: Completed cycle — private-credit stress, failed takeout, successful refinancing
 **Finastra** is the most instructive completed case study in this universe. The $5.3 billion private-credit unitranche (SOFR+725, originated September 2023) went on non-accrual at OBDC by December 31, 2024 — within 15 months of origination. A syndicated takeout attempt in April 2025 failed. In August 2025, a revised $4.195 billion cross-border syndicated loan (S+400 / S+700) fully refinanced the private-credit debt, repaying all unitranche lenders. By Q3 2025, OBDC's remaining Finastra exposure was only the revolving credit facility (~$27.9M).
@@ -114,14 +114,15 @@ The names most useful for anticipating BDC bond risk combine:
 
 On this basis, the current ranking is:
 1. **Medallia** — active restructuring; April 2026 PIK refusal forcing event; BXSL 77.75¢; Moody's FSK downgrade Ba1; 0.67x coverage; debt-for-equity or Thoma Bravo equity injection imminent
-2. **Cornerstone OnDemand** — first-lien at CGBD 77¢; second-lien at ARCC/OBDC 91–94¢; preferred at ARCC/OBDC 85–89¢; Clearlake $5.4B take-private; talent management AI compression
-3. **Zendesk** — ARCC preferred equity −52% Q3→Q4 2025; first-lien still clean at 99–103¢ across 5 lenders; next filing is the tell
-4. **Finastra** — completed cycle / historical anchor; all lenders at par; scale demands ongoing monitoring
-5. **Kaseya** — first-lien resolved via BSL refi at S+325; residual risk in holding-company PIK preferred ($34.1M accreting) and new $925M second-lien
-6. **Pluralsight** — completed workout; ARCC FV written to zero; GSBD marks declining
-7. **RealPage** — no confirmed BDC holding; legal risk template unique and applicable more broadly
+2. **Cornerstone OnDemand** — $2.1B BSL first-lien TLB at ~78–83¢ in secondary market; ARCC/OBDC second-lien 91–94¢; preferred 85–89¢; Oct 2026 revolver wall; primary driver: 2021 LBO leverage + rate shock + AI pressure on talent management software
+3. **Zendesk** — ARCC preferred equity −52% Q3→Q4 2025; first-lien clean at 99–103¢ across 5+ lenders; BSL capital structure not yet fully researched (likely $4–5B TLB invisible in BDC filings at $10.2B EV)
+4. **Zywave** *(new)* — Caa2/CCC+; ARCC preferred written to zero Q4 2025; $450M BSL first-lien (Nov 2027 maturity); ARCC 2L at anomalous 99.6¢ — most likely compression candidate Q1/Q2 2026; sole BDC holder; Clearlake + Aurora Capital sponsors; see `zywave_memo.md`
+5. **Finastra** — completed cycle / historical anchor; all lenders at par; scale demands ongoing monitoring
+6. **Kaseya** — first-lien resolved via BSL refi at S+325; residual risk in holding-company PIK preferred ($34.1M accreting) and new $925M second-lien
+7. **Pluralsight** — completed workout; ARCC FV written to zero; GSBD marks declining
+8. **RealPage** — no confirmed BDC holding; legal risk template unique and applicable more broadly
 
-*Updated April 2026: Medallia elevated to #1 (active restructuring, not just mark surveillance). Cornerstone OnDemand added at #2 based on Q4 2025 filings confirming multi-layer impairment across four BDCs. Zendesk remains #3 as equity-layer impairment confirmed but debt layers clean.*
+*Updated April 2026: Medallia #1 (active restructuring). Cornerstone #2 corrected — CGBD/PNNT were misidentified; actual signal is BSL secondary market pricing at 78–83¢. Zywave added as #4 (new surveillance name, Caa2, Nov 2027 maturity wall, ARCC 99.6¢ 2L anomaly). Rankings reflect combined BSL structural insight and issuer-level research completed this session.*
 
 ---
 
@@ -149,9 +150,16 @@ The CCLF liquidity memo covers these dynamics. But the issuer surveillance work 
 | 5 | ✅ Completed | Medallia deep-dive | April 2026 forcing event confirmed (Bloomberg); BXSL 77.75¢; Moody's FSK downgrade; debt ~$3B, coverage 0.67x; see medallia_memo.md |
 | 6 | ✅ Completed | ARCC capital-stack scan | 168 multi-layer issuers; ~$869M Q3→Q4 equity write-downs; Cornerstone identified as #2 surveillance name; see arcc_capital_stack_scan.md |
 | 7 | ✅ Completed | BSL poaching memo | $34.1B 2025 takeouts; adverse selection dynamic; FSK Moody's downgrade causal mechanism; see bsl_poaching_memo.md |
-| 8 | Active | Track Medallia restructuring event | Q1 2026 BDC filings (May 2026): non-accrual designation expected; debt-for-equity or Thoma Bravo equity injection |
-| 9 | Active | Track Cornerstone OnDemand | Does CGBD first-lien continue declining below 77¢? Does PNNT converge down from par? OBDC second-lien — below 90¢ in Q1? |
-| 10 | Active | Track ARCC Zendesk preferred in next filing | 52% Q4 markdown is the key forward signal; Q1 2026 print confirms trajectory |
+| 8 | ✅ Completed | Mystery company identity research | High Street = HSIP (Abry Partners); Cardinal/Packers = Zywave (Clearlake+Aurora); Cobalt = BioIVT (Linden Capital, LEI confirmed); Balrog = BakeMark (Clearlake, OBDC DBA confirmed) |
+| 9 | ✅ Completed | Cornerstone BSL capital structure | $2.1B TLB (CUSIP 86803YAB92) in CLOs at 78–83¢; CGBD/PNNT misidentification corrected; only ARCC+OBDC confirmed holders |
+| 10 | ✅ Completed | Zywave surveillance memo | Caa2/CCC+; $450M BSL 1L Nov 2027; ARCC sole BDC holder; 99.6¢ 2L anomaly documented; see zywave_memo.md |
+| 11 | ✅ Completed | Q1 2026 filing watch | Per-issuer thresholds for Medallia, Cornerstone, Zendesk, Zywave, FSK, ARCC; May 2026 calendar; see q1_2026_filing_watch.md |
+| 12 | ✅ Completed | Screener validation | Screener correctly identifies BDC-level risk (FSK ORANGE, TPVG/PFLT/TCPC RED); does not capture issuer concentration — by design; see sofr_ai_attribution.md |
+| 13 | ✅ Completed | BDC NAV stress table | Per-BDC stressed credit exposure as % of NAV; aggregate compression scenarios; see bdc_nav_stress_table.md |
+| 14 | Active | Track Medallia restructuring event | Q1 2026 BDC filings (May 2026): non-accrual designation expected; debt-for-equity or Thoma Bravo equity injection |
+| 15 | Active | Track Cornerstone OnDemand | Does BSL TLB drop below 78¢? Does Oct 2026 revolver get extended? OBDC 2L — below 90¢ in Q1? |
+| 16 | Active | Track Zywave 2L compression | ARCC 2L should compress from 99.6¢ toward 85–90¢ as Nov 2027 maturity approaches without visible refi progress |
+| 17 | Active | Track ARCC Zendesk preferred | 52% Q4 markdown is the key forward signal; Q1 2026 print confirms trajectory; Zendesk BSL structure research pending |
 
 ---
 
