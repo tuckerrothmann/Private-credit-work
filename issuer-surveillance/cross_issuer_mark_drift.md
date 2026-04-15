@@ -14,14 +14,17 @@
 
 ---
 
-## Medallia — Live stress (mark dispersion active)
+## Medallia — Active restructuring as of April 2026
 
 | Fund | Q3 2025 FV ($M) | Q3 Mark | Q4 2025 FV ($M) | Q4 Mark | Change | Notes |
 |------|----------------|---------|----------------|---------|--------|-------|
-| **BXSL** | n/a | — | **307.9** | **78.3¢** | — | No Q3 cache; Q4 mark a 21-point gap vs. FSK |
-| **FSK** | 452.7 | 99.0¢ PIK | 454.2 | 98.9¢ PIK | -0.1¢ | Stable but PIK-funded; 4.0% PIK tranche active |
+| **BXSL** | n/a | — | **307.9** | **78.3¢** (77.75¢ per Q4 earnings) | — | Mark trajectory: 94¢→89¢→87¢→82¢→77.75¢; "capital structure discussions expected" |
+| **FSK** | 452.7 | 99.0¢ PIK | 454.2 | 98.9¢ PIK | -0.1¢ | Filed blended mark ~99¢; Q4 earnings separately disclosed PIK tranche at ~$185M FV / $233M cost = **~79¢** (~$29M unrealized Q4 loss) |
 
-**Key signal:** 21-point dispersion (BXSL 78.3¢ vs. FSK 98.9¢) is unchanged Q3→Q4. FSK's near-par mark is supported by a 4.0% PIK mechanism that capitalises accrued interest rather than cash-paying it — FSK is not forced to mark down because the PIK structure masks cash-flow deterioration. BXSL's 78.3¢ mark represents a $85M unrealized loss vs. cost.
+**Key signals (updated April 2026):**
+- **April 2, 2026 forcing event (Bloomberg):** Lenders led by Blackstone refused to extend the PIK lifeline, forcing ~$100M incremental annual cash interest. Total debt ~$3B, EBITDA ~$200M → **coverage ~0.67x**. Restructuring options: debt-for-equity swap or Thoma Bravo equity injection.
+- **March 24, 2026 (Moody's):** FSK downgraded to Ba1 (speculative grade) — first time FSK has lost investment-grade rating. Moody's cited FSK's **14.7% PIK income share** (vs. 6.3% peer median) and explicitly named Medallia as a marked-down non-non-accrual. Direct consequence of adverse selection (BSL took better credits, FSK holds higher PIK concentration).
+- **Filing-based dispersion** (Q4 2025, December 31, 2025): BXSL 78.3¢ vs. FSK ~99¢ blended — still a ~21-point gap in filed data. BXSL's mark as lead lender has higher credibility; FSK's filed 99¢ blended includes large cash-pay tranches near par alongside the below-par PIK tranche.
 
 ---
 
@@ -134,14 +137,43 @@ OBDC reported a 2.7% / 1.3% (cost/FV) non-accrual rate as of December 31, 2025. 
 
 ---
 
+## Cornerstone OnDemand — Confirmed multi-layer impairment (Q4 2025 new entry)
+
+*Full memo: `cornerstone_ondemand_memo.md`*
+
+| Fund | Q3 2025 FV ($M) | Q3 Mark | Q4 2025 FV ($M) | Q4 Mark | Notes |
+|------|----------------|---------|----------------|---------|-------|
+| **ARCC** | ~$8.4M (revolver only) | ~100¢ | **Second lien: $125.1M / $137.5M = 91.0¢** | **91.0¢ 2L** | ARCC appears to have originated or funded new second-lien + preferred in Q4 2025 |
+| **ARCC** | — | — | **Preferred: $152.3M / $179.2M = 85.0¢** | **85.0¢ pref** | 10.50% PIK; new position in Q4 |
+| **OBDC** | — | — | **Second lien: $144.4M / $153.9M = 93.8¢** | **93.8¢ 2L** | Cross-lender confirmation |
+| **OBDC** | — | — | **Preferred: $66.9M / $75.2M = 89.0¢** | **89.0¢ pref** | Independent mark |
+| **CGBD** | — | — | First lien: $6.2M / $7.5M = **82.0¢** | **82.0¢ 1L** | Most alarming signal |
+| **CGBD** | — | — | First lien: $2.2M / $2.9M = **77.2¢** | **77.2¢ 1L** | Same credit, different tranche |
+| **PNNT** | — | — | First lien: $5.9M / $5.9M = **100.0¢** | **100.0¢ 1L** | Mark dispersion vs. CGBD |
+
+**Key signal:** Cornerstone is more advanced in the impairment cycle than Zendesk. CGBD marks first-lien at 77–82¢ (identical range to BXSL's Medallia mark) while PNNT holds comparable first-lien at par — mark dispersion in the first-lien layer is confirmed. ARCC and OBDC both mark second-lien at 91–94¢ and preferred at 85–89¢ — cross-lender consistency increases mark credibility. **This is the first surveillance name where first-lien impairment is confirmed by a filed mark below 80¢** (CGBD 77.2¢), ahead of ARCC's Q4 second-lien + preferred origination at discounted prices.
+
+Total confirmed BDC exposure (Q4 2025): ~$585M cost / ~$525M FV (~90¢ blended across ARCC, OBDC, CGBD, PNNT).
+
+---
+
 ## Synthesis observations
 
 **Divergence pattern confirms the thesis:**
 1. The Zendesk preferred equity (−52%) and Pluralsight (ARCC FV written to zero) confirm that equity layers move before first-lien marks — the transmission sequence is equity → subordinated debt → first-lien
-2. Medallia's 21-point first-lien dispersion (BXSL 78¢ vs. FSK 99¢) is the only case where first-lien stress has become unambiguous at a major BDC
-3. Kaseya's clean BSL refinancing at S+325 confirms that the market differentiates between credits: MSP IT platforms with clean cash flows can get 225bps tighter while AI-disrupted software categories (Zendesk, Medallia) show equity impairment
+2. Medallia's 21-point first-lien dispersion (BXSL 78¢ vs. FSK 99¢ blended) is the clearest case where first-lien stress has become unambiguous at a major BDC; the April 2, 2026 PIK refusal has escalated this to an active restructuring situation
+3. Cornerstone OnDemand adds a second name where first-lien marks have moved below 80¢ (CGBD 77.2¢) alongside second-lien and preferred impairment — advancing the surveillance universe from "equity-only impairment" to "multi-layer confirmed"
+4. Kaseya's clean BSL refinancing at S+325 confirms that the market differentiates: MSP IT platforms with clean cash flows can access BSL 225bps tighter, while AI-disrupted categories (Zendesk, Medallia, Cornerstone) remain in private credit absorbing cumulative mark deterioration
 
-**What to watch next quarter:**
-- ARCC Zendesk preferred: does it decline further or stabilize?
-- FSK Medallia: does the near-par mark hold, or does the PIK structure eventually force recognition?
-- OBDC: National Dentex is now the largest single non-accrual in the surveillance universe — watch for further markdown
+**Surveillance ranking update (April 2026):**
+1. **Medallia** — active restructuring; April 2026 forcing event confirmed; BXSL 77.75¢; Moody's FSK downgrade
+2. **Cornerstone OnDemand** — CGBD first-lien 77–82¢; ARCC second-lien 91¢ + preferred 85¢; multi-BDC confirmed; talent management software under AI/competitive pressure
+3. **Zendesk** — ARCC preferred equity −52%; first-lien clean at 99–103¢; next quarterly filing is the tell
+4. **Pluralsight** — completed workout; historical template
+5. **Finastra** — completed cycle; all at par; monitoring residual positions
+
+**What to watch in Q1 2026 filings (May 2026):**
+- **Medallia**: Will BXSL mark decline below 77¢? Will FSK take it to non-accrual? Q1 2026 is the first filing after the April 2026 PIK-refusal forcing event
+- **Cornerstone**: Does CGBD first-lien continue declining below 77¢? Does PNNT (at par) converge toward CGBD?
+- **Zendesk**: Does ARCC preferred equity decline further from $13.4M, or does it stabilize?
+- **FSK overall**: After the Moody's downgrade, does FSK's Q1 2026 filing show broader mark revision across the PIK-heavy portfolio?

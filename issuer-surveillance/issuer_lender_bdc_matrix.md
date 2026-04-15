@@ -16,11 +16,12 @@
 
 ---
 
-## Primary surveillance matrix — 9 issuers × 11 BDC / credit vehicles
+## Primary surveillance matrix — 10 issuers × 11 BDC / credit vehicles
 
-| Issuer | ARCC | BXSL | BCRED | FSK | OBDC | OTF | GSBD | GBDC | CGBD | OCSL | HTGC |
+| Issuer | ARCC | BXSL | BCRED | FSK | OBDC | OTF | GSBD | GBDC | CGBD | OCSL | PNNT |
 |--------|------|------|-------|-----|------|-----|------|------|------|------|------|
 | **Medallia** | No evidence | **Confirmed (filed)** 78.3¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~99¢ PIK | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence |
+| **Cornerstone OnDemand** | **Confirmed (filed)** 2L 91¢ + pref 85¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** 2L 94¢ + pref 89¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** 1L 77–82¢ | No evidence | **Confirmed (filed)** 1L 100¢ |
 | **Finastra** | **Confirmed (filed)** 102¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** revolving ~101¢ | **Confirmed (portfolio page)** | No evidence | **Confirmed (filed)** ~98.8¢ | No evidence | **Confirmed (filed)** 98¢ fixed | No evidence |
 | **Kaseya** | **Confirmed (filed)** PIK preferred equity | No evidence | No evidence | No evidence | **Confirmed (filed)** 100¢ pref | No evidence | **Confirmed (filed)** 101¢ | **Confirmed (filed)** 101¢ | **Confirmed (filed)** 102¢ | **Confirmed (filed)** 100¢ | No evidence |
 | **Zendesk** | **Confirmed (filed)** 1st lien + **PIK pref −52%** | **Confirmed (filed)** 101¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~101¢ | **Confirmed (filed)** ~101¢ | **Confirmed (portfolio page)** | No evidence | **Confirmed (filed)** ~100¢ | No evidence | No evidence | No evidence |
@@ -35,10 +36,13 @@
 ## Detailed notes by issuer
 
 ### Medallia
-- **BXSL (Blackstone Secured Lending):** Q4 2025 10-K. Two tranches. Cost $393.4M, FV $307.9M. **78.3 cents on dollar.** No non-accrual. Maturity October 29, 2028.
-- **FSK (FS KKR Capital Corp):** Q3–Q4 2025 10-Q/10-K. Multiple tranches. Cash tranche at ~99.4 cents. PIK tranche (4.0% PIK, SOFR+250bps) at ~98.4 cents. No non-accrual. Maturity October 29, 2028.
+- **BXSL (Blackstone Secured Lending):** Q4 2025 10-K. Two tranches. Cost $393.4M, FV $307.9M. **78.3¢** (77.75¢ per Q4 2025 earnings presentation). No non-accrual. Maturity October 29, 2028. Mark trajectory: **94¢ → 89¢ → 87¢ → 82¢ → 77.75¢**. Q4 2025 earnings: "capital structure discussions expected."
+- **FSK (FS KKR Capital Corp):** Q3–Q4 2025 10-Q/10-K. Multiple tranches. Cash tranche ~99.4¢. PIK tranche (4.0% PIK, SOFR+250bps) ~98.4¢. **Blended ~99¢ in filed iXBRL data.** Q4 2025 earnings call separately disclosed the below-par PIK tranche at approximately **$185M FV / $233M cost (~79¢)**, contributing ~$29M in Q4 unrealized losses. No non-accrual as of Q4 2025.
 - **BCRED (Blackstone Private Credit):** Portfolio page (Jan 2026). Listed as "Medallia/F1 (Medallia, Inc.)" first-lien senior secured. Mark and size not publicly disclosed.
-- **Mark dispersion:** 21 percentage points between BXSL (78¢) and FSK (~99¢) as of the same period-end. The Blackstone mark has drifted from approximately 94 (late 2024) to 78 (Q4 2025) per public reporting.
+- **Mark dispersion:** ~21 percentage points between BXSL filed mark (78¢) and FSK filed blended mark (~99¢). FSK's earnings-disclosed PIK tranche at ~79¢ is closer to BXSL's mark and confirms the bifurcation within FSK's own holding.
+- **April 2026 forcing event (Bloomberg, April 2, 2026):** Lenders (led by Blackstone) refused to extend PIK lifeline. ~$100M incremental annual cash interest; total debt ~$3B; EBITDA ~$200M; coverage ~0.67x. Restructuring options: debt-for-equity or Thoma Bravo equity injection.
+- **Moody's FSK downgrade (March 24, 2026):** FSK downgraded to Ba1. Moody's cited 14.7% PIK income share (vs. 6.3% peer median) and specifically named Medallia as a large marked-down non-non-accrual.
+- **Apollo:** Bloomberg Nov 2025 cited Apollo at ~77¢ in Q3 2025 — convergent with BXSL, confirming the Blackstone mark is broadly shared by distressed-view holders.
 
 ### Finastra
 - **Deal lifecycle:** $5.3B private-credit unitranche (SOFR+725) originated September 2023; went on non-accrual at OBDC by Q4 2024; April 2025 syndicated refinancing attempt failed; **August 2025: fully refinanced via $4.195B cross-border syndicated TLB (S+400 / S+700)** — private-credit unitranche repaid in full.
@@ -73,6 +77,15 @@
 - **OTF (Blue Owl Technology Finance):** Portfolio holdings page. Listed as Zendesk, Inc. first-lien senior secured loan.
 - **Capital-structure pattern:** Equity layers (ARCC preferred −52%, common near zero) are absorbing losses while first-lien lenders (FSK, GBDC, OBDC, BXSL, TCPC) remain at 99–103¢. This is the exact pattern seen at Pluralsight before first-lien marks moved.
 
+### Cornerstone OnDemand
+- **Background:** Clearlake Capital take-private at approximately $5.4 billion (2022). Talent management software: LMS, performance management, recruiting, workforce planning. Exposed to AI substitution in L&D and performance software, HR tech consolidation, and enterprise cost-cutting pressure.
+- **ARCC (Ares Capital Corporation):** Q4 2025 10-K. Second-lien term loan: cost $137.5M, FV $125.1M. **91.0¢.** Series A preferred shares: cost $179.2M, FV $152.3M. **85.0¢ (10.50% PIK).** Small first-lien revolver FV $7.6M/cost $8.4M (~90.5¢). New originations or funded commitments appearing in Q4 2025.
+- **OBDC (Blue Owl Capital Corporation):** Q4 2025 10-K. Second-lien term loan: cost $153.9M, FV $144.4M. **93.8¢.** Series A Preferred Stock: cost $75.2M, FV $66.9M. **89.0¢.** Cross-lender confirmation of both second-lien and preferred layer impairment.
+- **CGBD (TCG BDC / Carlyle Secured Lending):** Q4 2025 10-K. First-lien term loan: cost $7.5M, FV $6.2M. **82.0¢.** First-lien term loan (second tranche): cost $2.9M, FV $2.2M. **77.2¢.** These are the most alarming marks — first-lien below 80¢ from a separate independent lender.
+- **PNNT (PennantPark Investment):** Q4 2025 10-K. First-lien: cost $5.9M, FV $5.9M. **100.0¢.** Large mark dispersion vs. CGBD (77¢ vs. 100¢ on first-lien in the same period) — identical dynamic to BXSL/FSK on Medallia.
+- **Total confirmed BDC exposure (Q4 2025):** ~$585M cost / ~$525M FV (~90¢ blended)
+- **Capital-structure significance:** This is the first surveillance name (besides Medallia) where first-lien marks have moved below 80¢ at a confirmed BDC holder. Unlike Zendesk (equity impairment only), Cornerstone has confirmed impairment across first-lien (CGBD), second-lien (ARCC + OBDC), and preferred equity (ARCC + OBDC) simultaneously.
+
 ### RealPage
 - **No confirmed BDC portfolio holdings** found in borrower_db.json across the 27-BDC surveillance universe.
 - **Lender confirmation:** Latham advises on $4.0B financing package (first-lien term loan, revolver, second-lien). Syndicate members not publicly named.
@@ -105,8 +118,11 @@
 
 | Issuer | Best-supported mark | Filing date | Fund | Status |
 |--------|--------------------|-----------|----|--------|
-| Medallia | **78.3¢** | Q4 2025 10-K | BXSL | Current; diverges from FSK at 99¢ |
-| Medallia | **~99¢ (PIK active)** | Q4 2025 10-K | FSK | 21-point gap vs. BXSL |
+| Medallia | **78.3¢** (77.75¢ per earnings) | Q4 2025 10-K | BXSL | Active restructuring; April 2026 PIK refusal |
+| Medallia | **~99¢ blended** (PIK tranche ~79¢) | Q4 2025 10-K | FSK | 21-point gap vs. BXSL; Moody's downgrade March 2026 |
+| Cornerstone OnDemand | **77.2¢ first-lien** | Q4 2025 10-K | CGBD | New entrant; most advanced multi-layer impairment |
+| Cornerstone OnDemand | **91.0¢ second-lien** | Q4 2025 10-K | ARCC | Cross-confirmed by OBDC at 93.8¢ |
+| Cornerstone OnDemand | **85.0¢ preferred (PIK)** | Q4 2025 10-K | ARCC | Cross-confirmed by OBDC at 89.0¢ |
 | Finastra | **102¢** | Q4 2025 10-K | ARCC | Floating rate; accruing; no stress signal |
 | Finastra | **98¢ (fixed 7.25%)** | Q4 2025 10-K | OCSL | Fixed below-market rate; discount reflects rate duration, not credit concern |
 | Kaseya | **102¢** | Q4 2025 10-K | CGBD | Clean first-lien |
@@ -123,7 +139,8 @@
 
 | Issuer | Risk tier | Primary signal | BDC visibility |
 |--------|-----------|---------------|----------------|
-| Medallia | **Tier 1 — Live stress** | 78¢ mark at BXSL; 21-pt dispersion; PIK at FSK | BXSL, FSK, BCRED |
+| Medallia | **Tier 1 — Active restructuring** | 77.75¢ at BXSL; PIK refusal April 2026; 0.67x coverage; FSK Ba1 | BXSL, FSK, BCRED |
+| Cornerstone OnDemand | **Tier 1 — Live stress** | First-lien 77¢ at CGBD; 2L 91–94¢; preferred 85–89¢; multi-layer confirmed | ARCC, OBDC, CGBD, PNNT |
 | Finastra | **Tier 3 — Completed cycle / historical anchor** | Unitranche repaid Aug 2025 via $4.2B syndicated refi; TLB was non-accrual at OBDC in Q4 2024 | ARCC, OCSL, OBDC (revolver), GBDC, OTF |
 | Pluralsight | **Tier 1 — Historical workout** | PIK debt + equity post-restructuring | ARCC, GSBD |
 | Kaseya | **Tier 2 — Hidden structure** | PIK preferred in holdco; refi catalyst | CGBD, GSBD, ARCC |
