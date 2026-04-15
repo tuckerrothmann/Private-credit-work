@@ -166,6 +166,76 @@ Put differently: this looks more like a **high-yield structured liquidity risk p
 
 ---
 
+## Quantitative stress scenarios — cclf_liquidity_model.py
+
+*Model calibrated to September 30, 2025 semi-annual report: NAV $28.1B, facility drawn $3.21B of $5.45B limit, senior notes $5.65B, cash $0.28B, unfunded commitments $6.26B. All scenarios run for 8 quarters.*
+
+### Scenario definitions
+
+| Scenario | Default Rate | LGD | PIK % | Repayment Rate | Redemptions (qtrly) | Subscriptions (qtrly) | Unfunded Draw |
+|----------|-------------|-----|-------|---------------|--------------------|-----------------------|---------------|
+| **Baseline** | 2.0% | 35% | 3% | 3.0% | 5.0% | 5.5% | 10% |
+| **Confirmed Q1-2026 Stress** | 2.5% | 35% | 4% | 2.5% | 7.0% | 3.0% | 12% |
+| **Software Credit Deterioration** | 3.5% | 40% | 7% | 2.0% | 7.0% | 2.0% | 13% |
+| **Adverse Selection Severe** | 5.0% | 45% | 12% | 1.5% | 7.0% | 0.0% | 15% |
+
+*Confirmed Q1-2026 Stress uses: Bloomberg Q1 2026 redemption cap (7%), reduced subscription assumption (Q1 2026 Bloomberg: ~5.5% but declining), 2.5% defaults reflecting current credit conditions, modest repayment slowdown from BSL adverse selection.*
+
+### Scenario output summary (8-quarter horizon)
+
+| Scenario | End NAV | Min Cash | Max Facility | Min Headroom | Peak Leverage |
+|----------|---------|---------|-------------|-------------|---------------|
+| **Baseline** | $27.7B | $0.00B | $2.7B | $2.7B | 0.30x |
+| **Confirmed Q1-2026 Stress** | $19.4B | **−$5.3B** | **$5.5B (maxed)** | **$0.0B** | 0.57x |
+| **Software Credit Deterioration** | $17.5B | **−$8.4B** | **$5.5B (maxed)** | **$0.0B** | 0.64x |
+| **Adverse Selection Severe** | $14.4B | **−$12.9B** | **$5.5B (maxed)** | **$0.0B** | 0.77x |
+
+*No covenant breach in any scenario: BDC 1940 Act leverage ceiling of 2.0x D/E is far above peak modelled leverage (0.77x even in the severe case). The practical constraint is facility exhaustion, not regulatory covenant.*
+
+### The Q2 mechanism: how the facility runs out
+
+Under the Confirmed Q1-2026 Stress scenario (7% redemptions, 3% subscriptions):
+
+| Quarter | NAV | Cash | Redemptions | Subscriptions | Net Flow | Facility | Headroom |
+|---------|-----|------|-------------|---------------|---------|---------|---------|
+| Q1 | $26.8B | $0.00B | −$1.97B | +$0.84B | −$1.12B | $4.3B | $1.2B |
+| **Q2** | $25.6B | **−$0.01B** | −$1.88B | +$0.80B | −$1.07B | **$5.5B** | **$0.0B** |
+| Q3 | $24.4B | −$1.10B | −$1.79B | +$0.77B | −$1.02B | $5.5B | $0.0B |
+| Q4–Q8 | declining | −$2B to −$5B | declining | declining | ~−$0.85–1.0B | $5.5B | $0.0B |
+
+**Key finding:** Under Q1-2026 confirmed redemption parameters, the $5.45B revolving facility is completely exhausted by Q2. From Q2 onward, the model shows negative cash — meaning the fund must sell assets, expand the facility, or cut redemptions further to cover ongoing outflows of ~$0.85–1.1B per quarter.
+
+**The Evercore secondary sale in context:** Cliffwater's ~$1B portfolio sale via Evercore (confirmed, early March 2026) injects approximately one additional quarter of net outflow coverage. It does not solve the structural problem — it buys approximately one quarter of breathing room before the facility would otherwise exhaust. This is consistent with an asset sale as a tactical liquidity management tool, not a fundamental restructuring.
+
+### Subscription rate sensitivity (most critical single variable)
+
+The gap between 5.5% quarterly subscriptions (Bloomberg Q1 2026 observed) and 7.0% (break-even) is the key parameter to watch:
+
+| Quarterly Subscription Rate | End NAV (8Q) | Min Cash | Q2 Facility | Min Headroom |
+|-----------------------------|-------------|---------|------------|-------------|
+| 0.0% (zero subscriptions) | $15.1B | −$10.0B | $5.5B | $0.0B |
+| 2.0% | $17.8B | −$7.0B | $5.5B | $0.0B |
+| 4.0% | $21.0B | −$3.4B | $4.9B | $0.0B |
+| 5.0% | $22.8B | −$1.5B | $4.4B | $0.0B |
+| **5.5% (Q1 2026 observed)** | **$23.7B** | **−$0.5B** | $4.1B | $0.0B |
+| **7.0% (break-even)** | **$26.6B** | **$0.00B** | $3.3B | $2.1B |
+
+*The fund is in negative cash territory at every modelled subscription rate below 7%, assuming 7% redemptions and Q1-2026 default/repayment parameters. The model needs approximately $0.5B per quarter of additional cash from asset sales or facility expansion just to remain cash-flow neutral at 5.5% subscriptions.*
+
+### Software credit thesis connection
+
+The "Software Credit Deterioration" scenario (3.5% defaults, 40% LGD) is the scenario relevant to the Medallia/Cornerstone impairment pattern being tracked in the issuer surveillance files. The incremental impact vs. baseline:
+
+- Annual credit losses at baseline: ~$197M (2.0% × 35% × ~$28B)
+- Annual credit losses at software deterioration: ~$392M (3.5% × 40% × ~$28B)
+- **Incremental annual loss from software stress: ~$195M**
+
+This is a material NAV drag (~0.7% of NAV per year) added on top of the redemption pressure. Combined with subscription erosion, the model produces an 8-quarter NAV decline from $28.1B to $17.5B — a **38% NAV reduction** from current levels.
+
+**What this is NOT claiming:** This is not a prediction of default or collapse. The model is a sensitivity tool. Real-world mitigants include facility expansion (CCLF has expanded once already), asset sales (Evercore secondary), and distribution cuts (which would mechanically slow the NAV decline). The value of the model is in showing the **interaction** between subscription erosion, redemption pressure, and credit deterioration — three risks that typically arrive together.
+
+---
+
 ## Highest-value next work items
 
 1. ~~**Source the 14% redemption request data**~~ — **Confirmed** (Bloomberg March 11, 2026; PitchBook). Q1 2026: 14% tendered, 7% executed. The secondary portfolio sale (~$1B via Evercore) is the next confirming datapoint to track.
