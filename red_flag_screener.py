@@ -314,11 +314,17 @@ def load_universe_with_trends(
     path: Path | str = "data/bdc_universe.json",
     history_dir: Path | None = None,
 ) -> list[dict[str, Any]]:
-    """Load universe JSON and enrich each fund with trend signals from parquet history.
+    """Load universe JSON and enrich each fund with trend signals from parquet history
+    and fresh EDGAR XBRL metrics from universe_metrics.json.
 
     Falls back gracefully if trend_signals module is unavailable or parquets are missing.
+    EDGAR enrichment is applied first, then trend signals on top.
     """
     funds = load_universe(path)
+
+    # Overlay fresh EDGAR XBRL metrics (nii_coverage, leverage_de, nav_per_share, etc.)
+    funds = enrich_funds_with_edgar_metrics(funds)
+
     if not _TREND_SIGNALS_AVAILABLE:
         return funds
     try:
@@ -329,6 +335,72 @@ def load_universe_with_trends(
         return [enrich_fund_with_trends(f, signals) for f in funds]
     except Exception:
         return funds
+
+
+def enrich_funds_with_edgar_metrics(
+    funds: list[dict[str, Any]],
+    cache_dir: Path | str | None = None,
+) -> list[dict[str, Any]]:
+    """Overlay fresh EDGAR XBRL metrics from universe_metrics.json onto each fund dict.
+
+    Field mappings (EDGAR → fund dict):
+      nii_coverage_ratio  → nii_coverage
+      leverage_de         → leverage_de
+      pik_pct_of_income   → pik_pct_of_income
+      nav_per_share_usd   → nav_per_share
+      net_assets_usd/1e9  → nav_bn
+      total_assets_usd/1e9 → gross_assets_bn
+      long_term_debt_usd/1e9 → total_debt_bn
+      as_of_date          → edgar_as_of
+      unrealized_depreciation_pct → unrealized_gain_loss_pct
+
+    Only overwrites with EDGAR values that are non-None (preserves static values
+    for funds where EDGAR returned an error or missing field).
+    """
+    _default = Path("data/edgar_cache/universe_metrics.json")
+    cache_path = (Path(cache_dir) / "universe_metrics.json") if cache_dir else _default
+    if not cache_path.exists():
+        return funds
+
+    try:
+        edgar: dict[str, Any] = json.loads(cache_path.read_text(encoding="utf-8"))
+    except Exception:
+        return funds
+
+    enriched: list[dict[str, Any]] = []
+    for fund in funds:
+        ticker = fund.get("ticker", "").upper()
+        m = edgar.get(ticker)
+        if not m or m.get("error"):
+            enriched.append(fund)
+            continue
+
+        fund = dict(fund)
+        # nii_coverage: only use EDGAR value when no static value is present.
+        # The EDGAR NII / dividends-paid ratio can mix annual NII with a single
+        # quarterly distribution period, producing unreliable coverage ratios.
+        # Static values in bdc_universe.json are manually curated; prefer them.
+        if m.get("nii_coverage_ratio") is not None and fund.get("nii_coverage") is None:
+            fund["nii_coverage"] = m["nii_coverage_ratio"]
+        if m.get("leverage_de") is not None:
+            fund["leverage_de"] = m["leverage_de"]
+        if m.get("pik_pct_of_income") is not None:
+            fund["pik_pct_of_income"] = m["pik_pct_of_income"]
+        if m.get("nav_per_share_usd") is not None:
+            fund["nav_per_share"] = m["nav_per_share_usd"]
+        if m.get("net_assets_usd") is not None:
+            fund["nav_bn"] = m["net_assets_usd"] / 1e9
+        if m.get("total_assets_usd") is not None:
+            fund["gross_assets_bn"] = m["total_assets_usd"] / 1e9
+        if m.get("long_term_debt_usd") is not None:
+            fund["total_debt_bn"] = m["long_term_debt_usd"] / 1e9
+        if m.get("as_of_date"):
+            fund["edgar_as_of"] = m["as_of_date"]
+        if m.get("unrealized_depreciation_pct") is not None:
+            fund["unrealized_gain_loss_pct"] = m["unrealized_depreciation_pct"]
+        enriched.append(fund)
+
+    return enriched
 
 
 def enrich_funds_with_live_na(

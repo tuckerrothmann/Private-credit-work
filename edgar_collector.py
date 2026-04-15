@@ -375,9 +375,13 @@ class EdgarClient:
             abs(nii / divs) if (nii is not None and divs is not None and divs != 0) else None
         )
 
-        # Determine the as-of date from net assets entries
-        net_assets_series = _value_series(facts, "us-gaap", "NetAssets")
-        as_of = net_assets_series[0].get("end") if net_assets_series else None
+        # Determine the as-of date — try the same concepts used for net_assets
+        as_of: Optional[str] = None
+        for _nav_concept in ("StockholdersEquity", "NetAssets", "LimitedPartnersCapitalAccount"):
+            _series = _value_series(facts, "us-gaap", _nav_concept)
+            if _series:
+                as_of = _series[0].get("end")
+                break
 
         return {
             "ticker":              ticker,
