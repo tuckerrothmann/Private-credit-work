@@ -115,7 +115,7 @@ The names most useful for anticipating BDC bond risk combine:
 On this basis, the current ranking is:
 1. **Medallia** — active restructuring; April 2026 PIK refusal forcing event; BXSL 77.75¢; Moody's FSK downgrade Ba1; 0.67x coverage; debt-for-equity or Thoma Bravo equity injection imminent
 2. **Cornerstone OnDemand** — $2.1B BSL first-lien TLB at ~78–83¢ in secondary market; ARCC/OBDC second-lien 91–94¢; preferred 85–89¢; Oct 2026 revolver wall; primary driver: 2021 LBO leverage + rate shock + AI pressure on talent management software
-3. **Zendesk** — ARCC preferred equity −52% Q3→Q4 2025; first-lien clean at 99–103¢ across 5+ lenders; BSL capital structure not yet fully researched (likely $4–5B TLB invisible in BDC filings at $10.2B EV)
+3. **Zendesk** — ARCC preferred equity −52% Q3→Q4 2025; first-lien clean at 99–103¢ across FSK, OBDC, GBDC, BXSL, TCPC; **pure private credit — NO BSL TLB**; $4.6B senior debt held by 5-lender private club (BCRED dominant at ~$1B+, non-traded, completely opaque); BDC-visible ~$409M = only 9% of total first-lien; ~1x interest coverage (~$430M cash interest vs. ~$400–500M EBITDA); Nov 2028 first-lien maturity; see `zendesk_memo.md`
 4. **Zywave** *(new)* — Caa2/CCC+; ARCC preferred written to zero Q4 2025; $450M BSL first-lien (Nov 2027 maturity); ARCC 2L at anomalous 99.6¢ — most likely compression candidate Q1/Q2 2026; sole BDC holder; Clearlake + Aurora Capital sponsors; see `zywave_memo.md`
 5. **Finastra** — completed cycle / historical anchor; all lenders at par; scale demands ongoing monitoring
 6. **Kaseya** — first-lien resolved via BSL refi at S+325; residual risk in holding-company PIK preferred ($34.1M accreting) and new $925M second-lien
@@ -159,7 +159,8 @@ The CCLF liquidity memo covers these dynamics. But the issuer surveillance work 
 | 14 | Active | Track Medallia restructuring event | Q1 2026 BDC filings (May 2026): non-accrual designation expected; debt-for-equity or Thoma Bravo equity injection |
 | 15 | Active | Track Cornerstone OnDemand | Does BSL TLB drop below 78¢? Does Oct 2026 revolver get extended? OBDC 2L — below 90¢ in Q1? |
 | 16 | Active | Track Zywave 2L compression | ARCC 2L should compress from 99.6¢ toward 85–90¢ as Nov 2027 maturity approaches without visible refi progress |
-| 17 | Active | Track ARCC Zendesk preferred | 52% Q4 markdown is the key forward signal; Q1 2026 print confirms trajectory; Zendesk BSL structure research pending |
+| 17 | ✅ Completed | Zendesk capital structure research | Confirmed NO BSL TLB — pure private credit club; $4.6B senior at SOFR+500; BCRED dominant (~$1B+, non-traded); BDC-visible = 9%; ~1x interest coverage; see `zendesk_memo.md` |
+| 18 | Active | Track ARCC Zendesk preferred | 52% Q4 markdown is the key forward signal; Q1 2026 print confirms trajectory; preferred → zero would signal first-lien compression incoming |
 
 ---
 
