@@ -161,6 +161,8 @@ The CCLF liquidity memo covers these dynamics. But the issuer surveillance work 
 | 16 | Active | Track Zywave 2L compression | ARCC 2L should compress from 99.6¢ toward 85–90¢ as Nov 2027 maturity approaches without visible refi progress |
 | 17 | ✅ Completed | Zendesk capital structure research | Confirmed NO BSL TLB — pure private credit club; $4.6B senior at SOFR+500; BCRED dominant (~$1B+, non-traded); BDC-visible = 9%; ~1x interest coverage; see `zendesk_memo.md` |
 | 18 | Active | Track ARCC Zendesk preferred | 52% Q4 markdown is the key forward signal; Q1 2026 print confirms trajectory; preferred → zero would signal first-lien compression incoming |
+| 19 | ✅ Completed | BakeMark surveillance memo | "Balrog" identity confirmed; 1L at 87¢, 2L at 88¢ (ARCC) vs. 81¢ (OBDC) — 700bps divergence; preferred written off; pure SOFR rate shock (no AI exposure); Clearlake concentration; see `bakemark_memo.md` |
+| 20 | ✅ Completed | BDC bond positioning document | FSK fairly priced at T+280–320bps; BXSL modestly rich vs. Medallia tail risk; ARCC neutral; OBDC neutral; FSK/ARCC pair trade thesis for Q1 2026 earnings season; see `bdc_bond_positioning.md` |
 
 ---
 
