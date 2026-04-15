@@ -141,19 +141,17 @@ OBDC reported a 2.7% / 1.3% (cost/FV) non-accrual rate as of December 31, 2025. 
 
 *Full memo: `cornerstone_ondemand_memo.md`*
 
+*Correction (April 2026): Earlier versions included CGBD marks at 77–82¢ and a PNNT mark at par, incorrectly attributed to Cornerstone OnDemand (HR software). Those positions are Cornerstone Building Brands (vinyl siding, CD&R-backed) and Cornerstone Advisors of Arizona respectively — different companies. Corrected table below.*
+
 | Fund | Q3 2025 FV ($M) | Q3 Mark | Q4 2025 FV ($M) | Q4 Mark | Notes |
 |------|----------------|---------|----------------|---------|-------|
-| **ARCC** | ~$8.4M (revolver only) | ~100¢ | **Second lien: $125.1M / $137.5M = 91.0¢** | **91.0¢ 2L** | ARCC appears to have originated or funded new second-lien + preferred in Q4 2025 |
-| **ARCC** | — | — | **Preferred: $152.3M / $179.2M = 85.0¢** | **85.0¢ pref** | 10.50% PIK; new position in Q4 |
-| **OBDC** | — | — | **Second lien: $144.4M / $153.9M = 93.8¢** | **93.8¢ 2L** | Cross-lender confirmation |
-| **OBDC** | — | — | **Preferred: $66.9M / $75.2M = 89.0¢** | **89.0¢ pref** | Independent mark |
-| **CGBD** | — | — | First lien: $6.2M / $7.5M = **82.0¢** | **82.0¢ 1L** | Most alarming signal |
-| **CGBD** | — | — | First lien: $2.2M / $2.9M = **77.2¢** | **77.2¢ 1L** | Same credit, different tranche |
-| **PNNT** | — | — | First lien: $5.9M / $5.9M = **100.0¢** | **100.0¢ 1L** | Mark dispersion vs. CGBD |
+| **ARCC** | ~$8.4M (revolver only) | ~90.5¢ | **2L: $125.1M; preferred: $152.3M; 1L TL: $15.0M; common: $19.9M** | **2L 91.0¢; pref 85.0¢; 1L 100¢; common 146¢** | $316M in new 2L + preferred originated in Q4; common equity appreciating |
+| **OBDC** | — | — | **2L: $144.4M; preferred: $66.9M** | **2L 93.8¢; pref 89.0¢** | Cross-lender confirmation |
+| **BSL market** | — | — | **~$2.1B first-lien TLB (CUSIP 86803YAB92)** | **~78–83¢** | Secondary market / BVAL; held by CLOs/loan funds, not BDCs |
 
-**Key signal:** Cornerstone is more advanced in the impairment cycle than Zendesk. CGBD marks first-lien at 77–82¢ (identical range to BXSL's Medallia mark) while PNNT holds comparable first-lien at par — mark dispersion in the first-lien layer is confirmed. ARCC and OBDC both mark second-lien at 91–94¢ and preferred at 85–89¢ — cross-lender consistency increases mark credibility. **This is the first surveillance name where first-lien impairment is confirmed by a filed mark below 80¢** (CGBD 77.2¢), ahead of ARCC's Q4 second-lien + preferred origination at discounted prices.
+**Key signal:** The $2.1B broadly syndicated first-lien TLB — senior to all BDC-held instruments — is trading at **~78–83¢** in the secondary leveraged loan market. BDC marks on the second-lien (91–94¢) and preferred (85–89¢) confirm junior layer stress, but the BSL market is pricing the senior-most instrument at meaningful distress. October 2026 revolver maturity ($300M) is the near-term forcing event. ARCC's common equity co-invest ($13.6M → $19.9M, +146¢) confirms the operating company has positive enterprise value — the distress is in the over-levered capital structure, not the business fundamentals.
 
-Total confirmed BDC exposure (Q4 2025): ~$585M cost / ~$525M FV (~90¢ blended across ARCC, OBDC, CGBD, PNNT).
+Total confirmed BDC exposure (ARCC + OBDC only): ~$583M cost / ~$531M FV (~91¢ blended). The $2.1B BSL is the "hidden" exposure not visible through BDC filings.
 
 ---
 
@@ -162,18 +160,18 @@ Total confirmed BDC exposure (Q4 2025): ~$585M cost / ~$525M FV (~90¢ blended a
 **Divergence pattern confirms the thesis:**
 1. The Zendesk preferred equity (−52%) and Pluralsight (ARCC FV written to zero) confirm that equity layers move before first-lien marks — the transmission sequence is equity → subordinated debt → first-lien
 2. Medallia's 21-point first-lien dispersion (BXSL 78¢ vs. FSK 99¢ blended) is the clearest case where first-lien stress has become unambiguous at a major BDC; the April 2, 2026 PIK refusal has escalated this to an active restructuring situation
-3. Cornerstone OnDemand adds a second name where first-lien marks have moved below 80¢ (CGBD 77.2¢) alongside second-lien and preferred impairment — advancing the surveillance universe from "equity-only impairment" to "multi-layer confirmed"
+3. Cornerstone OnDemand advances the surveillance universe from "equity-only impairment" to "multi-layer confirmed" — second-lien and preferred impaired across ARCC and OBDC; the $2.1B BSL first-lien trading at ~78–83¢ in the secondary market is the primary first-lien stress signal (not BDC-filed marks, which are only on junior layers)
 4. Kaseya's clean BSL refinancing at S+325 confirms that the market differentiates: MSP IT platforms with clean cash flows can access BSL 225bps tighter, while AI-disrupted categories (Zendesk, Medallia, Cornerstone) remain in private credit absorbing cumulative mark deterioration
 
 **Surveillance ranking update (April 2026):**
 1. **Medallia** — active restructuring; April 2026 forcing event confirmed; BXSL 77.75¢; Moody's FSK downgrade
-2. **Cornerstone OnDemand** — CGBD first-lien 77–82¢; ARCC second-lien 91¢ + preferred 85¢; multi-BDC confirmed; talent management software under AI/competitive pressure
+2. **Cornerstone OnDemand** — BSL first-lien TLB ($2.1B) at ~78–83¢ in secondary market; ARCC 2L 91¢ + preferred 85¢; OBDC 2L 94¢ + preferred 89¢; Oct 2026 revolver = near-term wall; talent management software under AI/competitive pressure
 3. **Zendesk** — ARCC preferred equity −52%; first-lien clean at 99–103¢; next quarterly filing is the tell
 4. **Pluralsight** — completed workout; historical template
 5. **Finastra** — completed cycle; all at par; monitoring residual positions
 
 **What to watch in Q1 2026 filings (May 2026):**
 - **Medallia**: Will BXSL mark decline below 77¢? Will FSK take it to non-accrual? Q1 2026 is the first filing after the April 2026 PIK-refusal forcing event
-- **Cornerstone**: Does CGBD first-lien continue declining below 77¢? Does PNNT (at par) converge toward CGBD?
+- **Cornerstone**: Does the BSL TLB drop below 78¢ toward distressed-exchange pricing? Does ARCC extend or reprice the October 2026 revolver?
 - **Zendesk**: Does ARCC preferred equity decline further from $13.4M, or does it stabilize?
 - **FSK overall**: After the Moody's downgrade, does FSK's Q1 2026 filing show broader mark revision across the PIK-heavy portfolio?

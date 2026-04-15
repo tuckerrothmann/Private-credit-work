@@ -21,7 +21,7 @@
 | Issuer | ARCC | BXSL | BCRED | FSK | OBDC | OTF | GSBD | GBDC | CGBD | OCSL | PNNT |
 |--------|------|------|-------|-----|------|-----|------|------|------|------|------|
 | **Medallia** | No evidence | **Confirmed (filed)** 78.3¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~99¢ PIK | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence |
-| **Cornerstone OnDemand** | **Confirmed (filed)** 2L 91¢ + pref 85¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** 2L 94¢ + pref 89¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** 1L 77–82¢ | No evidence | **Confirmed (filed)** 1L 100¢ |
+| **Cornerstone OnDemand** | **Confirmed (filed)** 2L 91¢ + pref 85¢ + common 146¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** 2L 94¢ + pref 89¢ | No evidence | No evidence | No evidence | No evidence* | No evidence | No evidence* |
 | **Finastra** | **Confirmed (filed)** 102¢ | No evidence | No evidence | No evidence | **Confirmed (filed)** revolving ~101¢ | **Confirmed (portfolio page)** | No evidence | **Confirmed (filed)** ~98.8¢ | No evidence | **Confirmed (filed)** 98¢ fixed | No evidence |
 | **Kaseya** | **Confirmed (filed)** PIK preferred equity | No evidence | No evidence | No evidence | **Confirmed (filed)** 100¢ pref | No evidence | **Confirmed (filed)** 101¢ | **Confirmed (filed)** 101¢ | **Confirmed (filed)** 102¢ | **Confirmed (filed)** 100¢ | No evidence |
 | **Zendesk** | **Confirmed (filed)** 1st lien + **PIK pref −52%** | **Confirmed (filed)** 101¢ | **Confirmed (portfolio page)** | **Confirmed (filed)** ~101¢ | **Confirmed (filed)** ~101¢ | **Confirmed (portfolio page)** | No evidence | **Confirmed (filed)** ~100¢ | No evidence | No evidence | No evidence |
@@ -30,6 +30,8 @@
 | **Avalara** | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | No evidence | **Confirmed (filed)** 102¢ | **Confirmed (filed)** 101¢ | No evidence |
 | **Coupa** | No evidence | **Confirmed (filed)** 102¢ | No evidence | No evidence | No evidence | **Confirmed (portfolio page)** | No evidence | **Confirmed (ann't)** | No evidence | No evidence | No evidence |
 | **Pluralsight** | **Confirmed (filed)** PIK debt 1.50% | No evidence | No evidence | No evidence | No evidence | No evidence | **Confirmed (filed)** debt + equity | No evidence | No evidence | No evidence | No evidence |
+
+*\* For Cornerstone OnDemand: CGBD's "Cornerstone" marks (77–82¢) are Cornerstone Building Brands (vinyl siding, CD&R-backed), not Cornerstone OnDemand HR software. PNNT's "Cornerstone" position (at par) is Cornerstone Advisors of Arizona (financial consulting). Neither CGBD nor PNNT holds confirmed Cornerstone OnDemand (CSOD) exposure.*
 
 ---
 
@@ -78,13 +80,14 @@
 - **Capital-structure pattern:** Equity layers (ARCC preferred −52%, common near zero) are absorbing losses while first-lien lenders (FSK, GBDC, OBDC, BXSL, TCPC) remain at 99–103¢. This is the exact pattern seen at Pluralsight before first-lien marks moved.
 
 ### Cornerstone OnDemand
-- **Background:** Clearlake Capital take-private at approximately $5.4 billion (2022). Talent management software: LMS, performance management, recruiting, workforce planning. Exposed to AI substitution in L&D and performance software, HR tech consolidation, and enterprise cost-cutting pressure.
-- **ARCC (Ares Capital Corporation):** Q4 2025 10-K. Second-lien term loan: cost $137.5M, FV $125.1M. **91.0¢.** Series A preferred shares: cost $179.2M, FV $152.3M. **85.0¢ (10.50% PIK).** Small first-lien revolver FV $7.6M/cost $8.4M (~90.5¢). New originations or funded commitments appearing in Q4 2025.
-- **OBDC (Blue Owl Capital Corporation):** Q4 2025 10-K. Second-lien term loan: cost $153.9M, FV $144.4M. **93.8¢.** Series A Preferred Stock: cost $75.2M, FV $66.9M. **89.0¢.** Cross-lender confirmation of both second-lien and preferred layer impairment.
-- **CGBD (TCG BDC / Carlyle Secured Lending):** Q4 2025 10-K. First-lien term loan: cost $7.5M, FV $6.2M. **82.0¢.** First-lien term loan (second tranche): cost $2.9M, FV $2.2M. **77.2¢.** These are the most alarming marks — first-lien below 80¢ from a separate independent lender.
-- **PNNT (PennantPark Investment):** Q4 2025 10-K. First-lien: cost $5.9M, FV $5.9M. **100.0¢.** Large mark dispersion vs. CGBD (77¢ vs. 100¢ on first-lien in the same period) — identical dynamic to BXSL/FSK on Medallia.
-- **Total confirmed BDC exposure (Q4 2025):** ~$585M cost / ~$525M FV (~90¢ blended)
-- **Capital-structure significance:** This is the first surveillance name (besides Medallia) where first-lien marks have moved below 80¢ at a confirmed BDC holder. Unlike Zendesk (equity impairment only), Cornerstone has confirmed impairment across first-lien (CGBD), second-lien (ARCC + OBDC), and preferred equity (ARCC + OBDC) simultaneously.
+- **Background:** Clearlake Capital take-private at approximately $5.2B (October 2021). Talent management software: LMS, performance management, recruiting, workforce planning. Exposed to AI substitution in L&D and performance software, HR tech consolidation, and enterprise cost-cutting pressure. Revenue ~$830M TTM (early 2026).
+- **Full debt stack:** $300M revolver (BSL, matures **Oct 2026 — near-term wall**); **$2.1B first-lien TLB** (BSL, CUSIP 86803YAB92, matures Oct 2028, held by CLOs/loan funds, **trading ~78–83¢** in secondary market); $770M second-lien (private credit, matures Oct 2029); ~$700M preferred equity (private credit).
+- **ARCC (Ares Capital Corporation):** Q4 2025 10-K. 1L revolver: $8.4M/$7.6M (**90.5¢**, Oct 2026). 1L term loan: $15.0M/$15.0M (**100.0¢**, Oct 2028). Second-lien: cost $137.5M, FV $125.1M. **91.0¢.** Series A preferred: cost $179.2M, FV $152.3M. **85.0¢ (10.50% PIK).** Class A-1 common: $13.6M/$19.9M (**146¢**, appreciating). Total ARCC: ~$353.7M cost / ~$319.9M FV (~90.5¢ blended). 2L + preferred originated new in Q4 2025.
+- **OBDC (Blue Owl Capital Corporation):** Q4 2025 10-K. Second-lien: cost $153.9M, FV $144.4M. **93.8¢.** Series A Preferred: cost $75.2M, FV $66.9M. **89.0¢.** Total OBDC: ~$229.1M cost / ~$211.3M FV (~92.2¢). Cross-lender confirmation of both second-lien and preferred layer impairment.
+- **CGBD correction:** CGBD's "Cornerstone" marks at 77–82¢ are **Cornerstone Building Brands** (vinyl siding, CD&R-backed), not Cornerstone OnDemand (HR software). CGBD holds no confirmed Cornerstone OnDemand position.
+- **PNNT correction:** PNNT's "Cornerstone" position at par is **Cornerstone Advisors of Arizona** (financial consulting firm), not Cornerstone OnDemand (HR software). PNNT holds no confirmed Cornerstone OnDemand position.
+- **Total confirmed BDC exposure (ARCC + OBDC only, Q4 2025):** ~$583M cost / ~$531M FV (~91¢ blended)
+- **Primary stress signal:** The $2.1B BSL first-lien TLB trading at **~78–83¢** in the secondary market is the leading indicator — this is real-time, arm's-length pricing from CLO/loan fund managers, not quarterly BDC marks. The October 2026 revolver maturity is the near-term forcing event.
 
 ### RealPage
 - **No confirmed BDC portfolio holdings** found in borrower_db.json across the 27-BDC surveillance universe.
@@ -140,7 +143,7 @@
 | Issuer | Risk tier | Primary signal | BDC visibility |
 |--------|-----------|---------------|----------------|
 | Medallia | **Tier 1 — Active restructuring** | 77.75¢ at BXSL; PIK refusal April 2026; 0.67x coverage; FSK Ba1 | BXSL, FSK, BCRED |
-| Cornerstone OnDemand | **Tier 1 — Live stress** | First-lien 77¢ at CGBD; 2L 91–94¢; preferred 85–89¢; multi-layer confirmed | ARCC, OBDC, CGBD, PNNT |
+| Cornerstone OnDemand | **Tier 1 — Live stress** | BSL TLB ~78–83¢ (secondary market); 2L 91–94¢; preferred 85–89¢; Oct 2026 revolver wall | ARCC, OBDC only (CGBD/PNNT are different "Cornerstone" entities) |
 | Finastra | **Tier 3 — Completed cycle / historical anchor** | Unitranche repaid Aug 2025 via $4.2B syndicated refi; TLB was non-accrual at OBDC in Q4 2024 | ARCC, OCSL, OBDC (revolver), GBDC, OTF |
 | Pluralsight | **Tier 1 — Historical workout** | PIK debt + equity post-restructuring | ARCC, GSBD |
 | Kaseya | **Tier 2 — Hidden structure** | PIK preferred in holdco; refi catalyst | CGBD, GSBD, ARCC |
