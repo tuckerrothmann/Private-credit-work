@@ -26,9 +26,11 @@ from portfolio_collector import (
     _borrower_key,
     _borrower_family_key,
     _clean_issuer_name,
+    _review_token_signature,
     build_borrower_db,
     compute_live_na_rates,
     latest_portfolio_cache_files,
+    write_family_review_candidates,
 )
 import refresh
 from trade_signals import load_all_signals, load_signal_funds
@@ -889,3 +891,92 @@ def test_build_borrower_db_applies_family_alias_overrides(tmp_path: Path) -> Non
     assert family["borrower_count"] == 2
     assert family["total_fv_mm"] == 11.5
     assert db["meta"]["family_alias_count"] == 2
+    assert db["meta"]["family_alias_matched_count"] == 2
+    assert db["meta"]["family_alias_unmatched_count"] == 0
+    assert db["meta"]["family_alias_unmatched_keys"] == []
+
+
+def test_build_borrower_db_reports_unmatched_family_alias_keys(tmp_path: Path) -> None:
+    cache_dir = tmp_path / "portfolio_cache"
+    cache_dir.mkdir()
+    output_path = tmp_path / "borrower_db.json"
+    watchlist_path = tmp_path / "borrower_watchlist.csv"
+    family_watchlist_path = tmp_path / "borrower_family_watchlist.csv"
+    alias_path = tmp_path / "borrower_family_aliases.json"
+    universe_path = tmp_path / "bdc_universe.json"
+
+    universe_path.write_text(
+        json.dumps({"funds": [{"ticker": "ARCC", "manager": "Ares", "type": "listed_bdc"}]}),
+        encoding="utf-8",
+    )
+    alias_path.write_text(
+        json.dumps(
+            {
+                "borrower_key_overrides": {
+                    "alpha buyer": {"family_key": "alpha platform", "family_name": "Alpha Platform"},
+                    "missing borrower": {"family_key": "missing platform", "family_name": "Missing Platform"},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    _write_json(
+        cache_dir / "ARCC_2025-12-31.json",
+        [
+            {
+                "issuer": "Alpha Buyer, Inc.",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "First lien",
+                "rate_str": "9.5 %",
+                "maturity": "03/2029",
+                "cost_mm": 10.0,
+                "fv_mm": 9.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 475,
+            },
+        ],
+    )
+
+    db = build_borrower_db(
+        cache_dir=cache_dir,
+        output_path=output_path,
+        universe_path=universe_path,
+        watchlist_path=watchlist_path,
+        family_watchlist_path=family_watchlist_path,
+        family_alias_path=alias_path,
+    )
+
+    assert db["meta"]["family_alias_count"] == 2
+    assert db["meta"]["family_alias_matched_count"] == 1
+    assert db["meta"]["family_alias_unmatched_count"] == 1
+    assert db["meta"]["family_alias_unmatched_keys"] == ["missing borrower"]
+
+
+def test_write_family_review_candidates_exports_merge_and_split_rows(tmp_path: Path) -> None:
+    merge_path = tmp_path / "merge.csv"
+    split_path = tmp_path / "split.csv"
+
+    rows = write_family_review_candidates(
+        {"family_review": _sample_family_review()},
+        merge_output_path=merge_path,
+        split_output_path=split_path,
+    )
+
+    assert len(rows["merge_candidates"]) == 2
+    assert len(rows["split_candidates"]) == 2
+
+    merge_text = merge_path.read_text(encoding="utf-8")
+    split_text = split_path.read_text(encoding="utf-8")
+
+    assert "Alpha OpCo" in merge_text
+    assert "Gamma Family" in split_text
+
+
+def test_review_token_signature_drops_generic_industry_words() -> None:
+    assert _review_token_signature("X4 Pharmaceuticals, Inc.") == set()
+    assert _review_token_signature("Higginbotham Insurance Agency, Inc.") == {"agency", "higginbotham"}

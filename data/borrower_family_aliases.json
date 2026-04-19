@@ -1,16 +1,52 @@
 {
   "borrower_key_overrides": {
-    "aine acquisition ii (48forty)": {
+    "alpine acquisition corp ii (48forty)": {
       "family_key": "alpine ii",
       "family_name": "Alpine Acquisition Corp II"
+    },
+    "asp conair holdings": {
+      "family_key": "conair",
+      "family_name": "Conair Holdings LLC"
+    },
+    "cambium learning group": {
+      "family_key": "cambium",
+      "family_name": "Cambium Learning Group, Inc."
+    },
+    "carnegie dartlet": {
+      "family_key": "carnegie",
+      "family_name": "Carnegie Holdco, LLC"
+    },
+    "daylight beta parent llc (benefytt technologies inc)": {
+      "family_key": "daylight beta",
+      "family_name": "Daylight Beta Parent LLC and CFCo, LLC"
+    },
+    "dta intermediate ii": {
+      "family_key": "dta",
+      "family_name": "DTA, LP"
+    },
+    "gauge ete blocker": {
+      "family_key": "ete ii",
+      "family_name": "ETE Intermediate II, LLC"
+    },
+    "gauge loving tan": {
+      "family_key": "loving tan",
+      "family_name": "Loving Tan Intermediate II, Inc."
+    },
+    "genetix biotherapeutics inc (pka bluebird bio inc)": {
+      "family_key": "bluebird bio",
+      "family_name": "bluebird bio, Inc."
+    },
+    "heartland home services": {
+      "family_key": "heartland",
+      "family_name": "Heartland Home Services, Inc."
+    },
+    "icims inc*": {
+      "family_key": "icims",
+      "family_name": "iCIMS, Inc."
     },
     "thrasio holdings": {
       "family_key": "thrasio",
       "family_name": "Thrasio, LLC"
-    },
-    "walker edison hold": {
-      "family_key": "walker edison",
-      "family_name": "Walker Edison Furniture Company LLC"
     },
     "streamland media holdings": {
       "family_key": "streamland media",
@@ -20,15 +56,43 @@
       "family_key": "integrity marketing",
       "family_name": "Integrity Marketing Acquisition, LLC"
     },
+    "kbh topco llc (kingsbridge)": {
+      "family_key": "kingsbridge",
+      "family_name": "Kingsbridge Holdings, LLC"
+    },
+    "lightspeed investment holdco": {
+      "family_key": "lightspeed",
+      "family_name": "Lightspeed Buyer, Inc."
+    },
+    "loparex midco bv": {
+      "family_key": "loparex",
+      "family_name": "Loparex"
+    },
+    "nelipak european holdings coöperatief ua": {
+      "family_key": "nelipak",
+      "family_name": "Nelipak Holding Company"
+    },
+    "new medina health": {
+      "family_key": "medina health",
+      "family_name": "Medina Health, LLC"
+    },
+    "paving lessor": {
+      "family_key": "paving",
+      "family_name": "Paving Parent, LLC"
+    },
+    "paving lessor corp first lien": {
+      "family_key": "paving",
+      "family_name": "Paving Parent, LLC"
+    },
+    "podean intermediate ii": {
+      "family_key": "podean",
+      "family_name": "Podean Buyer, LLC"
+    },
     "dca investment holding": {
       "family_key": "dca investment",
       "family_name": "DCA Investment Holdings, LLC"
     },
-    "daylight beta parent (benefytt technologies)": {
-      "family_key": "daylight beta",
-      "family_name": "Daylight Beta Parent LLC and CFCo, LLC"
-    },
-    "ps operating company": {
+    "ps operating": {
       "family_key": "ps operating",
       "family_name": "PS Operating Company LLC"
     },
@@ -36,9 +100,33 @@
       "family_key": "aimbridge",
       "family_name": "Aimbridge Topco, LLC"
     },
-    "icims*": {
-      "family_key": "icims",
-      "family_name": "iCIMS, Inc."
+    "rtic subsidiary holdings": {
+      "family_key": "rtic",
+      "family_name": "RTIC Parent Holdings, LLC"
+    },
+    "sabel systems technology solutions": {
+      "family_key": "sabel investco",
+      "family_name": "Sabel Systems Technology Solutions, LLC"
+    },
+    "tcfi aevex": {
+      "family_key": "aevex",
+      "family_name": "Aevex Holdings, LLC"
+    },
+    "tower arch infolinks media": {
+      "family_key": "infolinks media",
+      "family_name": "Infolinks Media Buyco, LLC"
+    },
+    "tpc us parent": {
+      "family_key": "tpc",
+      "family_name": "TPC Holding Company, LP"
+    },
+    "trucordia insurance holdings": {
+      "family_key": "trucordia",
+      "family_name": "Trucordia"
+    },
+    "walker edison holdco": {
+      "family_key": "walker edison",
+      "family_name": "Walker Edison Furniture Company LLC"
     }
   }
 }

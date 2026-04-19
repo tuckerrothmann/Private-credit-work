@@ -1612,6 +1612,38 @@ _BORROWER_GENERIC_TOKENS = {
     "issuer",
     "interco",
 }
+_REVIEW_GENERIC_TOKENS = {
+    "capital",
+    "companies",
+    "company",
+    "distribution",
+    "financial",
+    "finance",
+    "fund",
+    "funding",
+    "global",
+    "group",
+    "health",
+    "healthcare",
+    "insurance",
+    "international",
+    "loan",
+    "loans",
+    "management",
+    "marketing",
+    "medical",
+    "network",
+    "networks",
+    "partners",
+    "pharmaceuticals",
+    "products",
+    "services",
+    "solutions",
+    "systems",
+    "technologies",
+    "technology",
+    "therapeutics",
+}
 _BORROWER_RATE_LIKE_RE = re.compile(
     r"^(?:fixed|floating|sofr|libor|euribor|base|prime)?\s*\+?\s*\d+(?:\.\d+)?\s*%$",
     re.IGNORECASE,
@@ -1830,6 +1862,24 @@ def _load_family_alias_overrides(alias_path: Path = BORROWER_FAMILY_ALIASES) -> 
             "family_name": family_name,
         }
     return clean_overrides
+
+
+def _summarize_family_alias_coverage(
+    alias_overrides: dict[str, dict[str, str]],
+    borrowers: dict[str, dict],
+) -> dict[str, list[str]]:
+    borrower_keys = set(borrowers)
+    matched_keys: list[str] = []
+    unmatched_keys: list[str] = []
+    for borrower_key in sorted(alias_overrides):
+        if borrower_key in borrower_keys:
+            matched_keys.append(borrower_key)
+        else:
+            unmatched_keys.append(borrower_key)
+    return {
+        "matched_keys": matched_keys,
+        "unmatched_keys": unmatched_keys,
+    }
 
 
 def _parse_rate_pct(rate_str: str) -> Optional[float]:
@@ -2257,7 +2307,7 @@ def _build_borrower_families(
 
 
 def _review_token_signature(name: str) -> set[str]:
-    return _substantive_borrower_tokens(_normalize_borrower_name(name))
+    return _substantive_borrower_tokens(_normalize_borrower_name(name)) - _REVIEW_GENERIC_TOKENS
 
 
 def _name_contains(a: str, b: str) -> bool:
@@ -2735,6 +2785,7 @@ def build_borrower_db(
         rec["stress_tier"] = _stress_tier(rec["stress_score"])
         rec["surveillance_score"] = _borrower_surveillance_score(rec)
 
+    family_alias_coverage = _summarize_family_alias_coverage(family_alias_overrides, borrowers)
     families = _build_borrower_families(borrowers, family_alias_overrides=family_alias_overrides)
     family_review = _build_family_review_candidates(borrowers, families)
 
@@ -2758,6 +2809,9 @@ def build_borrower_db(
             "family_watchlist_path": str(family_watchlist_path),
             "family_alias_path": str(family_alias_path),
             "family_alias_count": len(family_alias_overrides),
+            "family_alias_matched_count": len(family_alias_coverage["matched_keys"]),
+            "family_alias_unmatched_count": len(family_alias_coverage["unmatched_keys"]),
+            "family_alias_unmatched_keys": family_alias_coverage["unmatched_keys"],
             "family_merge_candidates_path": str(family_merge_candidates_path),
             "family_split_candidates_path": str(family_split_candidates_path),
             "family_merge_candidate_count": len(family_review.get("merge_candidates", [])),
