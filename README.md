@@ -76,6 +76,7 @@ Universe metadata lives in `data/bdc_universe.json`.
 
 - `data/processed/`: generated outputs, digests, and summaries
 - `data/processed/borrower_watchlist.csv`: ranked issuer surveillance sheet with stress, manager overlap, maturities, and mark pressure
+- `data/processed/borrower_family_watchlist.csv`: related-entity rollup of the borrower watchlist for family-level transmission and refinancing mapping
 - `memo/`: fund-level investment memos, including the CCLF liquidity work
 - `issuer-surveillance/`: borrower and sector surveillance artifacts
 - `scenarios/`: liquidity-model scenario configs
@@ -94,6 +95,7 @@ If you are jumping into the borrower side first, start here:
 - Listed BDC pricing is cached locally and refreshed from yfinance.
 - Live non-accrual overrides come from the latest cached SOI files, with MD&A fallback for known parser edge cases.
 - Trend enrichment comes from cached EDGAR XBRL history.
+- Borrower-family rollups are heuristic overlays on top of the cleaned legal-entity borrower DB; they are meant for surveillance and mapping, not legal documentation.
 - Interval / non-traded vehicles rely more heavily on static disclosures than listed names.
 
 ## Current limitations

@@ -16,6 +16,7 @@ from dashboard_helpers import (
 )
 from portfolio_collector import (
     _borrower_key,
+    _borrower_family_key,
     _clean_issuer_name,
     build_borrower_db,
     compute_live_na_rates,
@@ -369,6 +370,18 @@ def test_borrower_key_normalizes_dba_plus_and_related_entity_variants() -> None:
     assert _borrower_key("Pluralsight, LLC and Pluralsight Holdings, LLC and Paradigmatic Holdco LLC") == base
 
 
+def test_borrower_family_key_rolls_related_entities_without_overmerging() -> None:
+    assert _borrower_family_key("Project Granite Buyer, Inc.") == "granite"
+    assert _borrower_family_key("Project Granite Holdings, LLC") == "granite"
+    assert _borrower_family_key("B T Group Acquisition, Inc.") == "bt group"
+    assert _borrower_family_key("ACP Avenu Buyer, LLC") == "acp avenu"
+    assert _borrower_family_key("ACP Avenu Midco LLC") == "acp avenu"
+    assert _borrower_family_key("North Haven Fairway Buyer, LLC") == "north haven fairway"
+    assert _borrower_family_key("North Haven Saints Equity Holdings, LP") == "north haven saints"
+    assert _borrower_family_key("U.S. Government Securities") == "us government securities"
+    assert _borrower_family_key("U.S. Treasury Bill") == "us treasury bill"
+
+
 def test_build_borrower_db_filters_negative_noise_and_merges_instrument_suffixes(tmp_path: Path) -> None:
     cache_dir = tmp_path / "portfolio_cache"
     cache_dir.mkdir()
@@ -522,3 +535,135 @@ def test_build_borrower_db_ignores_scale_error_outlier_without_dropping_borrower
     assert borrower["total_cost_mm"] == 15.0
     assert borrower["total_fv_mm"] == 27.167
     assert borrower["current_by_fund"]["GSBD"]["fv_mm"] == 27.167
+
+
+def test_build_borrower_db_builds_family_rollups_and_watchlist(tmp_path: Path) -> None:
+    cache_dir = tmp_path / "portfolio_cache"
+    cache_dir.mkdir()
+    output_path = tmp_path / "borrower_db.json"
+    watchlist_path = tmp_path / "borrower_watchlist.csv"
+    family_watchlist_path = tmp_path / "borrower_family_watchlist.csv"
+    universe_path = tmp_path / "bdc_universe.json"
+
+    universe_path.write_text(
+        json.dumps(
+            {
+                "funds": [
+                    {"ticker": "ARCC", "manager": "Ares", "type": "listed_bdc"},
+                    {"ticker": "PFLT", "manager": "PennantPark", "type": "listed_bdc"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    _write_json(
+        cache_dir / "ARCC_2025-12-31.json",
+        [
+            {
+                "issuer": "Project Granite Buyer, Inc.",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "First lien",
+                "rate_str": "9.50 %",
+                "maturity": "03/2028",
+                "cost_mm": 20.0,
+                "fv_mm": 18.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 475,
+            },
+            {
+                "issuer": "Project Granite Holdings, LLC",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "Equity",
+                "rate_str": "",
+                "maturity": "",
+                "cost_mm": 4.0,
+                "fv_mm": 2.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": None,
+            },
+            {
+                "issuer": "ACP Avenu Buyer, LLC",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Business Services",
+                "invest_type": "First lien",
+                "rate_str": "10.00 %",
+                "maturity": "06/2029",
+                "cost_mm": 12.0,
+                "fv_mm": 11.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 500,
+            },
+        ],
+    )
+    _write_json(
+        cache_dir / "PFLT_2025-12-31.json",
+        [
+            {
+                "issuer": "Project Granite Buyer, Inc.",
+                "fund_ticker": "PFLT",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "Unitranche",
+                "rate_str": "10.25 %",
+                "maturity": "04/2028",
+                "cost_mm": 9.0,
+                "fv_mm": 7.0,
+                "is_pik": True,
+                "is_non_accrual": True,
+                "spread_bps": 525,
+            },
+            {
+                "issuer": "ACP Avenu Midco LLC",
+                "fund_ticker": "PFLT",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Business Services",
+                "invest_type": "Second lien",
+                "rate_str": "11.00 %",
+                "maturity": "07/2029",
+                "cost_mm": 8.0,
+                "fv_mm": 7.5,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 550,
+            },
+        ],
+    )
+
+    db = build_borrower_db(
+        cache_dir=cache_dir,
+        output_path=output_path,
+        universe_path=universe_path,
+        watchlist_path=watchlist_path,
+        family_watchlist_path=family_watchlist_path,
+    )
+
+    granite_family = db["families"]["granite"]
+    assert granite_family["borrower_count"] == 2
+    assert granite_family["fund_count"] == 2
+    assert granite_family["total_fv_mm"] == 27.0
+    assert granite_family["is_non_accrual_any"] is True
+    assert granite_family["is_pik_any"] is True
+    assert "Project Granite Buyer, Inc." in granite_family["borrower_names"]
+    assert "Project Granite Holdings, LLC" in granite_family["borrower_names"]
+
+    avenu_family = db["families"]["acp avenu"]
+    assert avenu_family["borrower_count"] == 2
+    assert avenu_family["fund_count"] == 2
+    assert avenu_family["total_fv_mm"] == 18.5
+
+    family_watchlist_text = family_watchlist_path.read_text(encoding="utf-8")
+    assert "Project Granite Buyer, Inc., Project Granite Holdings, LLC" in family_watchlist_text

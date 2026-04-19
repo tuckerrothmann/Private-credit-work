@@ -60,6 +60,7 @@ BORROWER_DB     = Path("data/borrower_db.json")
 UNIVERSE_PATH   = Path("data/bdc_universe.json")
 PROCESSED_DIR   = Path("data/processed")
 BORROWER_WATCHLIST = PROCESSED_DIR / "borrower_watchlist.csv"
+BORROWER_FAMILY_WATCHLIST = PROCESSED_DIR / "borrower_family_watchlist.csv"
 
 # SOI section headers we search for in filing HTML
 SOI_HEADINGS = [
@@ -1580,9 +1581,11 @@ _BORROWER_SUFFIX_RE = re.compile(
     re.IGNORECASE,
 )
 _BORROWER_GENERIC_TOKENS = {
+    "the",
     "hold",
     "holdco",
     "holdings",
+    "holding",
     "top",
     "topco",
     "parent",
@@ -1595,11 +1598,37 @@ _BORROWER_GENERIC_TOKENS = {
     "spv",
     "dac",
     "sarl",
+    "buyer",
+    "purchaser",
+    "aggregator",
+    "bidco",
+    "midco",
+    "blocker",
+    "project",
+    "unblocked",
+    "issuer",
+    "interco",
 }
 _BORROWER_RATE_LIKE_RE = re.compile(
     r"^(?:fixed|floating|sofr|libor|euribor|base|prime)?\s*\+?\s*\d+(?:\.\d+)?\s*%$",
     re.IGNORECASE,
 )
+_FAMILY_PREFIX_TOKENS = {
+    "north",
+    "south",
+    "east",
+    "west",
+    "new",
+    "global",
+    "world",
+    "first",
+    "national",
+    "community",
+    "united",
+    "international",
+    "us",
+    "uk",
+}
 
 
 def _normalize_borrower_text(value: str) -> str:
@@ -1711,6 +1740,48 @@ def _borrower_key(issuer: str) -> str:
     key = re.sub(r"[,\.;]", "", key)
     key = re.sub(r"\s*(llc|inc|corp|ltd|lp|co\b)", "", key).strip()
     return key
+
+
+def _borrower_family_key(issuer: str) -> str:
+    normalized = _normalize_borrower_name(issuer).lower()
+    normalized = re.sub(r"[^a-z0-9]+", " ", normalized)
+    split_tokens = [token for token in normalized.split() if token]
+    raw_tokens: list[str] = []
+    idx = 0
+    while idx < len(split_tokens):
+        token = split_tokens[idx]
+        if len(token) == 1 and token.isalpha():
+            letters = [token]
+            j = idx + 1
+            while j < len(split_tokens) and len(split_tokens[j]) == 1 and split_tokens[j].isalpha():
+                letters.append(split_tokens[j])
+                j += 1
+            if len(letters) >= 2:
+                raw_tokens.append("".join(letters))
+                idx = j
+                continue
+        raw_tokens.append(token)
+        idx += 1
+    legal_tokens = {"llc", "inc", "corp", "corporation", "ltd", "limited", "lp", "co", "company"}
+    raw_non_legal = [token for token in raw_tokens if token not in legal_tokens]
+    family_tokens = [
+        token
+        for token in raw_tokens
+        if token not in _BORROWER_GENERIC_TOKENS
+        and token not in legal_tokens
+        and not token.isdigit()
+    ]
+    if len(family_tokens) >= 2:
+        token_count = 3 if family_tokens[0] in _FAMILY_PREFIX_TOKENS and len(family_tokens) >= 3 else 2
+        chosen = family_tokens[:token_count]
+    elif family_tokens:
+        if raw_non_legal and raw_non_legal[0] in _FAMILY_PREFIX_TOKENS and len(raw_non_legal) >= 2:
+            chosen = raw_non_legal[:2]
+        else:
+            chosen = family_tokens[:1]
+    else:
+        chosen = raw_non_legal[:2] if raw_non_legal else raw_tokens[:2]
+    return " ".join(chosen).strip()
 
 
 def _load_fund_metadata(universe_path: Path = UNIVERSE_PATH) -> dict[str, dict]:
@@ -1969,6 +2040,193 @@ def _borrower_surveillance_score(rec: dict) -> int:
     return score
 
 
+def _build_borrower_families(borrowers: dict[str, dict]) -> dict[str, dict]:
+    families: dict[str, dict] = {}
+
+    for borrower_key, rec in borrowers.items():
+        family_key = _borrower_family_key(rec.get("canonical_name", ""))
+        if not family_key:
+            family_key = borrower_key
+        rec["family_key"] = family_key
+
+        family = families.setdefault(
+            family_key,
+            {
+                "family_key": family_key,
+                "family_name": rec.get("canonical_name", ""),
+                "members": [],
+                "member_keys": [],
+                "borrower_count": 0,
+                "funds": set(),
+                "managers": set(),
+                "non_accrual_funds": set(),
+                "pik_funds": set(),
+                "industries": Counter(),
+                "total_fv_mm": 0.0,
+                "total_cost_mm": 0.0,
+                "periods_seen": set(),
+                "peak_fund_count": 0,
+                "peak_total_fv_mm": 0.0,
+                "nearest_maturity_date": "",
+                "nearest_maturity": "",
+                "weighted_avg_rate_pairs": [],
+                "weighted_avg_spread_pairs": [],
+                "top_member_name": rec.get("canonical_name", ""),
+                "top_member_fv_mm": rec.get("total_fv_mm") or 0.0,
+                "stress_score": 0,
+                "surveillance_score": 0,
+                "is_non_accrual_any": False,
+                "is_pik_any": False,
+            },
+        )
+
+        family["members"].append(rec.get("canonical_name", ""))
+        family["member_keys"].append(borrower_key)
+        family["funds"].update(rec.get("funds", []))
+        family["managers"].update(rec.get("managers", []))
+        family["non_accrual_funds"].update(rec.get("non_accrual_funds", []))
+        family["pik_funds"].update(rec.get("pik_funds", []))
+        family["total_fv_mm"] += rec.get("total_fv_mm") or 0.0
+        family["total_cost_mm"] += rec.get("total_cost_mm") or 0.0
+        family["periods_seen"].update(rec.get("periods_seen", []))
+        family["peak_fund_count"] = max(family["peak_fund_count"], rec.get("peak_fund_count", 0))
+        family["peak_total_fv_mm"] = max(family["peak_total_fv_mm"], rec.get("peak_total_fv_mm") or 0.0)
+        family["stress_score"] = max(family["stress_score"], rec.get("stress_score", 0))
+        family["surveillance_score"] = max(family["surveillance_score"], rec.get("surveillance_score", 0))
+        family["is_non_accrual_any"] = family["is_non_accrual_any"] or rec.get("is_non_accrual_any", False)
+        family["is_pik_any"] = family["is_pik_any"] or rec.get("is_pik_any", False)
+
+        if (rec.get("total_fv_mm") or 0.0) > family["top_member_fv_mm"]:
+            family["top_member_name"] = rec.get("canonical_name", "")
+            family["top_member_fv_mm"] = rec.get("total_fv_mm") or 0.0
+
+        nearest_date = rec.get("nearest_maturity_date") or ""
+        if nearest_date and (not family["nearest_maturity_date"] or nearest_date < family["nearest_maturity_date"]):
+            family["nearest_maturity_date"] = nearest_date
+            family["nearest_maturity"] = rec.get("nearest_maturity", "")
+
+        for industry in rec.get("industries", []):
+            if industry:
+                family["industries"][industry] += 1
+
+        for app in rec.get("appearances", []):
+            weight = app.get("fv_mm") or app.get("cost_mm") or 0.0
+            if weight > 0:
+                family["weighted_avg_rate_pairs"].append((_parse_rate_pct(app.get("rate_str", "")), weight))
+                spread = app.get("spread_bps")
+                family["weighted_avg_spread_pairs"].append((float(spread) if spread is not None else None, weight))
+
+    family_records: dict[str, dict] = {}
+    for family_key, family in families.items():
+        total_cost = family["total_cost_mm"]
+        total_fv = family["total_fv_mm"]
+        unrealized_pct = None
+        if total_cost > 0 and total_fv >= 0:
+            unrealized_pct = round((total_fv - total_cost) / total_cost, 4)
+
+        members = sorted(set(family["members"]))
+        member_keys = sorted(set(family["member_keys"]))
+        funds = sorted(family["funds"])
+        managers = sorted(family["managers"])
+        non_accrual_funds = sorted(family["non_accrual_funds"])
+        pik_funds = sorted(family["pik_funds"])
+        periods_seen = sorted(family["periods_seen"])
+        industries = [name for name, _ in family["industries"].most_common()]
+
+        family_records[family_key] = {
+            "family_key": family_key,
+            "family_name": family["top_member_name"] or (members[0] if members else family_key.title()),
+            "borrower_count": len(member_keys),
+            "borrower_names": members,
+            "borrower_keys": member_keys,
+            "fund_count": len(funds),
+            "funds": funds,
+            "manager_count": len(managers),
+            "managers": managers,
+            "total_fv_mm": round(total_fv, 4),
+            "total_cost_mm": round(total_cost, 4),
+            "unrealized_pct": unrealized_pct,
+            "nearest_maturity_date": family["nearest_maturity_date"],
+            "nearest_maturity": family["nearest_maturity"],
+            "weighted_avg_rate_pct": _round_or_none(_weighted_average(family["weighted_avg_rate_pairs"]), 2),
+            "weighted_avg_spread_bps": _round_or_none(_weighted_average(family["weighted_avg_spread_pairs"]), 1),
+            "is_non_accrual_any": family["is_non_accrual_any"],
+            "non_accrual_funds": non_accrual_funds,
+            "is_pik_any": family["is_pik_any"],
+            "pik_funds": pik_funds,
+            "first_seen_period": periods_seen[0] if periods_seen else "",
+            "last_seen_period": periods_seen[-1] if periods_seen else "",
+            "period_count": len(periods_seen),
+            "peak_fund_count": family["peak_fund_count"],
+            "peak_total_fv_mm": _round_or_none(family["peak_total_fv_mm"], 4),
+            "industries": industries,
+            "stress_score": family["stress_score"],
+            "stress_tier": _stress_tier(family["stress_score"]),
+            "surveillance_score": family["surveillance_score"] + min(3, max(0, len(member_keys) - 1)),
+        }
+
+    return family_records
+
+
+def write_borrower_family_watchlist(
+    db: dict,
+    output_path: Path = BORROWER_FAMILY_WATCHLIST,
+) -> list[dict]:
+    rows: list[dict] = []
+    families = db.get("families", {})
+
+    for rec in families.values():
+        industries = rec.get("industries", [])
+        rows.append({
+            "Family": rec.get("family_name", ""),
+            "Family Key": rec.get("family_key", ""),
+            "Surveillance Score": rec.get("surveillance_score", 0),
+            "Stress Tier": rec.get("stress_tier", "GREEN"),
+            "Stress Score": rec.get("stress_score", 0),
+            "Borrower Count": rec.get("borrower_count", 0),
+            "Fund Count": rec.get("fund_count", 0),
+            "Manager Count": rec.get("manager_count", 0),
+            "Borrowers": ", ".join(rec.get("borrower_names", [])),
+            "Funds": ", ".join(rec.get("funds", [])),
+            "Managers": ", ".join(rec.get("managers", [])),
+            "Primary Industry": industries[0] if industries else "",
+            "Total FV ($M)": rec.get("total_fv_mm"),
+            "Total Cost ($M)": rec.get("total_cost_mm"),
+            "Unrealized %": rec.get("unrealized_pct"),
+            "Nearest Maturity": rec.get("nearest_maturity", ""),
+            "Weighted Avg Rate %": rec.get("weighted_avg_rate_pct"),
+            "Weighted Avg Spread (bps)": rec.get("weighted_avg_spread_bps"),
+            "Non-Accrual": rec.get("is_non_accrual_any", False),
+            "Non-Accrual Funds": ", ".join(rec.get("non_accrual_funds", [])),
+            "PIK": rec.get("is_pik_any", False),
+            "PIK Funds": ", ".join(rec.get("pik_funds", [])),
+            "First Seen": rec.get("first_seen_period", ""),
+            "Last Seen": rec.get("last_seen_period", ""),
+            "Period Count": rec.get("period_count", 0),
+        })
+
+    rows.sort(
+        key=lambda row: (
+            -(row["Surveillance Score"] or 0),
+            -(row["Borrower Count"] or 0),
+            -(row["Fund Count"] or 0),
+            -(row["Total FV ($M)"] or 0),
+            row["Family"],
+        )
+    )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", newline="", encoding="utf-8") as fh:
+        fieldnames = list(rows[0].keys()) if rows else [
+            "Family", "Family Key", "Surveillance Score", "Stress Tier", "Stress Score"
+        ]
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    return rows
+
+
 def write_borrower_watchlist(db: dict, output_path: Path = BORROWER_WATCHLIST) -> list[dict]:
     rows: list[dict] = []
     borrowers = db.get("borrowers", {})
@@ -1978,6 +2236,7 @@ def write_borrower_watchlist(db: dict, output_path: Path = BORROWER_WATCHLIST) -
         primary_industry = rec.get("industries", [])
         rows.append({
             "Issuer": rec.get("canonical_name", ""),
+            "Family Key": rec.get("family_key", ""),
             "Surveillance Score": rec.get("surveillance_score", 0),
             "Stress Tier": rec.get("stress_tier", "GREEN"),
             "Stress Score": rec.get("stress_score", 0),
@@ -2030,6 +2289,7 @@ def build_borrower_db(
     output_path: Path = BORROWER_DB,
     universe_path: Path = UNIVERSE_PATH,
     watchlist_path: Path = BORROWER_WATCHLIST,
+    family_watchlist_path: Path = BORROWER_FAMILY_WATCHLIST,
 ) -> dict[str, Any]:
     """Aggregate all cached SOI files into a cross-fund borrower database.
 
@@ -2172,11 +2432,14 @@ def build_borrower_db(
         rec["stress_tier"] = _stress_tier(rec["stress_score"])
         rec["surveillance_score"] = _borrower_surveillance_score(rec)
 
+    families = _build_borrower_families(borrowers)
+
     db = {
         "meta": {
             "build_time": datetime.now().isoformat(),
             "total_positions": total_positions,
             "unique_borrowers": len(borrowers),
+            "unique_families": len(families),
             "cached_periods_indexed": sorted({
                 period
                 for hist_rows in history.values()
@@ -2188,13 +2451,16 @@ def build_borrower_db(
                 for app in rec["appearances"]
             }),
             "watchlist_path": str(watchlist_path),
+            "family_watchlist_path": str(family_watchlist_path),
         },
         "borrowers": borrowers,
+        "families": families,
     }
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(db, indent=2), encoding="utf-8")
     write_borrower_watchlist(db, watchlist_path)
+    write_borrower_family_watchlist(db, family_watchlist_path)
     return db
 
 
@@ -2352,13 +2618,42 @@ def _is_reasonable_position(rec: dict) -> bool:
 def analyze_borrower_db(db: dict, min_funds: int = 2) -> None:
     """Print cross-fund concentration and stress analysis."""
     borrowers = db["borrowers"]
+    families = db.get("families", {})
     meta = db["meta"]
 
     print(f"\nBorrower Database Summary")
     print(f"  Built:          {meta['build_time'][:19]}")
     print(f"  Total positions: {meta['total_positions']}")
     print(f"  Unique borrowers: {meta['unique_borrowers']}")
+    print(f"  Unique families:  {meta.get('unique_families', 0)}")
     print(f"  Funds included:   {', '.join(meta['funds_included'])}")
+
+    family_watchlist = sorted(
+        families.values(),
+        key=lambda rec: (
+            -(rec.get("surveillance_score", 0)),
+            -(rec.get("borrower_count", 0)),
+            -(rec.get("fund_count", 0)),
+            -(rec.get("total_fv_mm") or 0),
+            rec["family_name"],
+        ),
+    )
+    print(f"\n--- Top Borrower Families (15) ---")
+    for rec in family_watchlist[:15]:
+        industry = rec["industries"][0] if rec.get("industries") else "n/a"
+        nearest = rec.get("nearest_maturity") or "n/a"
+        urg = f"{rec['unrealized_pct']*100:+.1f}%" if rec.get("unrealized_pct") is not None else "n/a"
+        print(
+            f"  {rec['family_name'][:44]:<44}  "
+            f"Score={rec.get('surveillance_score', 0):>2}  "
+            f"Borrowers={rec.get('borrower_count', 0)}  "
+            f"Funds={rec.get('fund_count', 0)}  "
+            f"Mgrs={rec.get('manager_count', 0)}  "
+            f"FV=${(rec.get('total_fv_mm') or 0):.1f}M  "
+            f"URG={urg:<7}  "
+            f"Mat={nearest:<8}  "
+            f"{industry}"
+        )
 
     watchlist = sorted(
         borrowers.values(),
@@ -2446,6 +2741,19 @@ def analyze_borrower_db(db: dict, min_funds: int = 2) -> None:
 def search_borrower(db: dict, query: str) -> None:
     """Search borrower DB by partial issuer name (case-insensitive)."""
     q = query.lower()
+    family_matches = [
+        (k, r) for k, r in db.get("families", {}).items()
+        if q in k or q in r.get("family_name", "").lower()
+    ]
+    if family_matches:
+        print(f"\nFamily match(es) for '{query}':")
+        for key, rec in sorted(family_matches, key=lambda item: (-item[1].get("fund_count", 0), item[0]))[:10]:
+            print(f"  {rec['family_name']}  "
+                  f"Borrowers={rec.get('borrower_count', 0)}  "
+                  f"Funds={rec.get('fund_count', 0)}  "
+                  f"FV=${rec.get('total_fv_mm') or 0:.1f}M  "
+                  f"Members: {', '.join(rec.get('borrower_names', [])[:5])}")
+
     matches = [(k, r) for k, r in db["borrowers"].items()
                if q in k or q in r["canonical_name"].lower()]
     if not matches:
@@ -2454,6 +2762,8 @@ def search_borrower(db: dict, query: str) -> None:
     print(f"\n{len(matches)} match(es) for '{query}':")
     for key, rec in sorted(matches, key=lambda x: -x[1]["fund_count"]):
         print(f"\n  {rec['canonical_name']}")
+        if rec.get("family_key"):
+            print(f"    Family key: {rec['family_key']}")
         print(f"    Funds ({rec['fund_count']}): {', '.join(rec['funds'])}")
         if rec.get("managers"):
             print(f"    Managers ({rec.get('manager_count', 0)}): {', '.join(rec['managers'])}")
