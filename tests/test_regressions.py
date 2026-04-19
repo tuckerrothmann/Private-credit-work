@@ -30,6 +30,7 @@ from portfolio_collector import (
     build_borrower_db,
     compute_live_na_rates,
     latest_portfolio_cache_files,
+    parse_soi_html,
     write_family_review_candidates,
 )
 import refresh
@@ -178,6 +179,48 @@ def _sample_family_review() -> dict:
     }
 
 
+def _sample_soi_html() -> str:
+    return """
+<html>
+  <body>
+    <h2>Consolidated Schedule of Investments</h2>
+    <table>
+      <tr>
+        <th>Portfolio Company</th>
+        <th>Investment Type</th>
+        <th>Interest Rate</th>
+        <th>Maturity Date</th>
+        <th>Principal</th>
+        <th>Cost</th>
+        <th>Fair Value</th>
+        <th>% of Net Assets</th>
+      </tr>
+      <tr>
+        <td>Acme Holdings, LLC</td>
+        <td>First Lien</td>
+        <td>SOFR + 5.50%</td>
+        <td>12/31/2028</td>
+        <td>$10,000</td>
+        <td>$9,800</td>
+        <td>$9,900</td>
+        <td>1.0%</td>
+      </tr>
+      <tr>
+        <td>Bravo Software, Inc.</td>
+        <td>Second Lien</td>
+        <td>SOFR + 6.50%</td>
+        <td>06/30/2029</td>
+        <td>$8,000</td>
+        <td>$7,500</td>
+        <td>$7,600</td>
+        <td>0.8%</td>
+      </tr>
+    </table>
+  </body>
+</html>
+""".strip()
+
+
 def test_latest_portfolio_cache_files_prefers_newest_period(tmp_path: Path) -> None:
     _write_json(tmp_path / "ARCC_2025-09-30.json", [])
     _write_json(tmp_path / "ARCC_2025-12-31.json", [])
@@ -231,6 +274,39 @@ def test_load_all_signals_delegates_to_canonical_fund_loader() -> None:
     assert result == signals
     load_funds.assert_called_once_with()
     compute.assert_called_once_with(funds)
+
+
+def test_parse_soi_html_retries_full_html_when_chunk_misses_heading() -> None:
+    full_html = _sample_soi_html()
+    large_html = full_html.replace("</body>", ("x" * 3_100_000) + "</body>")
+
+    with patch("portfolio_collector._extract_soi_chunk", return_value="<html><body><p>No schedule here</p></body></html>"):
+        investments = parse_soi_html(large_html, "TEST", "2025-12-31", "10-K")
+
+    assert len(investments) == 2
+    assert investments[0].issuer == "Acme Holdings, LLC"
+
+
+def test_parse_soi_html_retries_full_html_when_chunk_has_no_rows() -> None:
+    full_html = _sample_soi_html()
+    large_html = full_html.replace("</body>", ("x" * 3_100_000) + "</body>")
+    chunk_html = """
+<html>
+  <body>
+    <h2>Consolidated Schedule of Investments</h2>
+    <table>
+      <tr><th>Assets</th><th>December 31, 2025</th></tr>
+      <tr><td>Investments at fair value</td><td>$100,000</td></tr>
+    </table>
+  </body>
+</html>
+""".strip()
+
+    with patch("portfolio_collector._extract_soi_chunk", return_value=chunk_html):
+        investments = parse_soi_html(large_html, "TEST", "2025-12-31", "10-K")
+
+    assert len(investments) == 2
+    assert investments[0].issuer == "Acme Holdings, LLC"
 
 
 def test_get_latest_10kq_period_skips_cache_writes_in_dry_run(tmp_path: Path) -> None:

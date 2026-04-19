@@ -864,8 +864,16 @@ def _extract_soi_chunk(html: str, max_bytes: int = 4_000_000) -> str:
     return stitched
 
 
-def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
-                   verbose: bool = False) -> list[Investment]:
+def parse_soi_html(
+    html: str,
+    fund_ticker: str,
+    period: str,
+    filing_type: str,
+    verbose: bool = False,
+    *,
+    _use_chunking: bool = True,
+    _allow_full_retry: bool = True,
+) -> list[Investment]:
     """Parse a complete 10-K/10-Q HTML filing and extract all SOI investments."""
     if not _BS4_OK:
         raise RuntimeError("beautifulsoup4 not installed — run: pip install beautifulsoup4 lxml")
@@ -874,7 +882,7 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
 
     # For large filings (>3MB), extract just the SOI section(s) first to avoid
     # parsing tens of megabytes of iXBRL boilerplate
-    if len(html) > 3_000_000:
+    if _use_chunking and len(html) > 3_000_000:
         html_chunk = _extract_soi_chunk(html, max_bytes=20_000_000)
         if verbose:
             print(f"    Large filing ({len(html)//1000}KB) — using SOI chunk "
@@ -886,6 +894,18 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
 
     soi_tag = _find_soi_section(soup)
     if soi_tag is None:
+        if _use_chunking and _allow_full_retry and html_chunk != html:
+            if verbose:
+                print(f"    [!] Chunked SOI search missed {fund_ticker} {period}; retrying full filing HTML")
+            return parse_soi_html(
+                html,
+                fund_ticker,
+                period,
+                filing_type,
+                verbose=verbose,
+                _use_chunking=False,
+                _allow_full_retry=False,
+            )
         if verbose:
             print(f"  [!] SOI heading not found in {fund_ticker} {period}")
         return []
@@ -1450,6 +1470,19 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
         na = sum(1 for i in investments if i.is_non_accrual)
         pik = sum(1 for i in investments if i.is_pik)
         print(f"  Parsed {len(investments)} investments, {na} non-accrual, {pik} PIK")
+
+    if not investments and _use_chunking and _allow_full_retry and html_chunk != html:
+        if verbose:
+            print(f"    [!] Chunked SOI parse found no rows for {fund_ticker} {period}; retrying full filing HTML")
+        return parse_soi_html(
+            html,
+            fund_ticker,
+            period,
+            filing_type,
+            verbose=verbose,
+            _use_chunking=False,
+            _allow_full_retry=False,
+        )
 
     return investments
 
