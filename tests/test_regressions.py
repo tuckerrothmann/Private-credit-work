@@ -14,7 +14,7 @@ from dashboard_helpers import (
     compute_maturity_wall,
     summarize_portfolio_cache,
 )
-from portfolio_collector import compute_live_na_rates, latest_portfolio_cache_files
+from portfolio_collector import build_borrower_db, compute_live_na_rates, latest_portfolio_cache_files
 import refresh
 from trade_signals import load_all_signals, load_signal_funds
 
@@ -218,3 +218,124 @@ def test_build_borrower_table_rows_apply_filters_and_ordering() -> None:
 
     assert [row["Issuer"] for row in loss_rows] == ["Alpha Software"]
     assert loss_rows[0]["Cost ($M)"] == 30.0
+
+
+def test_build_borrower_db_enriches_manager_history_and_watchlist(tmp_path: Path) -> None:
+    cache_dir = tmp_path / "portfolio_cache"
+    cache_dir.mkdir()
+    output_path = tmp_path / "borrower_db.json"
+    watchlist_path = tmp_path / "borrower_watchlist.csv"
+    universe_path = tmp_path / "bdc_universe.json"
+
+    universe_path.write_text(
+        json.dumps(
+            {
+                "funds": [
+                    {"ticker": "ARCC", "manager": "Ares", "type": "listed_bdc", "name": "Ares Capital"},
+                    {"ticker": "PFLT", "manager": "PennantPark", "type": "listed_bdc", "name": "PennantPark"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    _write_json(
+        cache_dir / "ARCC_2025-09-30.json",
+        [
+            {
+                "issuer": "Example Borrower LLC",
+                "fund_ticker": "ARCC",
+                "period": "2025-09-30",
+                "filing_type": "10-Q",
+                "industry": "Software",
+                "invest_type": "First lien",
+                "rate_str": "8.50 %",
+                "maturity": "12/2028",
+                "cost_mm": 10.0,
+                "fv_mm": 9.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 425,
+            }
+        ],
+    )
+    _write_json(
+        cache_dir / "ARCC_2025-12-31.json",
+        [
+            {
+                "issuer": "Example Borrower LLC",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "First lien",
+                "rate_str": "9.25 %",
+                "maturity": "06/2027",
+                "cost_mm": 12.0,
+                "fv_mm": 11.0,
+                "is_pik": True,
+                "is_non_accrual": False,
+                "spread_bps": 475,
+            },
+            {
+                "issuer": "Example Borrower LLC",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "First lien",
+                "rate_str": "9.25 %",
+                "maturity": "06/2027",
+                "cost_mm": 3.0,
+                "fv_mm": 2.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 475,
+            },
+        ],
+    )
+    _write_json(
+        cache_dir / "PFLT_2025-12-31.json",
+        [
+            {
+                "issuer": "Example Borrower LLC",
+                "fund_ticker": "PFLT",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "Unitranche",
+                "rate_str": "10.00 %",
+                "maturity": "03/2028",
+                "cost_mm": 8.0,
+                "fv_mm": 6.0,
+                "is_pik": False,
+                "is_non_accrual": True,
+                "spread_bps": 525,
+            }
+        ],
+    )
+
+    db = build_borrower_db(
+        cache_dir=cache_dir,
+        output_path=output_path,
+        universe_path=universe_path,
+        watchlist_path=watchlist_path,
+    )
+
+    borrower = db["borrowers"]["example borrower"]
+    assert borrower["manager_count"] == 2
+    assert borrower["managers"] == ["Ares", "PennantPark"]
+    assert borrower["fund_type_breakdown"] == {"listed_bdc": 2}
+    assert borrower["nearest_maturity"] == "06/2027"
+    assert borrower["current_by_fund"]["ARCC"]["fv_mm"] == 13.0
+    assert borrower["current_by_fund"]["ARCC"]["position_count"] == 2
+    assert borrower["current_by_fund"]["PFLT"]["is_non_accrual"] is True
+    assert borrower["period_count"] == 2
+    assert borrower["first_seen_period"] == "2025-09-30"
+    assert borrower["last_seen_period"] == "2025-12-31"
+    assert borrower["peak_fund_count"] == 2
+    assert borrower["surveillance_score"] >= borrower["stress_score"] * 2
+
+    watchlist_text = watchlist_path.read_text(encoding="utf-8")
+    assert "Example Borrower LLC" in watchlist_text
+    assert "PennantPark" in watchlist_text

@@ -30,8 +30,10 @@ import json
 import re
 import time
 import urllib.request
+import csv
+from collections import Counter
 from dataclasses import dataclass, field, asdict
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Optional
 import os
@@ -56,6 +58,8 @@ RATE_DELAY   = 0.15   # sec between EDGAR API calls
 PORTFOLIO_CACHE = Path("data/portfolio_cache")
 BORROWER_DB     = Path("data/borrower_db.json")
 UNIVERSE_PATH   = Path("data/bdc_universe.json")
+PROCESSED_DIR   = Path("data/processed")
+BORROWER_WATCHLIST = PROCESSED_DIR / "borrower_watchlist.csv"
 
 # SOI section headers we search for in filing HTML
 SOI_HEADINGS = [
@@ -1558,9 +1562,330 @@ class PortfolioCollector:
 # Borrower database builder
 # ---------------------------------------------------------------------------
 
+def _borrower_key(issuer: str) -> str:
+    key = re.sub(r"\s+", " ", issuer.lower().strip())
+    key = re.sub(r"[,\.;]", "", key)
+    key = re.sub(r"\s*(llc|inc|corp|ltd|lp|co\b)", "", key).strip()
+    return key
+
+
+def _load_fund_metadata(universe_path: Path = UNIVERSE_PATH) -> dict[str, dict]:
+    try:
+        payload = json.loads(universe_path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+    funds = payload.get("funds", [])
+    return {
+        fund.get("ticker", "").upper(): {
+            "name": fund.get("name", ""),
+            "manager": fund.get("manager", ""),
+            "type": fund.get("type", ""),
+            "sector_focus": fund.get("sector_focus", ""),
+        }
+        for fund in funds
+        if fund.get("ticker")
+    }
+
+
+def _parse_rate_pct(rate_str: str) -> Optional[float]:
+    if not rate_str:
+        return None
+    match = re.search(r"(\d+(?:\.\d+)?)\s*%", rate_str)
+    if not match:
+        return None
+    try:
+        return float(match.group(1))
+    except ValueError:
+        return None
+
+
+def _parse_maturity_date(maturity: str) -> Optional[date]:
+    if not maturity:
+        return None
+    parts = maturity.split("/")
+    try:
+        if len(parts) == 2:
+            month, year = int(parts[0]), int(parts[1])
+            return date(year, month, 15)
+        if len(parts) == 3:
+            month, day, year = int(parts[0]), int(parts[1]), int(parts[2])
+            return date(year, month, day)
+    except ValueError:
+        return None
+    return None
+
+
+def _round_or_none(value: float | None, digits: int = 4) -> float | None:
+    if value is None:
+        return None
+    return round(value, digits)
+
+
+def _weighted_average(pairs: list[tuple[float | None, float]]) -> float | None:
+    usable = [(value, weight) for value, weight in pairs if value is not None and weight > 0]
+    if not usable:
+        return None
+    total_weight = sum(weight for _, weight in usable)
+    if total_weight <= 0:
+        return None
+    return sum(value * weight for value, weight in usable) / total_weight
+
+
+def _build_borrower_history(cache_dir: Path, current_keys: set[str]) -> dict[str, list[dict]]:
+    history_index: dict[str, dict[str, dict[str, Any]]] = {}
+
+    for fpath in sorted(cache_dir.glob("*.json")):
+        if fpath.name.startswith("_"):
+            continue
+        try:
+            positions = json.loads(fpath.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+
+        for pos in positions:
+            issuer = pos.get("issuer", "").strip()
+            if not issuer or len(issuer) < 2 or _is_equity_noise(issuer):
+                continue
+
+            key = _borrower_key(issuer)
+            if key not in current_keys:
+                continue
+
+            period = pos.get("period", "")
+            fund = pos.get("fund_ticker", "")
+            if not period or not fund:
+                continue
+
+            period_rec = history_index.setdefault(key, {}).setdefault(period, {
+                "period": period,
+                "funds": set(),
+                "total_fv_mm": 0.0,
+                "total_cost_mm": 0.0,
+                "non_accrual_funds": set(),
+                "pik_funds": set(),
+            })
+            period_rec["funds"].add(fund)
+            period_rec["total_fv_mm"] += pos.get("fv_mm") or 0.0
+            period_rec["total_cost_mm"] += pos.get("cost_mm") or 0.0
+            if pos.get("is_non_accrual"):
+                period_rec["non_accrual_funds"].add(fund)
+            if pos.get("is_pik"):
+                period_rec["pik_funds"].add(fund)
+
+    history_rows: dict[str, list[dict]] = {}
+    for key, period_map in history_index.items():
+        rows = []
+        for period in sorted(period_map):
+            row = period_map[period]
+            total_cost = row["total_cost_mm"]
+            total_fv = row["total_fv_mm"]
+            unrealized_pct = None
+            if total_cost > 0 and total_fv > 0:
+                unrealized_pct = round((total_fv - total_cost) / total_cost, 4)
+            rows.append({
+                "period": period,
+                "fund_count": len(row["funds"]),
+                "funds": sorted(row["funds"]),
+                "total_fv_mm": round(row["total_fv_mm"], 4),
+                "total_cost_mm": round(row["total_cost_mm"], 4),
+                "unrealized_pct": unrealized_pct,
+                "non_accrual_funds": sorted(row["non_accrual_funds"]),
+                "pik_funds": sorted(row["pik_funds"]),
+            })
+        history_rows[key] = rows
+
+    return history_rows
+
+
+def _enrich_borrower_record(rec: dict, history_rows: list[dict], fund_meta: dict[str, dict]) -> None:
+    by_fund: dict[str, list[dict]] = {}
+    for app in rec.get("appearances", []):
+        fund = app.get("fund")
+        if fund:
+            by_fund.setdefault(fund, []).append(app)
+
+    current_by_fund: dict[str, dict] = {}
+    nearest_maturity_date: date | None = None
+    nearest_maturity_str = ""
+    weighted_rate_pairs: list[tuple[float | None, float]] = []
+    weighted_spread_pairs: list[tuple[float | None, float]] = []
+
+    for fund, apps in sorted(by_fund.items()):
+        meta = fund_meta.get(fund, {})
+        total_fv = sum(app.get("fv_mm") or 0.0 for app in apps)
+        total_cost = sum(app.get("cost_mm") or 0.0 for app in apps)
+        industries = sorted({app.get("industry", "") for app in apps if app.get("industry")})
+        invest_types = sorted({app.get("invest_type", "") for app in apps if app.get("invest_type")})
+        forms = sorted({app.get("form", "") for app in apps if app.get("form")})
+        maturities = [(app.get("maturity", ""), _parse_maturity_date(app.get("maturity", ""))) for app in apps]
+        maturity_pairs = [(raw, mat_date) for raw, mat_date in maturities if mat_date is not None]
+        fund_nearest_str = ""
+        fund_nearest_date: date | None = None
+        if maturity_pairs:
+            fund_nearest_str, fund_nearest_date = min(maturity_pairs, key=lambda item: item[1])
+            if nearest_maturity_date is None or fund_nearest_date < nearest_maturity_date:
+                nearest_maturity_date = fund_nearest_date
+                nearest_maturity_str = fund_nearest_str
+
+        for app in apps:
+            weight = app.get("fv_mm") or app.get("cost_mm") or 0.0
+            weighted_rate_pairs.append((_parse_rate_pct(app.get("rate_str", "")), weight))
+            spread = app.get("spread_bps")
+            weighted_spread_pairs.append((float(spread) if spread is not None else None, weight))
+
+        fund_unrealized_pct = None
+        if total_cost > 0 and total_fv > 0:
+            fund_unrealized_pct = round((total_fv - total_cost) / total_cost, 4)
+
+        current_by_fund[fund] = {
+            "fund": fund,
+            "fund_name": meta.get("name", ""),
+            "manager": meta.get("manager", ""),
+            "fund_type": meta.get("type", ""),
+            "sector_focus": meta.get("sector_focus", ""),
+            "period": max((app.get("period", "") for app in apps), default=""),
+            "form": forms[0] if len(forms) == 1 else ", ".join(forms),
+            "position_count": len(apps),
+            "fv_mm": round(total_fv, 4),
+            "cost_mm": round(total_cost, 4),
+            "unrealized_pct": fund_unrealized_pct,
+            "is_non_accrual": any(app.get("is_non_accrual") for app in apps),
+            "is_pik": any(app.get("is_pik") for app in apps),
+            "nearest_maturity": fund_nearest_str,
+            "nearest_maturity_date": fund_nearest_date.isoformat() if fund_nearest_date else "",
+            "industries": industries,
+            "invest_types": invest_types,
+        }
+
+    managers = sorted({summary["manager"] for summary in current_by_fund.values() if summary.get("manager")})
+    fund_type_counter = Counter(
+        summary["fund_type"] for summary in current_by_fund.values() if summary.get("fund_type")
+    )
+    largest_fund = None
+    if current_by_fund:
+        largest_fund = max(current_by_fund.values(), key=lambda summary: summary.get("fv_mm") or 0.0)
+
+    rec["current_by_fund"] = current_by_fund
+    rec["managers"] = managers
+    rec["manager_count"] = len(managers)
+    rec["fund_type_breakdown"] = dict(sorted(fund_type_counter.items()))
+    rec["nearest_maturity"] = nearest_maturity_str
+    rec["nearest_maturity_date"] = nearest_maturity_date.isoformat() if nearest_maturity_date else ""
+    rec["weighted_avg_rate_pct"] = _round_or_none(_weighted_average(weighted_rate_pairs), 2)
+    rec["weighted_avg_spread_bps"] = _round_or_none(_weighted_average(weighted_spread_pairs), 1)
+    rec["largest_fund_exposure"] = {
+        "fund": largest_fund["fund"],
+        "manager": largest_fund.get("manager", ""),
+        "fv_mm": largest_fund.get("fv_mm", 0.0),
+    } if largest_fund else None
+
+    periods_seen = [row["period"] for row in history_rows]
+    rec["history_by_period"] = history_rows
+    rec["periods_seen"] = periods_seen
+    rec["period_count"] = len(periods_seen)
+    rec["first_seen_period"] = periods_seen[0] if periods_seen else ""
+    rec["last_seen_period"] = periods_seen[-1] if periods_seen else ""
+    rec["peak_fund_count"] = max((row["fund_count"] for row in history_rows), default=rec.get("fund_count", 0))
+    rec["peak_total_fv_mm"] = _round_or_none(max((row["total_fv_mm"] for row in history_rows), default=0.0), 4)
+
+
+def _borrower_surveillance_score(rec: dict) -> int:
+    score = int(rec.get("stress_score") or 0) * 2
+    score += min(4, rec.get("fund_count", 0))
+    score += min(3, rec.get("manager_count", 0))
+
+    if rec.get("is_non_accrual_any"):
+        score += 3
+    if len(rec.get("non_accrual_funds") or []) >= 2:
+        score += 2
+    if rec.get("is_pik_any") and rec.get("fund_count", 0) >= 2:
+        score += 1
+
+    urg = rec.get("unrealized_pct")
+    if urg is not None:
+        if urg <= -0.25:
+            score += 2
+        elif urg <= -0.10:
+            score += 1
+
+    nearest = rec.get("nearest_maturity_date")
+    if nearest:
+        try:
+            maturity_date = date.fromisoformat(nearest)
+            days_to_maturity = (maturity_date - date.today()).days
+            if days_to_maturity <= 540:
+                score += 1
+        except ValueError:
+            pass
+
+    if rec.get("peak_fund_count", 0) > rec.get("fund_count", 0):
+        score += 1
+
+    return score
+
+
+def write_borrower_watchlist(db: dict, output_path: Path = BORROWER_WATCHLIST) -> list[dict]:
+    rows: list[dict] = []
+    borrowers = db.get("borrowers", {})
+
+    for rec in borrowers.values():
+        largest = rec.get("largest_fund_exposure") or {}
+        primary_industry = rec.get("industries", [])
+        rows.append({
+            "Issuer": rec.get("canonical_name", ""),
+            "Surveillance Score": rec.get("surveillance_score", 0),
+            "Stress Tier": rec.get("stress_tier", "GREEN"),
+            "Stress Score": rec.get("stress_score", 0),
+            "Fund Count": rec.get("fund_count", 0),
+            "Peak Fund Count": rec.get("peak_fund_count", 0),
+            "Manager Count": rec.get("manager_count", 0),
+            "Funds": ", ".join(rec.get("funds", [])),
+            "Managers": ", ".join(rec.get("managers", [])),
+            "Primary Industry": primary_industry[0] if primary_industry else "",
+            "Total FV ($M)": rec.get("total_fv_mm"),
+            "Total Cost ($M)": rec.get("total_cost_mm"),
+            "Unrealized %": rec.get("unrealized_pct"),
+            "Nearest Maturity": rec.get("nearest_maturity", ""),
+            "Weighted Avg Rate %": rec.get("weighted_avg_rate_pct"),
+            "Weighted Avg Spread (bps)": rec.get("weighted_avg_spread_bps"),
+            "Non-Accrual": rec.get("is_non_accrual_any", False),
+            "Non-Accrual Funds": ", ".join(rec.get("non_accrual_funds", [])),
+            "PIK": rec.get("is_pik_any", False),
+            "PIK Funds": ", ".join(rec.get("pik_funds", [])),
+            "First Seen": rec.get("first_seen_period", ""),
+            "Last Seen": rec.get("last_seen_period", ""),
+            "Period Count": rec.get("period_count", 0),
+            "Largest Fund": largest.get("fund", ""),
+            "Largest Fund FV ($M)": largest.get("fv_mm"),
+        })
+
+    rows.sort(
+        key=lambda row: (
+            -(row["Surveillance Score"] or 0),
+            -(row["Fund Count"] or 0),
+            -(row["Manager Count"] or 0),
+            -(row["Total FV ($M)"] or 0),
+            row["Issuer"],
+        )
+    )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", newline="", encoding="utf-8") as fh:
+        fieldnames = list(rows[0].keys()) if rows else [
+            "Issuer", "Surveillance Score", "Stress Tier", "Stress Score"
+        ]
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    return rows
+
 def build_borrower_db(
     cache_dir: Path = PORTFOLIO_CACHE,
     output_path: Path = BORROWER_DB,
+    universe_path: Path = UNIVERSE_PATH,
+    watchlist_path: Path = BORROWER_WATCHLIST,
 ) -> dict[str, Any]:
     """Aggregate all cached SOI files into a cross-fund borrower database.
 
@@ -1568,6 +1893,8 @@ def build_borrower_db(
       borrowers:  dict[issuer_name, BorrowerRecord]
       meta:       {build_time, funds_included, total_positions}
     """
+    fund_meta = _load_fund_metadata(universe_path)
+
     # Keep only the most recent period per fund ticker (TICKER_YYYY-MM-DD.json).
     # Without this, aggregating Q3 + Q4 files would double-count every position.
     _ticker_files: dict[str, Path] = {}
@@ -1601,9 +1928,7 @@ def build_borrower_db(
             if _is_equity_noise(issuer):
                 continue
             # Normalize issuer name for matching
-            key = re.sub(r'\s+', ' ', issuer.lower().strip())
-            key = re.sub(r'[,\.;]', '', key)
-            key = re.sub(r'\s*(llc|inc|corp|ltd|lp|co\b)', '', key).strip()
+            key = _borrower_key(issuer)
 
             if key not in borrowers:
                 borrowers[key] = {
@@ -1672,6 +1997,8 @@ def build_borrower_db(
 
             total_positions += 1
 
+    history = _build_borrower_history(cache_dir, set(borrowers.keys()))
+
     # Compute unrealized gain/loss % — only when BOTH cost and FV were actually parsed
     for rec in borrowers.values():
         cost = rec["total_cost_mm"]
@@ -1687,26 +2014,37 @@ def build_borrower_db(
         rec.pop("_fv_count", None)
         rec.pop("_cost_count", None)
 
+        _enrich_borrower_record(rec, history.get(_borrower_key(rec["canonical_name"]), []), fund_meta)
+
     # Compute borrower stress tier for each record
     for rec in borrowers.values():
         rec["stress_score"] = _borrower_stress_score(rec)
         rec["stress_tier"] = _stress_tier(rec["stress_score"])
+        rec["surveillance_score"] = _borrower_surveillance_score(rec)
 
     db = {
         "meta": {
             "build_time": datetime.now().isoformat(),
             "total_positions": total_positions,
             "unique_borrowers": len(borrowers),
+            "cached_periods_indexed": sorted({
+                period
+                for hist_rows in history.values()
+                for period in [row["period"] for row in hist_rows]
+            }),
             "funds_included": sorted({
                 app["fund"]
                 for rec in borrowers.values()
                 for app in rec["appearances"]
             }),
+            "watchlist_path": str(watchlist_path),
         },
         "borrowers": borrowers,
     }
 
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(db, indent=2), encoding="utf-8")
+    write_borrower_watchlist(db, watchlist_path)
     return db
 
 
@@ -1872,6 +2210,33 @@ def analyze_borrower_db(db: dict, min_funds: int = 2) -> None:
     print(f"  Unique borrowers: {meta['unique_borrowers']}")
     print(f"  Funds included:   {', '.join(meta['funds_included'])}")
 
+    watchlist = sorted(
+        borrowers.values(),
+        key=lambda rec: (
+            -(rec.get("surveillance_score", 0)),
+            -(rec.get("fund_count", 0)),
+            -(rec.get("manager_count", 0)),
+            -(rec.get("total_fv_mm") or 0),
+            rec["canonical_name"],
+        ),
+    )
+    print(f"\n--- Top Surveillance Watchlist (20) ---")
+    for rec in watchlist[:20]:
+        industry = rec["industries"][0] if rec.get("industries") else "n/a"
+        nearest = rec.get("nearest_maturity") or "n/a"
+        urg = f"{rec['unrealized_pct']*100:+.1f}%" if rec.get("unrealized_pct") is not None else "n/a"
+        print(
+            f"  {rec['canonical_name'][:44]:<44}  "
+            f"Score={rec.get('surveillance_score', 0):>2}  "
+            f"Stress={rec.get('stress_tier', 'GREEN'):<6}  "
+            f"Funds={rec.get('fund_count', 0)}  "
+            f"Mgrs={rec.get('manager_count', 0)}  "
+            f"FV=${(rec.get('total_fv_mm') or 0):.1f}M  "
+            f"URG={urg:<7}  "
+            f"Mat={nearest:<8}  "
+            f"{industry}"
+        )
+
     # 1. Multi-lender issuers
     multi = [(k, r) for k, r in borrowers.items() if r["fund_count"] >= min_funds]
     multi.sort(key=lambda x: -x[1]["fund_count"])
@@ -1880,11 +2245,12 @@ def analyze_borrower_db(db: dict, min_funds: int = 2) -> None:
         fv_str = f"${rec['total_fv_mm']:.1f}M" if rec["total_fv_mm"] else "n/a"
         na_str = " [NON-ACCRUAL at " + "+".join(rec["non_accrual_funds"]) + "]" if rec["is_non_accrual_any"] else ""
         pik_str = " [PIK at " + "+".join(rec["pik_funds"]) + "]" if rec["is_pik_any"] else ""
+        mgr_str = "  Mgrs=" + "/".join(rec.get("managers", [])) if rec.get("managers") else ""
         unr_str = ""
         if rec["unrealized_pct"] is not None:
             unr_str = f"  URG/L: {rec['unrealized_pct']*100:+.1f}%"
         print(f"  {rec['canonical_name'][:50]:<50}  "
-              f"{rec['fund_count']}x  FV={fv_str}{unr_str}{na_str}{pik_str}")
+              f"{rec['fund_count']}x  FV={fv_str}{unr_str}{na_str}{pik_str}{mgr_str}")
 
     # 2. Non-accrual crossover (any fund)
     non_acc = [(k, r) for k, r in borrowers.items() if r["is_non_accrual_any"]]
@@ -1939,9 +2305,18 @@ def search_borrower(db: dict, query: str) -> None:
     for key, rec in sorted(matches, key=lambda x: -x[1]["fund_count"]):
         print(f"\n  {rec['canonical_name']}")
         print(f"    Funds ({rec['fund_count']}): {', '.join(rec['funds'])}")
+        if rec.get("managers"):
+            print(f"    Managers ({rec.get('manager_count', 0)}): {', '.join(rec['managers'])}")
         print(f"    Total FV: ${rec['total_fv_mm']:.1f}M  "
               f"Cost: ${rec['total_cost_mm']:.1f}M  "
               f"URG/L: {rec['unrealized_pct']*100:+.1f}%" if rec["unrealized_pct"] else "")
+        if rec.get("nearest_maturity"):
+            print(f"    Nearest maturity: {rec['nearest_maturity']}  "
+                  f"Weighted avg rate: {rec.get('weighted_avg_rate_pct') or 'n/a'}%  "
+                  f"Spread: {rec.get('weighted_avg_spread_bps') or 'n/a'} bps")
+        if rec.get("periods_seen"):
+            print(f"    History: {rec['first_seen_period']} -> {rec['last_seen_period']}  "
+                  f"({rec.get('period_count', 0)} period(s), peak fund count {rec.get('peak_fund_count', 0)})")
         if rec["is_non_accrual_any"]:
             print(f"    [NON-ACCRUAL at {', '.join(rec['non_accrual_funds'])}]")
         if rec["is_pik_any"]:

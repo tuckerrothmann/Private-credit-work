@@ -75,6 +75,7 @@ Universe metadata lives in `data/bdc_universe.json`.
 ## High-value folders
 
 - `data/processed/`: generated outputs, digests, and summaries
+- `data/processed/borrower_watchlist.csv`: ranked issuer surveillance sheet with stress, manager overlap, maturities, and mark pressure
 - `memo/`: fund-level investment memos, including the CCLF liquidity work
 - `issuer-surveillance/`: borrower and sector surveillance artifacts
 - `scenarios/`: liquidity-model scenario configs
