@@ -548,10 +548,22 @@ def _clean_issuer_name(raw: str) -> tuple[str, str, set[str]]:
     cleaned = re.sub(r'\s*\([a-z]{1,3}\)\s*', ' ', cleaned, flags=re.IGNORECASE).strip()
     cleaned = re.sub(r'\s+', ' ', cleaned).strip()
 
-    # Split on " - " to separate company from instrument type
-    if " - " in cleaned:
-        parts = cleaned.split(" - ", 1)
-        return parts[0].strip(), parts[1].strip(), markers
+    # Split embedded instrument descriptors off the borrower name. Some funds use
+    # ASCII hyphens, some use unicode dashes, and some put the instrument after a
+    # comma (e.g. "Issuer, Revolver").
+    match = re.search(
+        r'(?P<sep>\s*[\u2013\u2014-]\s*|,\s*)'
+        r'(?P<suffix>('
+        r'line of credit|unfunded revolver|revolver|term debt|term loan|'
+        r'delayed draw|delayed draw term loan|first lien|second lien|'
+        r'unitranche|mezzanine|structured mezzanine|bridge loan|'
+        r'senior note|secured note|unsecured note'
+        r')\b.*)$',
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    if match:
+        return cleaned[:match.start()].strip(" ,;"), match.group("suffix").strip(), markers
     return cleaned.strip(), "", markers
 
 
@@ -1562,8 +1574,140 @@ class PortfolioCollector:
 # Borrower database builder
 # ---------------------------------------------------------------------------
 
+_BORROWER_SUFFIX_RE = re.compile(
+    r"\b(llc|inc|corp|corporation|ltd|lp|co|company|holdco|holdings|topco|top|"
+    r"parent|borrower|intermediate|ultimate|acquisition|merger|finco|spv|dac|sarl)\b",
+    re.IGNORECASE,
+)
+_BORROWER_GENERIC_TOKENS = {
+    "hold",
+    "holdco",
+    "holdings",
+    "top",
+    "topco",
+    "parent",
+    "borrower",
+    "intermediate",
+    "ultimate",
+    "acquisition",
+    "merger",
+    "finco",
+    "spv",
+    "dac",
+    "sarl",
+}
+_BORROWER_RATE_LIKE_RE = re.compile(
+    r"^(?:fixed|floating|sofr|libor|euribor|base|prime)?\s*\+?\s*\d+(?:\.\d+)?\s*%$",
+    re.IGNORECASE,
+)
+
+
+def _normalize_borrower_text(value: str) -> str:
+    text = value.replace("\u2013", " - ").replace("\u2014", " - ").replace("\u2212", "-")
+    text = re.sub(r"\s+", " ", text)
+    return text.strip(" ,;:+")
+
+
+def _substantive_borrower_tokens(name: str) -> set[str]:
+    token_source = _normalize_borrower_text(name).lower()
+    token_source = re.sub(r"[&/+,()]", " ", token_source)
+    token_source = _BORROWER_SUFFIX_RE.sub(" ", token_source)
+    tokens = {
+        token
+        for token in re.findall(r"[a-z0-9]+", token_source)
+        if len(token) >= 3 and token not in _BORROWER_GENERIC_TOKENS
+    }
+    return tokens
+
+
+def _collapse_related_entity_name(name: str) -> str:
+    parts = [part.strip(" ,;") for part in re.split(r"\s+and\s+", name, flags=re.IGNORECASE) if part.strip(" ,;")]
+    if len(parts) < 2 or len(parts) > 4:
+        return name
+
+    token_sets = [(_substantive_borrower_tokens(part), part) for part in parts]
+    shared_counts = Counter(
+        token
+        for tokens, _ in token_sets
+        for token in tokens
+    )
+    shared_tokens = {token for token, count in shared_counts.items() if count >= 2}
+    if not shared_tokens:
+        return name
+
+    candidates = [
+        part
+        for tokens, part in token_sets
+        if tokens & shared_tokens
+    ]
+    if not candidates:
+        return name
+    return min(candidates, key=lambda part: (len(part), part.lower()))
+
+
+def _normalize_borrower_name(raw: str) -> str:
+    if not raw:
+        return ""
+
+    dba_match = re.search(r"\((?:d/b/a|dba)\s+([^)]+)\)", raw, flags=re.IGNORECASE)
+    if dba_match:
+        alias = _normalize_borrower_text(dba_match.group(1))
+        if alias:
+            return alias
+
+    cleaned, _, _ = _clean_issuer_name(raw)
+    cleaned = re.sub(r"\((?:f/k/a|fka)[^)]+\)", " ", cleaned, flags=re.IGNORECASE)
+    cleaned = cleaned.replace("+", " ")
+    cleaned = _normalize_borrower_text(cleaned)
+    cleaned = _collapse_related_entity_name(cleaned)
+    return _normalize_borrower_text(cleaned)
+
+
+def _clean_position_exposure(value: Any) -> float | None:
+    if value is None:
+        return None
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return None
+    if numeric <= 0:
+        return None
+    # Single-position SOI values above $500M are typically parse/scale artifacts,
+    # not real borrower-level loan marks.
+    if numeric > 500:
+        return None
+    return numeric
+
+
+def _is_borrower_noise(issuer: str) -> bool:
+    low = _normalize_borrower_text(issuer).lower()
+    if not low:
+        return True
+    if _BORROWER_RATE_LIKE_RE.fullmatch(low):
+        return True
+    if re.fullmatch(r"\d+(?:\.\d+)?\s*%", low):
+        return True
+    if "unfunded" in low and "commitment" in low:
+        return True
+    if low in {"asset based finance commitments", "unfunded asset based finance commitments"}:
+        return True
+    return False
+
+
+def _has_meaningful_borrower_exposure(rec: dict) -> bool:
+    for app in rec.get("appearances", []):
+        if (app.get("fv_mm") or 0) > 0:
+            return True
+        if (app.get("cost_mm") or 0) > 0:
+            return True
+        if app.get("is_non_accrual") or app.get("is_pik"):
+            return True
+    return False
+
+
 def _borrower_key(issuer: str) -> str:
-    key = re.sub(r"\s+", " ", issuer.lower().strip())
+    normalized = _normalize_borrower_name(issuer)
+    key = re.sub(r"\s+", " ", normalized.lower().strip())
     key = re.sub(r"[,\.;]", "", key)
     key = re.sub(r"\s*(llc|inc|corp|ltd|lp|co\b)", "", key).strip()
     return key
@@ -1644,8 +1788,8 @@ def _build_borrower_history(cache_dir: Path, current_keys: set[str]) -> dict[str
             continue
 
         for pos in positions:
-            issuer = pos.get("issuer", "").strip()
-            if not issuer or len(issuer) < 2 or _is_equity_noise(issuer):
+            issuer = _normalize_borrower_name(pos.get("issuer", ""))
+            if not issuer or len(issuer) < 2 or _is_equity_noise(issuer) or _is_borrower_noise(issuer):
                 continue
 
             key = _borrower_key(issuer)
@@ -1666,8 +1810,8 @@ def _build_borrower_history(cache_dir: Path, current_keys: set[str]) -> dict[str
                 "pik_funds": set(),
             })
             period_rec["funds"].add(fund)
-            period_rec["total_fv_mm"] += pos.get("fv_mm") or 0.0
-            period_rec["total_cost_mm"] += pos.get("cost_mm") or 0.0
+            period_rec["total_fv_mm"] += _clean_position_exposure(pos.get("fv_mm")) or 0.0
+            period_rec["total_cost_mm"] += _clean_position_exposure(pos.get("cost_mm")) or 0.0
             if pos.get("is_non_accrual"):
                 period_rec["non_accrual_funds"].add(fund)
             if pos.get("is_pik"):
@@ -1921,11 +2065,11 @@ def build_borrower_db(
             continue
 
         for pos in positions:
-            issuer = pos.get("issuer", "").strip()
+            issuer = _normalize_borrower_name(pos.get("issuer", ""))
             if not issuer or len(issuer) < 2:
                 continue
             # Skip equity/instrument-type noise before indexing
-            if _is_equity_noise(issuer):
+            if _is_equity_noise(issuer) or _is_borrower_noise(issuer):
                 continue
             # Normalize issuer name for matching
             key = _borrower_key(issuer)
@@ -1958,8 +2102,8 @@ def build_borrower_db(
                 "invest_type": pos.get("invest_type", ""),
                 "rate_str": pos.get("rate_str", ""),
                 "maturity": pos.get("maturity", ""),
-                "cost_mm": pos.get("cost_mm"),
-                "fv_mm": pos.get("fv_mm"),
+                "cost_mm": _clean_position_exposure(pos.get("cost_mm")),
+                "fv_mm": _clean_position_exposure(pos.get("fv_mm")),
                 "pct_nav": pos.get("pct_nav"),
                 "is_pik": pos.get("is_pik", False),
                 "is_non_accrual": pos.get("is_non_accrual", False),
@@ -1972,11 +2116,11 @@ def build_borrower_db(
                 rec["funds"].append(ticker)
                 rec["fund_count"] = len(rec["funds"])
 
-            if pos.get("fv_mm") is not None:
-                rec["total_fv_mm"] = round(rec["total_fv_mm"] + pos["fv_mm"], 4)
+            if app["fv_mm"] is not None:
+                rec["total_fv_mm"] = round(rec["total_fv_mm"] + app["fv_mm"], 4)
                 rec["_fv_count"] = rec.get("_fv_count", 0) + 1
-            if pos.get("cost_mm") is not None:
-                rec["total_cost_mm"] = round(rec["total_cost_mm"] + pos["cost_mm"], 4)
+            if app["cost_mm"] is not None:
+                rec["total_cost_mm"] = round(rec["total_cost_mm"] + app["cost_mm"], 4)
                 rec["_cost_count"] = rec.get("_cost_count", 0) + 1
 
             if pos.get("is_pik"):
@@ -1994,8 +2138,14 @@ def build_borrower_db(
             inv_type = pos.get("invest_type", "")
             if inv_type and inv_type not in rec["invest_types"]:
                 rec["invest_types"].append(inv_type)
-
             total_positions += 1
+
+    borrowers = {
+        key: rec
+        for key, rec in borrowers.items()
+        if _has_meaningful_borrower_exposure(rec)
+    }
+    total_positions = sum(len(rec.get("appearances", [])) for rec in borrowers.values())
 
     history = _build_borrower_history(cache_dir, set(borrowers.keys()))
 

@@ -14,7 +14,13 @@ from dashboard_helpers import (
     compute_maturity_wall,
     summarize_portfolio_cache,
 )
-from portfolio_collector import build_borrower_db, compute_live_na_rates, latest_portfolio_cache_files
+from portfolio_collector import (
+    _borrower_key,
+    _clean_issuer_name,
+    build_borrower_db,
+    compute_live_na_rates,
+    latest_portfolio_cache_files,
+)
 import refresh
 from trade_signals import load_all_signals, load_signal_funds
 
@@ -339,3 +345,180 @@ def test_build_borrower_db_enriches_manager_history_and_watchlist(tmp_path: Path
     watchlist_text = watchlist_path.read_text(encoding="utf-8")
     assert "Example Borrower LLC" in watchlist_text
     assert "PennantPark" in watchlist_text
+
+
+def test_clean_issuer_name_strips_unicode_dash_instrument_suffix() -> None:
+    issuer, instrument, markers = _clean_issuer_name(
+        "Edge Adhesives Holdings, Inc. – Term Debt (S + 5.5 %, 9.6 % Cash, Due 8/2026)"
+    )
+
+    assert issuer == "Edge Adhesives Holdings, Inc."
+    assert instrument == "Term Debt (S + 5.5 %, 9.6 % Cash, Due 8/2026)"
+    assert markers == set()
+
+    issuer, instrument, _ = _clean_issuer_name("Meadowlark Acquirer, LLC- Unfunded Revolver")
+    assert issuer == "Meadowlark Acquirer, LLC"
+    assert instrument == "Unfunded Revolver"
+
+
+def test_borrower_key_normalizes_dba_plus_and_related_entity_variants() -> None:
+    base = _borrower_key("Pluralsight, Inc.")
+
+    assert _borrower_key("Paradigmatic Holdco LLC (dba Pluralsight)") == base
+    assert _borrower_key("Pluralsight, LLC+") == base
+    assert _borrower_key("Pluralsight, LLC and Pluralsight Holdings, LLC and Paradigmatic Holdco LLC") == base
+
+
+def test_build_borrower_db_filters_negative_noise_and_merges_instrument_suffixes(tmp_path: Path) -> None:
+    cache_dir = tmp_path / "portfolio_cache"
+    cache_dir.mkdir()
+    output_path = tmp_path / "borrower_db.json"
+    watchlist_path = tmp_path / "borrower_watchlist.csv"
+    universe_path = tmp_path / "bdc_universe.json"
+
+    universe_path.write_text(
+        json.dumps({"funds": [{"ticker": "ARCC", "manager": "Ares", "type": "listed_bdc"}]}),
+        encoding="utf-8",
+    )
+
+    _write_json(
+        cache_dir / "ARCC_2025-12-31.json",
+        [
+            {
+                "issuer": "Edge Adhesives Holdings, Inc. – Term Debt (S + 5.5 %, 9.6 % Cash, Due 8/2026)",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Chemicals",
+                "invest_type": "First lien",
+                "rate_str": "9.60 %",
+                "maturity": "08/2026",
+                "cost_mm": 5.5,
+                "fv_mm": 5.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 550,
+            },
+            {
+                "issuer": "Edge Adhesives Holdings, Inc., Revolver",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Chemicals",
+                "invest_type": "Revolver",
+                "rate_str": "9.10 %",
+                "maturity": "08/2026",
+                "cost_mm": 1.2,
+                "fv_mm": 1.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 500,
+            },
+            {
+                "issuer": "Fixed 2.7 %",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "",
+                "invest_type": "",
+                "rate_str": "",
+                "maturity": "",
+                "cost_mm": -12.0,
+                "fv_mm": -12.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": None,
+            },
+            {
+                "issuer": "Hyphen Solutions, LLC",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "Equity",
+                "rate_str": "",
+                "maturity": "",
+                "cost_mm": -0.011,
+                "fv_mm": -0.011,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": None,
+            },
+        ],
+    )
+
+    db = build_borrower_db(
+        cache_dir=cache_dir,
+        output_path=output_path,
+        universe_path=universe_path,
+        watchlist_path=watchlist_path,
+    )
+
+    assert sorted(db["borrowers"]) == ["edge adhesives holdings"]
+    borrower = db["borrowers"]["edge adhesives holdings"]
+    assert borrower["canonical_name"] == "Edge Adhesives Holdings, Inc."
+    assert borrower["total_fv_mm"] == 6.0
+    assert borrower["total_cost_mm"] == 6.7
+    assert borrower["current_by_fund"]["ARCC"]["position_count"] == 2
+
+
+def test_build_borrower_db_ignores_scale_error_outlier_without_dropping_borrower(tmp_path: Path) -> None:
+    cache_dir = tmp_path / "portfolio_cache"
+    cache_dir.mkdir()
+    output_path = tmp_path / "borrower_db.json"
+    watchlist_path = tmp_path / "borrower_watchlist.csv"
+    universe_path = tmp_path / "bdc_universe.json"
+
+    universe_path.write_text(
+        json.dumps({"funds": [{"ticker": "GSBD", "manager": "GSAM", "type": "listed_bdc"}]}),
+        encoding="utf-8",
+    )
+
+    _write_json(
+        cache_dir / "GSBD_2025-12-31.json",
+        [
+            {
+                "issuer": "Pluralsight, Inc.",
+                "fund_ticker": "GSBD",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "First lien",
+                "rate_str": "8.75 %",
+                "maturity": "08/2029",
+                "cost_mm": 15.0,
+                "fv_mm": 14.0,
+                "is_pik": False,
+                "is_non_accrual": True,
+                "spread_bps": 450,
+            },
+            {
+                "issuer": "Pluralsight, Inc.",
+                "fund_ticker": "GSBD",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "First lien",
+                "rate_str": "8.75 %",
+                "maturity": "08/2029",
+                "cost_mm": 4836.698,
+                "fv_mm": 13.167,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 450,
+            },
+        ],
+    )
+
+    db = build_borrower_db(
+        cache_dir=cache_dir,
+        output_path=output_path,
+        universe_path=universe_path,
+        watchlist_path=watchlist_path,
+    )
+
+    borrower = db["borrowers"]["pluralsight"]
+    assert borrower["canonical_name"] == "Pluralsight, Inc."
+    assert borrower["total_cost_mm"] == 15.0
+    assert borrower["total_fv_mm"] == 27.167
+    assert borrower["current_by_fund"]["GSBD"]["fv_mm"] == 27.167
