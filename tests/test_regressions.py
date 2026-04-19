@@ -8,6 +8,12 @@ from unittest.mock import patch
 from dashboard_helpers import (
     build_borrower_heatmap_records,
     build_borrower_stress_rows,
+    build_family_heatmap_records,
+    build_family_non_accrual_rows,
+    build_family_pik_rows,
+    build_family_stress_rows,
+    build_family_summary_rows,
+    build_family_unrealized_loss_rows,
     build_non_accrual_rows,
     build_pik_rows,
     build_unrealized_loss_rows,
@@ -69,6 +75,58 @@ def _sample_borrowers() -> dict:
             "total_fv_mm": 5.0,
             "total_cost_mm": 5.4,
             "industries": ["Healthcare"],
+        },
+    }
+
+
+def _sample_families() -> dict:
+    return {
+        "alpha": {
+            "family_key": "alpha",
+            "family_name": "Alpha Family",
+            "borrower_count": 2,
+            "borrower_names": ["Alpha OpCo", "Alpha Holdco"],
+            "fund_count": 2,
+            "funds": ["ARCC", "PFLT"],
+            "manager_count": 2,
+            "managers": ["Ares", "PennantPark"],
+            "non_accrual_funds": ["PFLT"],
+            "pik_funds": ["ARCC"],
+            "is_non_accrual_any": True,
+            "is_pik_any": True,
+            "stress_score": 6,
+            "stress_tier": "RED",
+            "unrealized_pct": -0.22,
+            "total_fv_mm": 22.0,
+            "total_cost_mm": 30.0,
+            "industries": ["Software", "Application"],
+            "current_by_fund": {
+                "ARCC": {"fund": "ARCC", "period": "2025-12-31", "fv_mm": 14.0, "cost_mm": 18.0},
+                "PFLT": {"fund": "PFLT", "period": "2025-12-31", "fv_mm": 8.0, "cost_mm": 12.0},
+            },
+        },
+        "beta": {
+            "family_key": "beta",
+            "family_name": "Beta Family",
+            "borrower_count": 1,
+            "borrower_names": ["Beta Healthcare"],
+            "fund_count": 1,
+            "funds": ["GSBD"],
+            "manager_count": 1,
+            "managers": ["GSAM"],
+            "non_accrual_funds": [],
+            "pik_funds": ["GSBD"],
+            "is_non_accrual_any": False,
+            "is_pik_any": True,
+            "stress_score": 2,
+            "stress_tier": "YELLOW",
+            "unrealized_pct": -0.04,
+            "total_fv_mm": 5.0,
+            "total_cost_mm": 5.4,
+            "industries": ["Healthcare"],
+            "current_by_fund": {
+                "GSBD": {"fund": "GSBD", "period": "2025-12-31", "fv_mm": 5.0, "cost_mm": 5.4},
+            },
         },
     }
 
@@ -227,6 +285,37 @@ def test_build_borrower_table_rows_apply_filters_and_ordering() -> None:
     assert loss_rows[0]["Cost ($M)"] == 30.0
 
 
+def test_build_family_helpers_apply_filters_and_ordering() -> None:
+    families = _sample_families()
+
+    summary_rows = build_family_summary_rows(families, min_funds=1)
+    heatmap_records = build_family_heatmap_records(families, min_funds=1)
+    stress_rows = build_family_stress_rows(families, min_score=3)
+    non_accrual_rows = build_family_non_accrual_rows(families)
+    pik_rows = build_family_pik_rows(families)
+    loss_rows = build_family_unrealized_loss_rows(families)
+
+    assert [row["Family"] for row in summary_rows] == ["Alpha Family", "Beta Family"]
+    assert summary_rows[0]["Borrowers"] == 2
+
+    assert [record["name"] for record in heatmap_records] == ["Alpha Family", "Beta Family"]
+    assert heatmap_records[0]["latest"]["ARCC"]["period"] == "2025-12-31"
+    assert heatmap_records[0]["na_funds"] == {"PFLT"}
+
+    assert [row["Family"] for row in stress_rows] == ["Alpha Family"]
+    assert stress_rows[0]["Tier"] == "RED"
+
+    assert [row["Family"] for row in non_accrual_rows] == ["Alpha Family"]
+    assert non_accrual_rows[0]["Non-Accrual At"] == "PFLT"
+
+    assert [row["Family"] for row in pik_rows] == ["Alpha Family", "Beta Family"]
+    assert pik_rows[0]["Multi-Fund PIK"] is True
+    assert pik_rows[1]["Multi-Fund PIK"] is False
+
+    assert [row["Family"] for row in loss_rows] == ["Alpha Family"]
+    assert loss_rows[0]["Cost ($M)"] == 30.0
+
+
 def test_build_borrower_db_enriches_manager_history_and_watchlist(tmp_path: Path) -> None:
     cache_dir = tmp_path / "portfolio_cache"
     cache_dir.mkdir()
@@ -368,6 +457,7 @@ def test_borrower_key_normalizes_dba_plus_and_related_entity_variants() -> None:
     assert _borrower_key("Paradigmatic Holdco LLC (dba Pluralsight)") == base
     assert _borrower_key("Pluralsight, LLC+") == base
     assert _borrower_key("Pluralsight, LLC and Pluralsight Holdings, LLC and Paradigmatic Holdco LLC") == base
+    assert _borrower_key("Alpha Buyer, Inc.") == "alpha buyer"
 
 
 def test_borrower_family_key_rolls_related_entities_without_overmerging() -> None:
@@ -667,3 +757,80 @@ def test_build_borrower_db_builds_family_rollups_and_watchlist(tmp_path: Path) -
 
     family_watchlist_text = family_watchlist_path.read_text(encoding="utf-8")
     assert "Project Granite Buyer, Inc., Project Granite Holdings, LLC" in family_watchlist_text
+
+
+def test_build_borrower_db_applies_family_alias_overrides(tmp_path: Path) -> None:
+    cache_dir = tmp_path / "portfolio_cache"
+    cache_dir.mkdir()
+    output_path = tmp_path / "borrower_db.json"
+    watchlist_path = tmp_path / "borrower_watchlist.csv"
+    family_watchlist_path = tmp_path / "borrower_family_watchlist.csv"
+    alias_path = tmp_path / "borrower_family_aliases.json"
+    universe_path = tmp_path / "bdc_universe.json"
+
+    universe_path.write_text(
+        json.dumps({"funds": [{"ticker": "ARCC", "manager": "Ares", "type": "listed_bdc"}]}),
+        encoding="utf-8",
+    )
+    alias_path.write_text(
+        json.dumps(
+                {
+                    "borrower_key_overrides": {
+                        "alpha buyer": {"family_key": "alpha platform", "family_name": "Alpha Platform"},
+                        "beta holdings": {"family_key": "alpha platform", "family_name": "Alpha Platform"},
+                    }
+                }
+            ),
+        encoding="utf-8",
+    )
+
+    _write_json(
+        cache_dir / "ARCC_2025-12-31.json",
+        [
+            {
+                "issuer": "Alpha Buyer, Inc.",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "First lien",
+                "rate_str": "9.5 %",
+                "maturity": "03/2029",
+                "cost_mm": 10.0,
+                "fv_mm": 9.0,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": 475,
+            },
+            {
+                "issuer": "Beta Holdings, LLC",
+                "fund_ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-K",
+                "industry": "Software",
+                "invest_type": "Equity",
+                "rate_str": "",
+                "maturity": "",
+                "cost_mm": 3.0,
+                "fv_mm": 2.5,
+                "is_pik": False,
+                "is_non_accrual": False,
+                "spread_bps": None,
+            },
+        ],
+    )
+
+    db = build_borrower_db(
+        cache_dir=cache_dir,
+        output_path=output_path,
+        universe_path=universe_path,
+        watchlist_path=watchlist_path,
+        family_watchlist_path=family_watchlist_path,
+        family_alias_path=alias_path,
+    )
+
+    family = db["families"]["alpha platform"]
+    assert family["family_name"] == "Alpha Platform"
+    assert family["borrower_count"] == 2
+    assert family["total_fv_mm"] == 11.5
+    assert db["meta"]["family_alias_count"] == 2

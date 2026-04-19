@@ -1,0 +1,44 @@
+{
+  "borrower_key_overrides": {
+    "aine acquisition ii (48forty)": {
+      "family_key": "alpine ii",
+      "family_name": "Alpine Acquisition Corp II"
+    },
+    "thrasio holdings": {
+      "family_key": "thrasio",
+      "family_name": "Thrasio, LLC"
+    },
+    "walker edison hold": {
+      "family_key": "walker edison",
+      "family_name": "Walker Edison Furniture Company LLC"
+    },
+    "streamland media holdings": {
+      "family_key": "streamland media",
+      "family_name": "Streamland Media Midco LLC"
+    },
+    "integrity marketing group": {
+      "family_key": "integrity marketing",
+      "family_name": "Integrity Marketing Acquisition, LLC"
+    },
+    "dca investment holding": {
+      "family_key": "dca investment",
+      "family_name": "DCA Investment Holdings, LLC"
+    },
+    "daylight beta parent (benefytt technologies)": {
+      "family_key": "daylight beta",
+      "family_name": "Daylight Beta Parent LLC and CFCo, LLC"
+    },
+    "ps operating company": {
+      "family_key": "ps operating",
+      "family_name": "PS Operating Company LLC"
+    },
+    "aimbridge acquisition": {
+      "family_key": "aimbridge",
+      "family_name": "Aimbridge Topco, LLC"
+    },
+    "icims*": {
+      "family_key": "icims",
+      "family_name": "iCIMS, Inc."
+    }
+  }
+}

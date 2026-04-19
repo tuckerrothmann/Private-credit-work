@@ -31,6 +31,11 @@ from bdc_historical import BdcHistorian, load_history, nav_indexed_to_100, compa
 from dashboard_helpers import (
     build_borrower_heatmap_records,
     build_borrower_stress_rows,
+    build_family_non_accrual_rows,
+    build_family_pik_rows,
+    build_family_stress_rows,
+    build_family_summary_rows,
+    build_family_unrealized_loss_rows,
     build_non_accrual_rows,
     build_pik_rows,
     build_unrealized_loss_rows,
@@ -2038,13 +2043,137 @@ def render_portfolio() -> None:
 
     meta = db.get("meta", {})
     borrowers = db.get("borrowers", {})
+    families = db.get("families", {})
 
     st.divider()
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
     col1.metric("Unique borrowers", meta.get("unique_borrowers", 0))
-    col2.metric("Total positions", meta.get("total_positions", 0))
-    col3.metric("Funds covered", len(meta.get("funds_included", [])))
-    col4.metric("Funds", ", ".join(meta.get("funds_included", [])))
+    col2.metric("Unique families", meta.get("unique_families", 0))
+    col3.metric("Total positions", meta.get("total_positions", 0))
+    col4.metric("Funds covered", len(meta.get("funds_included", [])))
+    col5.metric("Funds", ", ".join(meta.get("funds_included", [])))
+
+    if families:
+        st.divider()
+        st.subheader("Borrower Families (Related-Entity Rollup)")
+        st.write(
+            "This view rolls related borrower entities into family-level surveillance buckets. "
+            "It is intended for transmission mapping, refinancing clusters, and sponsor-platform monitoring."
+        )
+
+        family_min_funds = st.slider(
+            "Minimum funds holding the family",
+            1,
+            6,
+            2,
+            key="family_min_funds",
+        )
+        family_rows = build_family_summary_rows(families, min_funds=family_min_funds)
+        if family_rows:
+            family_df = pd.DataFrame(family_rows).set_index("Family")
+
+            def _style_family_flag(val):
+                return "background-color: #fee2e2; font-weight: bold" if val and "YES" in str(val) else ""
+
+            st.dataframe(
+                family_df.style.applymap(_style_family_flag, subset=["Non-Accrual"]),
+                use_container_width=True,
+                height=360,
+            )
+        else:
+            st.info(f"No borrower families held by {family_min_funds}+ funds.")
+
+        fam_c1, fam_c2, fam_c3 = st.columns(3)
+        fam_c1.metric("Family watchlist rows", len(families))
+        fam_c2.metric(
+            "Alias overrides",
+            meta.get("family_alias_count", 0),
+            help="Curated borrower-family overrides loaded during DB build.",
+        )
+        fam_c3.metric("Family watchlist", Path(meta.get("family_watchlist_path", "")).name or "n/a")
+
+        st.markdown("**Family Stress Tiers**")
+        _FAMILY_TIER_COLORS = {"RED": "#fee2e2", "ORANGE": "#ffedd5", "YELLOW": "#fef9c3", "GREEN": ""}
+
+        def _family_tier_color(val):
+            color = _FAMILY_TIER_COLORS.get(str(val), "")
+            return f"background-color: {color}; font-weight: bold" if color else ""
+
+        family_stress_min = st.slider(
+            "Minimum family stress score to show",
+            0,
+            10,
+            3,
+            key="family_stress_min_score",
+        )
+        family_stress_rows = build_family_stress_rows(families, min_score=family_stress_min)
+        if family_stress_rows:
+            family_stress_df = pd.DataFrame(family_stress_rows).set_index("Family")
+            st.dataframe(
+                family_stress_df.style.applymap(_family_tier_color, subset=["Tier"]),
+                use_container_width=True,
+                height=min(420, max(200, len(family_stress_rows) * 36)),
+            )
+        else:
+            st.info(f"No borrower families with stress score ≥ {family_stress_min}.")
+
+        family_non_acc = build_family_non_accrual_rows(families)
+        if family_non_acc:
+            st.markdown("**Family Non-Accrual Positions**")
+            st.dataframe(pd.DataFrame(family_non_acc).set_index("Family"), use_container_width=True)
+
+        family_pik = build_family_pik_rows(families)
+        if family_pik:
+            st.markdown("**Family PIK Positions**")
+            st.dataframe(pd.DataFrame(family_pik).set_index("Family"), use_container_width=True)
+
+        family_losses = build_family_unrealized_loss_rows(families)
+        if family_losses:
+            st.markdown("**Largest Family Unrealized Losses**")
+            st.dataframe(pd.DataFrame(family_losses).set_index("Family"), use_container_width=True)
+
+        st.markdown("**Family Search**")
+        family_search_q = st.text_input(
+            "Search by family or borrower name",
+            key="family_search",
+            placeholder="e.g. 'pluralsight', 'integrity', 'streamland'...",
+        )
+        if family_search_q and len(family_search_q) >= 2:
+            q = family_search_q.lower()
+            family_matches = {
+                key: rec
+                for key, rec in families.items()
+                if q in key
+                or q in rec.get("family_name", "").lower()
+                or any(q in name.lower() for name in rec.get("borrower_names", []))
+            }
+            if family_matches:
+                st.write(f"{len(family_matches)} family match(es):")
+                for key, rec in sorted(
+                    family_matches.items(),
+                    key=lambda item: (-item[1].get("fund_count", 0), -item[1].get("borrower_count", 0)),
+                )[:20]:
+                    with st.expander(
+                        f"{rec['family_name']} — {rec.get('borrower_count', 0)} borrower(s), {rec.get('fund_count', 0)} fund(s)"
+                    ):
+                        st.json(
+                            {
+                                "family_key": rec.get("family_key"),
+                                "borrower_names": rec.get("borrower_names", []),
+                                "funds": rec.get("funds", []),
+                                "managers": rec.get("managers", []),
+                                "total_fv_mm": rec.get("total_fv_mm"),
+                                "total_cost_mm": rec.get("total_cost_mm"),
+                                "unrealized_pct": rec.get("unrealized_pct"),
+                                "is_non_accrual_any": rec.get("is_non_accrual_any"),
+                                "non_accrual_funds": rec.get("non_accrual_funds", []),
+                                "is_pik_any": rec.get("is_pik_any"),
+                                "pik_funds": rec.get("pik_funds", []),
+                                "current_by_fund": rec.get("current_by_fund", {}),
+                            }
+                        )
+            else:
+                st.info(f"No borrower families matching '{family_search_q}'.")
 
     # ── Multi-lender issuers ──────────────────────────────────────────────
     st.subheader("Multi-Fund Issuers (Systemic Risk)")

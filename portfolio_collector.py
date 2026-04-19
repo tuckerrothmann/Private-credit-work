@@ -61,6 +61,7 @@ UNIVERSE_PATH   = Path("data/bdc_universe.json")
 PROCESSED_DIR   = Path("data/processed")
 BORROWER_WATCHLIST = PROCESSED_DIR / "borrower_watchlist.csv"
 BORROWER_FAMILY_WATCHLIST = PROCESSED_DIR / "borrower_family_watchlist.csv"
+BORROWER_FAMILY_ALIASES = Path("data/borrower_family_aliases.json")
 
 # SOI section headers we search for in filing HTML
 SOI_HEADINGS = [
@@ -1738,7 +1739,11 @@ def _borrower_key(issuer: str) -> str:
     normalized = _normalize_borrower_name(issuer)
     key = re.sub(r"\s+", " ", normalized.lower().strip())
     key = re.sub(r"[,\.;]", "", key)
-    key = re.sub(r"\s*(llc|inc|corp|ltd|lp|co\b)", "", key).strip()
+    key = re.sub(
+        r"(?:\s+\b(?:llc|inc|corp|corporation|ltd|lp|co|company)\b)+$",
+        "",
+        key,
+    ).strip()
     return key
 
 
@@ -1801,6 +1806,28 @@ def _load_fund_metadata(universe_path: Path = UNIVERSE_PATH) -> dict[str, dict]:
         for fund in funds
         if fund.get("ticker")
     }
+
+
+def _load_family_alias_overrides(alias_path: Path = BORROWER_FAMILY_ALIASES) -> dict[str, dict[str, str]]:
+    try:
+        payload = json.loads(alias_path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+    overrides = payload.get("borrower_key_overrides", {})
+    clean_overrides: dict[str, dict[str, str]] = {}
+    for borrower_key, config in overrides.items():
+        if not borrower_key or not isinstance(config, dict):
+            continue
+        family_key = str(config.get("family_key", "")).strip().lower()
+        family_name = str(config.get("family_name", "")).strip()
+        if not family_key:
+            continue
+        clean_overrides[str(borrower_key).strip().lower()] = {
+            "family_key": family_key,
+            "family_name": family_name,
+        }
+    return clean_overrides
 
 
 def _parse_rate_pct(rate_str: str) -> Optional[float]:
@@ -2040,14 +2067,21 @@ def _borrower_surveillance_score(rec: dict) -> int:
     return score
 
 
-def _build_borrower_families(borrowers: dict[str, dict]) -> dict[str, dict]:
+def _build_borrower_families(
+    borrowers: dict[str, dict],
+    family_alias_overrides: dict[str, dict[str, str]] | None = None,
+) -> dict[str, dict]:
     families: dict[str, dict] = {}
+    alias_overrides = family_alias_overrides or {}
 
     for borrower_key, rec in borrowers.items():
-        family_key = _borrower_family_key(rec.get("canonical_name", ""))
+        override = alias_overrides.get(borrower_key, {})
+        family_key = override.get("family_key") or _borrower_family_key(rec.get("canonical_name", ""))
         if not family_key:
             family_key = borrower_key
         rec["family_key"] = family_key
+        if override.get("family_name"):
+            rec["family_name_override"] = override["family_name"]
 
         family = families.setdefault(
             family_key,
@@ -2073,12 +2107,16 @@ def _build_borrower_families(borrowers: dict[str, dict]) -> dict[str, dict]:
                 "weighted_avg_spread_pairs": [],
                 "top_member_name": rec.get("canonical_name", ""),
                 "top_member_fv_mm": rec.get("total_fv_mm") or 0.0,
+                "preferred_family_name": override.get("family_name", ""),
                 "stress_score": 0,
                 "surveillance_score": 0,
                 "is_non_accrual_any": False,
                 "is_pik_any": False,
+                "current_by_fund": {},
             },
         )
+        if override.get("family_name"):
+            family["preferred_family_name"] = override["family_name"]
 
         family["members"].append(rec.get("canonical_name", ""))
         family["member_keys"].append(borrower_key)
@@ -2116,6 +2154,36 @@ def _build_borrower_families(borrowers: dict[str, dict]) -> dict[str, dict]:
                 spread = app.get("spread_bps")
                 family["weighted_avg_spread_pairs"].append((float(spread) if spread is not None else None, weight))
 
+        for fund, summary in rec.get("current_by_fund", {}).items():
+            fund_rec = family["current_by_fund"].setdefault(
+                fund,
+                {
+                    "fund": fund,
+                    "fund_name": summary.get("fund_name", ""),
+                    "manager": summary.get("manager", ""),
+                    "fund_type": summary.get("fund_type", ""),
+                    "sector_focus": summary.get("sector_focus", ""),
+                    "period": summary.get("period", ""),
+                    "form": summary.get("form", ""),
+                    "position_count": 0,
+                    "fv_mm": 0.0,
+                    "cost_mm": 0.0,
+                    "is_non_accrual": False,
+                    "is_pik": False,
+                    "member_names": set(),
+                },
+            )
+            if summary.get("period", "") > fund_rec.get("period", ""):
+                fund_rec["period"] = summary.get("period", "")
+                fund_rec["form"] = summary.get("form", "")
+            fund_rec["position_count"] += summary.get("position_count", 0)
+            fund_rec["fv_mm"] += summary.get("fv_mm") or 0.0
+            fund_rec["cost_mm"] += summary.get("cost_mm") or 0.0
+            fund_rec["is_non_accrual"] = fund_rec["is_non_accrual"] or summary.get("is_non_accrual", False)
+            fund_rec["is_pik"] = fund_rec["is_pik"] or summary.get("is_pik", False)
+            if rec.get("canonical_name"):
+                fund_rec["member_names"].add(rec["canonical_name"])
+
     family_records: dict[str, dict] = {}
     for family_key, family in families.items():
         total_cost = family["total_cost_mm"]
@@ -2132,10 +2200,22 @@ def _build_borrower_families(borrowers: dict[str, dict]) -> dict[str, dict]:
         pik_funds = sorted(family["pik_funds"])
         periods_seen = sorted(family["periods_seen"])
         industries = [name for name, _ in family["industries"].most_common()]
+        current_by_fund = {}
+        for fund, summary in sorted(family["current_by_fund"].items()):
+            current_by_fund[fund] = {
+                **summary,
+                "fv_mm": round(summary["fv_mm"], 4),
+                "cost_mm": round(summary["cost_mm"], 4),
+                "member_names": sorted(summary["member_names"]),
+            }
 
         family_records[family_key] = {
             "family_key": family_key,
-            "family_name": family["top_member_name"] or (members[0] if members else family_key.title()),
+            "family_name": (
+                family.get("preferred_family_name")
+                or family["top_member_name"]
+                or (members[0] if members else family_key.title())
+            ),
             "borrower_count": len(member_keys),
             "borrower_names": members,
             "borrower_keys": member_keys,
@@ -2163,6 +2243,7 @@ def _build_borrower_families(borrowers: dict[str, dict]) -> dict[str, dict]:
             "stress_score": family["stress_score"],
             "stress_tier": _stress_tier(family["stress_score"]),
             "surveillance_score": family["surveillance_score"] + min(3, max(0, len(member_keys) - 1)),
+            "current_by_fund": current_by_fund,
         }
 
     return family_records
@@ -2290,6 +2371,7 @@ def build_borrower_db(
     universe_path: Path = UNIVERSE_PATH,
     watchlist_path: Path = BORROWER_WATCHLIST,
     family_watchlist_path: Path = BORROWER_FAMILY_WATCHLIST,
+    family_alias_path: Path = BORROWER_FAMILY_ALIASES,
 ) -> dict[str, Any]:
     """Aggregate all cached SOI files into a cross-fund borrower database.
 
@@ -2298,6 +2380,7 @@ def build_borrower_db(
       meta:       {build_time, funds_included, total_positions}
     """
     fund_meta = _load_fund_metadata(universe_path)
+    family_alias_overrides = _load_family_alias_overrides(family_alias_path)
 
     # Keep only the most recent period per fund ticker (TICKER_YYYY-MM-DD.json).
     # Without this, aggregating Q3 + Q4 files would double-count every position.
@@ -2432,7 +2515,7 @@ def build_borrower_db(
         rec["stress_tier"] = _stress_tier(rec["stress_score"])
         rec["surveillance_score"] = _borrower_surveillance_score(rec)
 
-    families = _build_borrower_families(borrowers)
+    families = _build_borrower_families(borrowers, family_alias_overrides=family_alias_overrides)
 
     db = {
         "meta": {
@@ -2452,6 +2535,8 @@ def build_borrower_db(
             }),
             "watchlist_path": str(watchlist_path),
             "family_watchlist_path": str(family_watchlist_path),
+            "family_alias_path": str(family_alias_path),
+            "family_alias_count": len(family_alias_overrides),
         },
         "borrowers": borrowers,
         "families": families,

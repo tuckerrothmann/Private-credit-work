@@ -144,6 +144,61 @@ def build_borrower_heatmap_records(borrowers: dict, min_funds: int) -> list[dict
     return heatmap_records
 
 
+def build_family_heatmap_records(families: dict, min_funds: int) -> list[dict]:
+    """Prepare borrower-family rows for the concentration heatmap."""
+    heatmap_records: list[dict] = []
+
+    for family in families.values():
+        if family.get("fund_count", 0) < min_funds:
+            continue
+
+        latest_by_fund: dict[str, dict] = {}
+        for fund, summary in family.get("current_by_fund", {}).items():
+            latest_by_fund[fund] = summary
+
+        total_fv = sum((entry.get("fv_mm") or entry.get("cost_mm") or 0) for entry in latest_by_fund.values())
+        heatmap_records.append(
+            {
+                "name": family["family_name"],
+                "fund_count": family["fund_count"],
+                "total_fv": total_fv,
+                "latest": latest_by_fund,
+                "na_funds": set(family.get("non_accrual_funds", [])),
+                "pik_funds": set(family.get("pik_funds", [])),
+                "is_na_any": family.get("is_non_accrual_any", False),
+                "member_count": family.get("borrower_count", 0),
+            }
+        )
+
+    heatmap_records.sort(key=lambda row: (-row["fund_count"], -row["total_fv"], row["name"]))
+    return heatmap_records
+
+
+def build_family_summary_rows(families: dict, min_funds: int) -> list[dict]:
+    """Build family-level systemic-risk rows."""
+    rows = [
+        {
+            "Family": family["family_name"],
+            "Borrowers": family.get("borrower_count", 0),
+            "Funds": family.get("fund_count", 0),
+            "Fund List": ", ".join(family.get("funds", [])),
+            "Managers": ", ".join(family.get("managers", [])),
+            "Total FV ($M)": round(family["total_fv_mm"], 1) if family.get("total_fv_mm") else None,
+            "Total Cost ($M)": round(family["total_cost_mm"], 1) if family.get("total_cost_mm") else None,
+            "Unrealized G/L": f"{family['unrealized_pct'] * 100:+.1f}%"
+            if family.get("unrealized_pct") is not None else "—",
+            "Non-Accrual": "YES — " + "+".join(family.get("non_accrual_funds", []))
+            if family.get("is_non_accrual_any") else "",
+            "PIK": "YES — " + "+".join(family.get("pik_funds", [])) if family.get("is_pik_any") else "",
+            "Industry": ", ".join(family.get("industries", [])[:2]),
+        }
+        for family in families.values()
+        if family.get("fund_count", 0) >= min_funds
+    ]
+    rows.sort(key=lambda row: (-row["Funds"], -(row["Total FV ($M)"] or 0), row["Family"]))
+    return rows
+
+
 def build_borrower_stress_rows(borrowers: dict, min_score: int) -> list[dict]:
     """Build borrower stress-tier table rows."""
     rows = [
@@ -167,6 +222,30 @@ def build_borrower_stress_rows(borrowers: dict, min_score: int) -> list[dict]:
     return rows
 
 
+def build_family_stress_rows(families: dict, min_score: int) -> list[dict]:
+    """Build family stress-tier table rows."""
+    rows = [
+        {
+            "Family": family["family_name"],
+            "Score": family.get("stress_score", 0),
+            "Tier": family.get("stress_tier", "GREEN"),
+            "Borrowers": family.get("borrower_count", 0),
+            "Funds": ", ".join(family.get("funds", [])),
+            "Fund Count": family.get("fund_count", 0),
+            "FV ($M)": round(family["total_fv_mm"], 1) if family.get("total_fv_mm") else None,
+            "Unrealized G/L": f"{family['unrealized_pct'] * 100:+.1f}%"
+            if family.get("unrealized_pct") is not None else "—",
+            "Non-Accrual": "YES" if family.get("is_non_accrual_any") else "",
+            "PIK": "Yes" if family.get("is_pik_any") else "",
+            "Industry": ", ".join(family.get("industries", [])[:1]),
+        }
+        for family in families.values()
+        if family.get("stress_score", 0) >= min_score
+    ]
+    rows.sort(key=lambda row: (-row["Score"], -(row["FV ($M)"] or 0), row["Family"]))
+    return rows
+
+
 def build_non_accrual_rows(borrowers: dict) -> list[dict]:
     """Build non-accrual borrower table rows."""
     rows = [
@@ -187,6 +266,27 @@ def build_non_accrual_rows(borrowers: dict) -> list[dict]:
     return rows
 
 
+def build_family_non_accrual_rows(families: dict) -> list[dict]:
+    """Build non-accrual family table rows."""
+    rows = [
+        {
+            "Family": family["family_name"],
+            "Non-Accrual At": ", ".join(family.get("non_accrual_funds", [])),
+            "Borrowers": family.get("borrower_count", 0),
+            "Fund Count": family.get("fund_count", 0),
+            "Total FV ($M)": round(family["total_fv_mm"], 1) if family.get("total_fv_mm") else None,
+            "Unrealized G/L": f"{family['unrealized_pct'] * 100:+.1f}%"
+            if family.get("unrealized_pct") is not None else "—",
+            "PIK": "Yes" if family.get("is_pik_any") else "",
+            "Industry": ", ".join(family.get("industries", [])[:2]),
+        }
+        for family in families.values()
+        if family.get("is_non_accrual_any")
+    ]
+    rows.sort(key=lambda row: (-row["Fund Count"], -(row["Total FV ($M)"] or 0), row["Family"]))
+    return rows
+
+
 def build_pik_rows(borrowers: dict) -> list[dict]:
     """Build PIK borrower table rows."""
     rows = [
@@ -201,6 +301,24 @@ def build_pik_rows(borrowers: dict) -> list[dict]:
         if borrower.get("is_pik_any")
     ]
     rows.sort(key=lambda row: (-int(row["Multi-Fund PIK"]), -(row["Total FV ($M)"] or 0), row["Issuer"]))
+    return rows
+
+
+def build_family_pik_rows(families: dict) -> list[dict]:
+    """Build family-level PIK rows."""
+    rows = [
+        {
+            "Family": family["family_name"],
+            "PIK At": ", ".join(family.get("pik_funds", [])),
+            "Borrowers": family.get("borrower_count", 0),
+            "Multi-Fund PIK": family.get("fund_count", 0) >= 2,
+            "Total FV ($M)": round(family["total_fv_mm"], 1) if family.get("total_fv_mm") else None,
+            "Industry": ", ".join(family.get("industries", [])[:2]),
+        }
+        for family in families.values()
+        if family.get("is_pik_any")
+    ]
+    rows.sort(key=lambda row: (-int(row["Multi-Fund PIK"]), -(row["Total FV ($M)"] or 0), row["Family"]))
     return rows
 
 
@@ -225,6 +343,33 @@ def build_unrealized_loss_rows(
         if borrower.get("unrealized_pct") is not None
         and borrower["unrealized_pct"] < min_unrealized_pct
         and (borrower.get("total_cost_mm") or 0) > min_total_cost_mm
+    ]
+    rows.sort(key=lambda row: float(row["Unrealized G/L"].replace("%", "").replace("+", "")))
+    return rows[:limit]
+
+
+def build_family_unrealized_loss_rows(
+    families: dict,
+    min_unrealized_pct: float = -0.05,
+    min_total_cost_mm: float = 1.0,
+    limit: int = 30,
+) -> list[dict]:
+    """Build family unrealized-loss ranking rows."""
+    rows = [
+        {
+            "Family": family["family_name"],
+            "Borrowers": ", ".join(family.get("borrower_names", [])[:4]),
+            "Funds": ", ".join(family.get("funds", [])),
+            "Cost ($M)": round(family["total_cost_mm"], 1) if family.get("total_cost_mm") else None,
+            "FV ($M)": round(family["total_fv_mm"], 1) if family.get("total_fv_mm") else None,
+            "Unrealized G/L": f"{family['unrealized_pct'] * 100:+.1f}%",
+            "Non-Accrual": "Yes" if family.get("is_non_accrual_any") else "",
+            "Industry": ", ".join(family.get("industries", [])[:2]),
+        }
+        for family in families.values()
+        if family.get("unrealized_pct") is not None
+        and family["unrealized_pct"] < min_unrealized_pct
+        and (family.get("total_cost_mm") or 0) > min_total_cost_mm
     ]
     rows.sort(key=lambda row: float(row["Unrealized G/L"].replace("%", "").replace("+", "")))
     return rows[:limit]
