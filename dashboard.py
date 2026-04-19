@@ -28,6 +28,7 @@ from red_flag_screener import (
 from trend_signals import compute_all_trend_signals, TrendSignal
 from edgar_collector import EdgarClient, load_cached_universe_metrics, collect_universe_metrics
 from bdc_historical import BdcHistorian, load_history, nav_indexed_to_100, compare_nav_trajectories
+from dashboard_helpers import compute_maturity_wall, summarize_portfolio_cache
 
 st.set_page_config(page_title="BDC Liquidity Dashboard", layout="wide")
 
@@ -1945,29 +1946,7 @@ def _load_borrower_db() -> dict:
 @st.cache_data(ttl=1800)
 def _load_portfolio_cache_summary() -> list[dict]:
     """Summarise what's in the portfolio cache."""
-    files = sorted(_PORTFOLIO_CACHE.glob("*.json"))
-    files = [f for f in files if not f.name.startswith("_")]
-    summary = []
-    for f in files:
-        try:
-            data = json.loads(f.read_text(encoding="utf-8"))
-            ticker = f.stem.split("_")[0]
-            period = "_".join(f.stem.split("_")[1:])
-            na_count = sum(1 for p in data if p.get("is_non_accrual"))
-            pik_count = sum(1 for p in data if p.get("is_pik"))
-            total_fv = sum(p.get("fv_mm") or 0 for p in data)
-            summary.append({
-                "file": f.name,
-                "ticker": ticker,
-                "period": period,
-                "positions": len(data),
-                "non_accruals": na_count,
-                "pik_positions": pik_count,
-                "total_fv_mm": round(total_fv, 1),
-            })
-        except Exception:
-            pass
-    return summary
+    return summarize_portfolio_cache(_PORTFOLIO_CACHE)
 
 
 @st.cache_data(ttl=1800)
@@ -1979,69 +1958,7 @@ def _compute_maturity_wall() -> tuple[list[dict], list[dict]]:
         wall_rows: {quarter, fund, fv_mm} for stacked bar chart
         past_due_rows: {fund, issuer, maturity, fv_mm} past-due positions
     """
-    from datetime import date as _date
-
-    today = _date.today()
-    from portfolio_collector import latest_portfolio_cache_files
-    files = sorted(latest_portfolio_cache_files(_PORTFOLIO_CACHE).values(), key=lambda p: p.name)
-
-    # Use only the most recent filing per fund (first file per ticker)
-    wall_rows: list[dict] = []
-    past_due_rows: list[dict] = []
-
-    for f in files:
-        ticker = f.stem.split("_")[0]
-        try:
-            data = json.loads(f.read_text(encoding="utf-8"))
-        except Exception:
-            continue
-
-        seen_positions: set[tuple] = set()
-        for p in data:
-            mat_str = p.get("maturity", "") or ""
-            fv = p.get("fv_mm")
-            if not mat_str or not fv or fv <= 0:
-                continue
-            # Parse M/D/YYYY or M/YYYY
-            try:
-                parts = mat_str.split("/")
-                if len(parts) == 3:
-                    m, d, y = int(parts[0]), int(parts[1]), int(parts[2])
-                elif len(parts) == 2:
-                    m, d, y = int(parts[0]), 15, int(parts[1])
-                else:
-                    continue
-                if y < 2019 or y > 2035:
-                    continue
-                mat_date = _date(y, m, d)
-            except Exception:
-                continue
-
-            # Deduplicate by (issuer prefix, maturity, fv rounded)
-            key = (p["issuer"][:30], mat_str, round(fv, 1))
-            if key in seen_positions:
-                continue
-            seen_positions.add(key)
-
-            ql = f"{y}-Q{(m - 1) // 3 + 1}"
-
-            if mat_date < today:
-                past_due_rows.append({
-                    "Fund": ticker,
-                    "Issuer": p["issuer"][:60],
-                    "Maturity": mat_str,
-                    "FV ($M)": round(fv, 1),
-                    "mat_date": mat_date,
-                })
-            else:
-                wall_rows.append({
-                    "Quarter": ql,
-                    "Fund": ticker,
-                    "FV ($M)": round(fv, 1),
-                })
-
-    past_due_rows.sort(key=lambda x: x["mat_date"])
-    return wall_rows, past_due_rows
+    return compute_maturity_wall(_PORTFOLIO_CACHE)
 
 
 def render_portfolio() -> None:

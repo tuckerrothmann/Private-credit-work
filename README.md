@@ -24,10 +24,34 @@ The repo is built around a 35-fund universe plus an issuer-surveillance workflow
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+pip install -e .[dev]
 
 pytest -q
 streamlit run dashboard.py
 ```
+
+## Operator workflow
+
+For the common refresh / scoring / testing loop, use the PowerShell workbench:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/workbench.ps1 -Task daily
+powershell -ExecutionPolicy Bypass -File scripts/workbench.ps1 -Task full
+powershell -ExecutionPolicy Bypass -File scripts/workbench.ps1 -Task test
+```
+
+Notes:
+- The script respects an already-activated virtualenv before it falls back to `.\.venv\Scripts\python.exe`.
+- `-DryRun` avoids file-writing refresh steps where possible; for example `-Task daily -DryRun` runs a score-only dry run and prints the screener without rewriting the CSV.
+- `-Task full -DryRun` skips borrower DB rebuild because that command has no dry-run mode today.
+
+## CI
+
+GitHub Actions now runs a small smoke suite on pushes to `main`, pull requests, and manual dispatch:
+
+- `python -m pytest -q`
+- `python refresh.py --score-only --dry-run`
+- `python red_flag_screener.py --live-na`
 
 ## Core CLI entry points
 

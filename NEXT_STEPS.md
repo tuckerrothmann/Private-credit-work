@@ -13,5 +13,6 @@
 1. Keep using the canonical trade-signal loader so screener, dashboard, and CLI cannot drift again.
 2. Add more small regression tests around cache selection, parser edge cases, and generated-output consistency.
 3. Decide whether generated files like `data/borrower_db.json` should stay tracked or be rebuilt on demand.
-4. Add a lightweight `make`/PowerShell refresh workflow for `refresh.py`, screener outputs, and borrower DB rebuilds.
+4. Extend `scripts/workbench.ps1` as the standard local operator workflow for `refresh.py`, screener outputs, and borrower DB rebuilds.
 5. Consider extracting more dashboard business logic into pure helpers so it is easier to test without importing Streamlit.
+6. Expand the new GitHub Actions smoke suite when additional stable checks emerge (`trade_signals.py --matrix`, targeted parser fixtures, generated-output diffs).

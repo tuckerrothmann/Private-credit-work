@@ -112,7 +112,7 @@ def _fetch_json(url: str) -> dict:
     return data
 
 
-def _get_latest_10kq_period(cik: str) -> Optional[str]:
+def _get_latest_10kq_period(cik: str, allow_cache_write: bool = True) -> Optional[str]:
     """Return the reportDate of the most recent 10-K or 10-Q for this CIK."""
     padded = cik.zfill(10)
     cache_path = EDGAR_CACHE / "submissions" / f"CIK{padded}.json"
@@ -131,8 +131,9 @@ def _get_latest_10kq_period(cik: str) -> Optional[str]:
         try:
             url  = f"{_EDGAR_BASE}/submissions/CIK{padded}.json"
             data = _fetch_json(url)
-            cache_path.parent.mkdir(parents=True, exist_ok=True)
-            cache_path.write_text(json.dumps(data), encoding="utf-8")
+            if allow_cache_write:
+                cache_path.parent.mkdir(parents=True, exist_ok=True)
+                cache_path.write_text(json.dumps(data), encoding="utf-8")
         except Exception:
             return None
 
@@ -165,6 +166,7 @@ def _latest_cached_period(ticker: str) -> Optional[str]:
 def check_new_filings(
     funds: list[dict],
     verbose: bool = True,
+    dry_run: bool = False,
 ) -> dict[str, str]:
     """
     For each listed BDC, compare the latest EDGAR 10-K/10-Q period against
@@ -181,7 +183,7 @@ def check_new_filings(
     for fund in listed:
         ticker = fund["ticker"]
         cik    = str(fund["sec_cik"])
-        edgar_period  = _get_latest_10kq_period(cik)
+        edgar_period  = _get_latest_10kq_period(cik, allow_cache_write=not dry_run)
         cached_period = _latest_cached_period(ticker)
 
         if edgar_period is None:
@@ -674,7 +676,7 @@ def run(
             if verbose:
                 print(f"Force mode: refreshing all {len(listed)} listed BDCs")
         else:
-            new_filings = check_new_filings(funds, verbose=verbose)
+            new_filings = check_new_filings(funds, verbose=verbose, dry_run=dry_run)
 
     # ── Step 2: Pull new SOI data ───────────────────────────────────────────
     tickers_to_refresh = [t for t in new_filings if new_filings[t] != "forced" or force]
