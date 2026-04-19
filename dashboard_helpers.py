@@ -373,3 +373,54 @@ def build_family_unrealized_loss_rows(
     ]
     rows.sort(key=lambda row: float(row["Unrealized G/L"].replace("%", "").replace("+", "")))
     return rows[:limit]
+
+
+def build_family_merge_candidate_rows(
+    review: dict,
+    min_similarity: float = 0.5,
+    require_shared_context: bool = False,
+    limit: int = 50,
+) -> list[dict]:
+    """Filter/sort family merge candidates for dashboard display."""
+    rows = [
+        row
+        for row in review.get("merge_candidates", [])
+        if (row.get("Similarity") or 0) >= min_similarity
+        and (
+            not require_shared_context
+            or (row.get("Shared Fund Count", 0) > 0 or row.get("Shared Manager Count", 0) > 0)
+        )
+    ]
+    rows.sort(
+        key=lambda row: (
+            -(row.get("Similarity") or 0),
+            -(row.get("Shared Fund Count") or 0),
+            -(row.get("Shared Manager Count") or 0),
+            -(row.get("Combined FV ($M)") or 0),
+            row.get("Borrower A", ""),
+        )
+    )
+    return rows[:limit]
+
+
+def build_family_split_candidate_rows(
+    review: dict,
+    include_override_families: bool = True,
+    limit: int = 50,
+) -> list[dict]:
+    """Filter/sort family split candidates for dashboard display."""
+    rows = [
+        row
+        for row in review.get("split_candidates", [])
+        if include_override_families or not row.get("Override Applied", False)
+    ]
+    rows.sort(
+        key=lambda row: (
+            row.get("Override Applied", False),
+            row.get("Max Pair Similarity") or 0,
+            row.get("Shared Fund Pairs") or 0,
+            -(row.get("Total FV ($M)") or 0),
+            row.get("Family", ""),
+        )
+    )
+    return rows[:limit]

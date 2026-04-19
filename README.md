@@ -77,6 +77,8 @@ Universe metadata lives in `data/bdc_universe.json`.
 - `data/processed/`: generated outputs, digests, and summaries
 - `data/processed/borrower_watchlist.csv`: ranked issuer surveillance sheet with stress, manager overlap, maturities, and mark pressure
 - `data/processed/borrower_family_watchlist.csv`: related-entity rollup of the borrower watchlist for family-level transmission and refinancing mapping
+- `data/processed/borrower_family_merge_candidates.csv`: candidate borrower pairs that may belong in the same family alias bucket
+- `data/processed/borrower_family_split_candidates.csv`: low-cohesion family buckets that may deserve a split or alias cleanup
 - `data/borrower_family_aliases.json`: curated borrower-key overrides for family rollups where heuristics need explicit steering
 - `memo/`: fund-level investment memos, including the CCLF liquidity work
 - `issuer-surveillance/`: borrower and sector surveillance artifacts
@@ -98,6 +100,7 @@ If you are jumping into the borrower side first, start here:
 - Trend enrichment comes from cached EDGAR XBRL history.
 - Borrower-family rollups are heuristic overlays on top of the cleaned legal-entity borrower DB; they are meant for surveillance and mapping, not legal documentation.
 - `data/borrower_family_aliases.json` lets us override family grouping by cleaned borrower key for known sponsor / platform families.
+- The family review CSVs are triage tools, not truth tables; they are intentionally biased toward surfacing candidates for human review.
 - Interval / non-traded vehicles rely more heavily on static disclosures than listed names.
 
 ## Current limitations

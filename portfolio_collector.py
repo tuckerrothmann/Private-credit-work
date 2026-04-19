@@ -62,6 +62,8 @@ PROCESSED_DIR   = Path("data/processed")
 BORROWER_WATCHLIST = PROCESSED_DIR / "borrower_watchlist.csv"
 BORROWER_FAMILY_WATCHLIST = PROCESSED_DIR / "borrower_family_watchlist.csv"
 BORROWER_FAMILY_ALIASES = Path("data/borrower_family_aliases.json")
+BORROWER_FAMILY_MERGE_CANDIDATES = PROCESSED_DIR / "borrower_family_merge_candidates.csv"
+BORROWER_FAMILY_SPLIT_CANDIDATES = PROCESSED_DIR / "borrower_family_split_candidates.csv"
 
 # SOI section headers we search for in filing HTML
 SOI_HEADINGS = [
@@ -2080,6 +2082,7 @@ def _build_borrower_families(
         if not family_key:
             family_key = borrower_key
         rec["family_key"] = family_key
+        rec["family_override_applied"] = bool(override)
         if override.get("family_name"):
             rec["family_name_override"] = override["family_name"]
 
@@ -2108,6 +2111,7 @@ def _build_borrower_families(
                 "top_member_name": rec.get("canonical_name", ""),
                 "top_member_fv_mm": rec.get("total_fv_mm") or 0.0,
                 "preferred_family_name": override.get("family_name", ""),
+                "override_applied": bool(override),
                 "stress_score": 0,
                 "surveillance_score": 0,
                 "is_non_accrual_any": False,
@@ -2117,6 +2121,8 @@ def _build_borrower_families(
         )
         if override.get("family_name"):
             family["preferred_family_name"] = override["family_name"]
+        if override:
+            family["override_applied"] = True
 
         family["members"].append(rec.get("canonical_name", ""))
         family["member_keys"].append(borrower_key)
@@ -2244,9 +2250,194 @@ def _build_borrower_families(
             "stress_tier": _stress_tier(family["stress_score"]),
             "surveillance_score": family["surveillance_score"] + min(3, max(0, len(member_keys) - 1)),
             "current_by_fund": current_by_fund,
+            "override_applied": family.get("override_applied", False),
         }
 
     return family_records
+
+
+def _review_token_signature(name: str) -> set[str]:
+    return _substantive_borrower_tokens(_normalize_borrower_name(name))
+
+
+def _name_contains(a: str, b: str) -> bool:
+    left = re.sub(r"[^a-z0-9]+", " ", _normalize_borrower_name(a).lower()).strip()
+    right = re.sub(r"[^a-z0-9]+", " ", _normalize_borrower_name(b).lower()).strip()
+    shorter, longer = sorted([left, right], key=len)
+    return bool(shorter) and shorter in longer
+
+
+def _suggest_family_key(rec_a: dict, rec_b: dict, shared_tokens: set[str]) -> str:
+    if shared_tokens:
+        tokens = sorted(shared_tokens)
+        return " ".join(tokens[:2])
+    family_keys = [rec_a.get("family_key", ""), rec_b.get("family_key", "")]
+    family_keys = [key for key in family_keys if key]
+    return min(family_keys, key=len) if family_keys else ""
+
+
+def _build_family_review_candidates(
+    borrowers: dict[str, dict],
+    families: dict[str, dict],
+) -> dict[str, list[dict]]:
+    merge_candidates: list[dict] = []
+    seen_pairs: set[tuple[str, str]] = set()
+    token_index: dict[str, set[str]] = {}
+    token_signatures: dict[str, set[str]] = {}
+
+    for borrower_key, rec in borrowers.items():
+        tokens = _review_token_signature(rec.get("canonical_name", ""))
+        token_signatures[borrower_key] = tokens
+        for token in tokens:
+            token_index.setdefault(token, set()).add(borrower_key)
+
+    for borrower_key, rec in borrowers.items():
+        candidate_keys: set[str] = set()
+        for token in token_signatures.get(borrower_key, set()):
+            if len(token_index.get(token, ())) <= 25:
+                candidate_keys.update(token_index.get(token, set()))
+
+        for other_key in candidate_keys:
+            if other_key <= borrower_key:
+                continue
+            other = borrowers.get(other_key)
+            if other is None:
+                continue
+            if rec.get("family_key") == other.get("family_key"):
+                continue
+
+            pair = (borrower_key, other_key)
+            if pair in seen_pairs:
+                continue
+            seen_pairs.add(pair)
+
+            tokens_a = token_signatures.get(borrower_key, set())
+            tokens_b = token_signatures.get(other_key, set())
+            shared_tokens = tokens_a & tokens_b
+            if not shared_tokens:
+                continue
+
+            similarity = len(shared_tokens) / max(1, min(len(tokens_a), len(tokens_b)))
+            shared_funds = sorted(set(rec.get("funds", [])) & set(other.get("funds", [])))
+            shared_managers = sorted(set(rec.get("managers", [])) & set(other.get("managers", [])))
+            industry_match = bool(set(rec.get("industries", [])) & set(other.get("industries", [])))
+            contains = _name_contains(rec.get("canonical_name", ""), other.get("canonical_name", ""))
+            combined_fv = (rec.get("total_fv_mm") or 0.0) + (other.get("total_fv_mm") or 0.0)
+            single_token_match = len(shared_tokens) == 1
+
+            if not (
+                similarity >= 0.75
+                or (similarity >= 0.5 and (shared_funds or shared_managers or industry_match))
+                or (contains and (shared_funds or shared_managers or industry_match))
+            ):
+                continue
+            if single_token_match and not (contains or industry_match):
+                continue
+            if combined_fv < 5 and not (shared_funds or shared_managers):
+                continue
+
+            merge_candidates.append(
+                {
+                    "Borrower A": rec.get("canonical_name", ""),
+                    "Borrower B": other.get("canonical_name", ""),
+                    "Family A": rec.get("family_key", ""),
+                    "Family B": other.get("family_key", ""),
+                    "Similarity": round(similarity, 3),
+                    "Shared Tokens": ", ".join(sorted(shared_tokens)),
+                    "Shared Fund Count": len(shared_funds),
+                    "Shared Funds": ", ".join(shared_funds),
+                    "Shared Manager Count": len(shared_managers),
+                    "Shared Managers": ", ".join(shared_managers),
+                    "Industry Match": industry_match,
+                    "Combined FV ($M)": round(combined_fv, 4),
+                    "Suggested Family Key": _suggest_family_key(rec, other, shared_tokens),
+                    "Override Present": rec.get("family_override_applied", False) or other.get("family_override_applied", False),
+                }
+            )
+
+    split_candidates: list[dict] = []
+    for family in families.values():
+        member_keys = family.get("borrower_keys", [])
+        if len(member_keys) < 2:
+            continue
+
+        max_similarity = 0.0
+        shared_fund_pairs = 0
+        for idx, left_key in enumerate(member_keys):
+            left = borrowers.get(left_key, {})
+            left_tokens = token_signatures.get(left_key, set())
+            left_funds = set(left.get("funds", []))
+            for right_key in member_keys[idx + 1:]:
+                right = borrowers.get(right_key, {})
+                right_tokens = token_signatures.get(right_key, set())
+                right_funds = set(right.get("funds", []))
+                shared_tokens = left_tokens & right_tokens
+                if shared_tokens:
+                    similarity = len(shared_tokens) / max(1, min(len(left_tokens), len(right_tokens)))
+                    max_similarity = max(max_similarity, similarity)
+                if left_funds & right_funds:
+                    shared_fund_pairs += 1
+
+        if max_similarity >= 0.75 and shared_fund_pairs > 0:
+            continue
+        if shared_fund_pairs == 0 and max_similarity >= 0.9:
+            continue
+
+        reason = "Low token cohesion"
+        if shared_fund_pairs == 0:
+            reason = "No shared fund overlap"
+        elif max_similarity < 0.35:
+            reason = "Low token cohesion"
+
+        split_candidates.append(
+            {
+                "Family": family.get("family_name", ""),
+                "Family Key": family.get("family_key", ""),
+                "Borrower Count": family.get("borrower_count", 0),
+                "Borrowers": ", ".join(family.get("borrower_names", [])),
+                "Fund Count": family.get("fund_count", 0),
+                "Funds": ", ".join(family.get("funds", [])),
+                "Max Pair Similarity": round(max_similarity, 3),
+                "Shared Fund Pairs": shared_fund_pairs,
+                "Total FV ($M)": round(family.get("total_fv_mm") or 0.0, 4),
+                "Override Applied": family.get("override_applied", False),
+                "Reason": reason,
+            }
+        )
+
+    merge_candidates.sort(
+        key=lambda row: (
+            -(row["Similarity"] or 0),
+            -(row["Shared Fund Count"] or 0),
+            -(row["Shared Manager Count"] or 0),
+            -(row["Combined FV ($M)"] or 0),
+            row["Borrower A"],
+        )
+    )
+    split_candidates.sort(
+        key=lambda row: (
+            row["Override Applied"],
+            row["Max Pair Similarity"] or 0,
+            row["Shared Fund Pairs"] or 0,
+            -(row["Total FV ($M)"] or 0),
+            row["Family"],
+        )
+    )
+
+    return {
+        "merge_candidates": merge_candidates,
+        "split_candidates": split_candidates,
+    }
+
+
+def _write_review_csv(rows: list[dict], output_path: Path, fallback_fields: list[str]) -> list[dict]:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", newline="", encoding="utf-8") as fh:
+        fieldnames = list(rows[0].keys()) if rows else fallback_fields
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    return rows
 
 
 def write_borrower_family_watchlist(
@@ -2306,6 +2497,33 @@ def write_borrower_family_watchlist(
         writer.writerows(rows)
 
     return rows
+
+
+def write_family_review_candidates(
+    db: dict,
+    merge_output_path: Path = BORROWER_FAMILY_MERGE_CANDIDATES,
+    split_output_path: Path = BORROWER_FAMILY_SPLIT_CANDIDATES,
+) -> dict[str, list[dict]]:
+    review = db.get("family_review", {})
+    merge_rows = _write_review_csv(
+        review.get("merge_candidates", []),
+        merge_output_path,
+        [
+            "Borrower A", "Borrower B", "Family A", "Family B", "Similarity",
+            "Shared Tokens", "Shared Fund Count", "Shared Funds", "Shared Manager Count",
+            "Shared Managers", "Industry Match", "Combined FV ($M)", "Suggested Family Key",
+            "Override Present",
+        ],
+    )
+    split_rows = _write_review_csv(
+        review.get("split_candidates", []),
+        split_output_path,
+        [
+            "Family", "Family Key", "Borrower Count", "Borrowers", "Fund Count", "Funds",
+            "Max Pair Similarity", "Shared Fund Pairs", "Total FV ($M)", "Override Applied", "Reason",
+        ],
+    )
+    return {"merge_candidates": merge_rows, "split_candidates": split_rows}
 
 
 def write_borrower_watchlist(db: dict, output_path: Path = BORROWER_WATCHLIST) -> list[dict]:
@@ -2372,6 +2590,8 @@ def build_borrower_db(
     watchlist_path: Path = BORROWER_WATCHLIST,
     family_watchlist_path: Path = BORROWER_FAMILY_WATCHLIST,
     family_alias_path: Path = BORROWER_FAMILY_ALIASES,
+    family_merge_candidates_path: Path = BORROWER_FAMILY_MERGE_CANDIDATES,
+    family_split_candidates_path: Path = BORROWER_FAMILY_SPLIT_CANDIDATES,
 ) -> dict[str, Any]:
     """Aggregate all cached SOI files into a cross-fund borrower database.
 
@@ -2516,6 +2736,7 @@ def build_borrower_db(
         rec["surveillance_score"] = _borrower_surveillance_score(rec)
 
     families = _build_borrower_families(borrowers, family_alias_overrides=family_alias_overrides)
+    family_review = _build_family_review_candidates(borrowers, families)
 
     db = {
         "meta": {
@@ -2537,15 +2758,25 @@ def build_borrower_db(
             "family_watchlist_path": str(family_watchlist_path),
             "family_alias_path": str(family_alias_path),
             "family_alias_count": len(family_alias_overrides),
+            "family_merge_candidates_path": str(family_merge_candidates_path),
+            "family_split_candidates_path": str(family_split_candidates_path),
+            "family_merge_candidate_count": len(family_review.get("merge_candidates", [])),
+            "family_split_candidate_count": len(family_review.get("split_candidates", [])),
         },
         "borrowers": borrowers,
         "families": families,
+        "family_review": family_review,
     }
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(db, indent=2), encoding="utf-8")
     write_borrower_watchlist(db, watchlist_path)
     write_borrower_family_watchlist(db, family_watchlist_path)
+    write_family_review_candidates(
+        db,
+        merge_output_path=family_merge_candidates_path,
+        split_output_path=family_split_candidates_path,
+    )
     return db
 
 

@@ -31,8 +31,10 @@ from bdc_historical import BdcHistorian, load_history, nav_indexed_to_100, compa
 from dashboard_helpers import (
     build_borrower_heatmap_records,
     build_borrower_stress_rows,
+    build_family_merge_candidate_rows,
     build_family_non_accrual_rows,
     build_family_pik_rows,
+    build_family_split_candidate_rows,
     build_family_stress_rows,
     build_family_summary_rows,
     build_family_unrealized_loss_rows,
@@ -2044,6 +2046,7 @@ def render_portfolio() -> None:
     meta = db.get("meta", {})
     borrowers = db.get("borrowers", {})
     families = db.get("families", {})
+    family_review = db.get("family_review", {})
 
     st.divider()
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -2174,6 +2177,52 @@ def render_portfolio() -> None:
                         )
             else:
                 st.info(f"No borrower families matching '{family_search_q}'.")
+
+        st.markdown("**Family Override Review**")
+        st.write(
+            "These review tables help maintain `data/borrower_family_aliases.json`. "
+            "Merge candidates are related borrowers in different families; split candidates are low-cohesion families."
+        )
+        rev_c1, rev_c2 = st.columns(2)
+        rev_c1.metric("Merge candidates", meta.get("family_merge_candidate_count", 0))
+        rev_c2.metric("Split candidates", meta.get("family_split_candidate_count", 0))
+
+        merge_similarity = st.slider(
+            "Minimum merge-candidate similarity",
+            0.3,
+            1.0,
+            0.6,
+            0.05,
+            key="family_merge_similarity",
+        )
+        require_context = st.checkbox(
+            "Require shared fund or manager context",
+            value=True,
+            key="family_merge_require_context",
+        )
+        merge_rows = build_family_merge_candidate_rows(
+            family_review,
+            min_similarity=merge_similarity,
+            require_shared_context=require_context,
+        )
+        if merge_rows:
+            st.dataframe(pd.DataFrame(merge_rows), use_container_width=True, height=300)
+        else:
+            st.info("No merge candidates match the current review filters.")
+
+        include_override_splits = st.checkbox(
+            "Include override-backed families in split review",
+            value=False,
+            key="family_split_include_overrides",
+        )
+        split_rows = build_family_split_candidate_rows(
+            family_review,
+            include_override_families=include_override_splits,
+        )
+        if split_rows:
+            st.dataframe(pd.DataFrame(split_rows), use_container_width=True, height=260)
+        else:
+            st.info("No split candidates match the current review filters.")
 
     # ── Multi-lender issuers ──────────────────────────────────────────────
     st.subheader("Multi-Fund Issuers (Systemic Risk)")

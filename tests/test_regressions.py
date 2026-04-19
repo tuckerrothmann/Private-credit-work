@@ -9,8 +9,10 @@ from dashboard_helpers import (
     build_borrower_heatmap_records,
     build_borrower_stress_rows,
     build_family_heatmap_records,
+    build_family_merge_candidate_rows,
     build_family_non_accrual_rows,
     build_family_pik_rows,
+    build_family_split_candidate_rows,
     build_family_stress_rows,
     build_family_summary_rows,
     build_family_unrealized_loss_rows,
@@ -128,6 +130,49 @@ def _sample_families() -> dict:
                 "GSBD": {"fund": "GSBD", "period": "2025-12-31", "fv_mm": 5.0, "cost_mm": 5.4},
             },
         },
+    }
+
+
+def _sample_family_review() -> dict:
+    return {
+        "merge_candidates": [
+            {
+                "Borrower A": "Alpha OpCo",
+                "Borrower B": "Alpha Holdco",
+                "Family A": "alpha op",
+                "Family B": "alpha hold",
+                "Similarity": 0.8,
+                "Shared Fund Count": 1,
+                "Shared Manager Count": 1,
+                "Combined FV ($M)": 30.0,
+            },
+            {
+                "Borrower A": "Beta One",
+                "Borrower B": "Beta Two",
+                "Family A": "beta one",
+                "Family B": "beta two",
+                "Similarity": 0.55,
+                "Shared Fund Count": 0,
+                "Shared Manager Count": 0,
+                "Combined FV ($M)": 12.0,
+            },
+        ],
+        "split_candidates": [
+            {
+                "Family": "Gamma Family",
+                "Override Applied": False,
+                "Max Pair Similarity": 0.1,
+                "Shared Fund Pairs": 0,
+                "Total FV ($M)": 20.0,
+            },
+            {
+                "Family": "Delta Family",
+                "Override Applied": True,
+                "Max Pair Similarity": 0.2,
+                "Shared Fund Pairs": 0,
+                "Total FV ($M)": 25.0,
+            },
+        ],
     }
 
 
@@ -314,6 +359,16 @@ def test_build_family_helpers_apply_filters_and_ordering() -> None:
 
     assert [row["Family"] for row in loss_rows] == ["Alpha Family"]
     assert loss_rows[0]["Cost ($M)"] == 30.0
+
+
+def test_build_family_review_rows_filter_candidates() -> None:
+    review = _sample_family_review()
+
+    merge_rows = build_family_merge_candidate_rows(review, min_similarity=0.6, require_shared_context=True)
+    split_rows = build_family_split_candidate_rows(review, include_override_families=False)
+
+    assert [row["Borrower A"] for row in merge_rows] == ["Alpha OpCo"]
+    assert [row["Family"] for row in split_rows] == ["Gamma Family"]
 
 
 def test_build_borrower_db_enriches_manager_history_and_watchlist(tmp_path: Path) -> None:
