@@ -225,11 +225,10 @@ def run_collection(tickers: list[str], verbose: bool = True) -> None:
 # ---------------------------------------------------------------------------
 
 def score_all_funds(verbose: bool = False) -> dict[str, ScoreRecord]:
-    """Re-score all funds with live NA enrichment and return ScoreRecord dict."""
-    from red_flag_screener import load_universe, score_fund, enrich_funds_with_live_na
-    from price_feed import enrich_funds_with_prices
+    """Re-score all funds using the canonical enriched scoring universe."""
+    from red_flag_screener import load_scoring_funds, score_fund
 
-    funds = enrich_funds_with_prices(enrich_funds_with_live_na(load_universe()))
+    funds = load_scoring_funds()
     records: dict[str, ScoreRecord] = {}
 
     for fund in funds:

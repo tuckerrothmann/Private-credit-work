@@ -132,6 +132,18 @@ class TradeSignal:
 # Core logic
 # ---------------------------------------------------------------------------
 
+def load_signal_funds() -> list[dict]:
+    """Load funds with the same enrichments used by the main risk workflows."""
+    from red_flag_screener import load_scoring_funds
+
+    return load_scoring_funds()
+
+
+def load_all_signals() -> list[TradeSignal]:
+    """Compute trade signals using the canonical enriched fund universe."""
+    return compute_signals(load_signal_funds())
+
+
 def _risk_bucket(score: int) -> str:
     if score <= _SCORE_LOW:
         return "LOW"
@@ -332,11 +344,7 @@ def main() -> None:
     parser.add_argument("--matrix", action="store_true", help="Print 2x2 signal matrix.")
     args = parser.parse_args()
 
-    from red_flag_screener import load_universe
-    from price_feed import enrich_funds_with_prices
-
-    funds = enrich_funds_with_prices(load_universe())
-    signals = compute_signals(funds)
+    signals = load_all_signals()
 
     if args.matrix:
         df = build_signal_matrix_df(signals)

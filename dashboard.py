@@ -859,11 +859,8 @@ def _render_peer_ranking(funds: list) -> None:
 def _load_trade_signals():
     """Compute trade signals for all funds (cached 5 min)."""
     try:
-        from trade_signals import compute_signals
-        from red_flag_screener import load_universe, enrich_funds_with_live_na
-        from price_feed import enrich_funds_with_prices
-        funds = enrich_funds_with_prices(enrich_funds_with_live_na(load_universe()))
-        return compute_signals(funds)
+        from trade_signals import load_all_signals
+        return load_all_signals()
     except Exception as exc:
         return []
 
@@ -1985,19 +1982,15 @@ def _compute_maturity_wall() -> tuple[list[dict], list[dict]]:
     from datetime import date as _date
 
     today = _date.today()
-    files = sorted(_PORTFOLIO_CACHE.glob("*_*.json"))
-    files = [f for f in files if not f.name.startswith("_")]
+    from portfolio_collector import latest_portfolio_cache_files
+    files = sorted(latest_portfolio_cache_files(_PORTFOLIO_CACHE).values(), key=lambda p: p.name)
 
     # Use only the most recent filing per fund (first file per ticker)
-    seen_tickers: set[str] = set()
     wall_rows: list[dict] = []
     past_due_rows: list[dict] = []
 
     for f in files:
         ticker = f.stem.split("_")[0]
-        if ticker in seen_tickers:
-            continue
-        seen_tickers.add(ticker)
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
         except Exception:

@@ -45,7 +45,7 @@ That same template is what makes the name so useful now. If a company like Medal
 | FSK | Q4 2025 (10-K) | First lien term loan (cash) | 234.6 | 233.3 | **99.4** | No | No | Filed 10-K |
 | FSK | Q3–Q4 2025 | First lien term loan (PIK) | 224.5 | 220.9 | **98.4** | **Yes (4.0% PIK)** | No | Filed 10-Q/10-K |
 | FSK | Q4 2025 earnings disclosure | Specifically disclosed below-par tranche | ~233.0 | ~185.0 | **~79¢** | Yes | No | FSK Q4 2025 earnings (Feb 26, 2026) |
-| BCRED | Jan 2026 | First lien senior secured | n/a | confirmed | n/a | TBD | No | Portfolio page |
+| BCRED | Jan 2026 | First lien senior secured | n/a | confirmed | n/a | Not disclosed | No | Portfolio page |
 
 **Total confirmed fair value (BXSL + FSK):** approximately **$762M** across two public BDC vehicles as of Q4 2025 (from parsed iXBRL filing data).
 

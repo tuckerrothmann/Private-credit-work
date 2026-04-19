@@ -1761,6 +1761,25 @@ def _stress_tier(score: int) -> str:
 # Live NA-rate computation (for red_flag_screener integration)
 # ---------------------------------------------------------------------------
 
+def latest_portfolio_cache_files(
+    cache_dir: Path = PORTFOLIO_CACHE,
+) -> dict[str, Path]:
+    """Return the most recent cached SOI file for each ticker."""
+    latest: dict[str, tuple[str, Path]] = {}
+    for fpath in cache_dir.glob("*.json"):
+        if fpath.name.startswith("_"):
+            continue
+        stem = fpath.stem
+        parts = stem.split("_", 1)
+        if len(parts) != 2:
+            continue
+        ticker, period = parts[0].upper(), parts[1]
+        current = latest.get(ticker)
+        if current is None or period > current[0]:
+            latest[ticker] = (period, fpath)
+    return {ticker: path for ticker, (_, path) in latest.items()}
+
+
 def compute_live_na_rates(
     cache_dir: Path = PORTFOLIO_CACHE,
 ) -> dict[str, float]:
@@ -1772,23 +1791,8 @@ def compute_live_na_rates(
     Suitable for injecting live nonaccrual_pct_fair_value into the screener
     in place of the static value from bdc_universe.json.
     """
-    # Group cache files by ticker, pick most recent period per ticker
-    ticker_files: dict[str, Path] = {}
-    for fpath in sorted(cache_dir.glob("*.json")):
-        if fpath.name.startswith("_"):
-            continue
-        # File names are like TICKER_YYYY-MM-DD.json
-        stem = fpath.stem  # e.g. "ARCC_2024-12-31"
-        parts = stem.split("_", 1)
-        if len(parts) != 2:
-            continue
-        ticker, period = parts[0].upper(), parts[1]
-        # Keep most recent period (string compare works for YYYY-MM-DD)
-        if ticker not in ticker_files or period > ticker_files[ticker].stem.split("_", 1)[1]:
-            ticker_files[ticker] = fpath
-
     result: dict[str, float] = {}
-    for ticker, fpath in ticker_files.items():
+    for ticker, fpath in latest_portfolio_cache_files(cache_dir).items():
         try:
             positions = json.loads(fpath.read_text(encoding="utf-8"))
         except Exception:

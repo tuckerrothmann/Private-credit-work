@@ -453,6 +453,22 @@ def enrich_funds_with_live_na(
     return enriched
 
 
+def load_scoring_funds(
+    path: Path | str = "data/bdc_universe.json",
+    history_dir: Path | None = None,
+    live_na_cache_dir: Path | str | None = None,
+    include_prices: bool = True,
+) -> list[dict[str, Any]]:
+    """Load the canonical enriched fund universe used for scoring workflows."""
+    funds = load_universe_with_trends(path, history_dir=history_dir)
+    funds = enrich_funds_with_live_na(funds, cache_dir=live_na_cache_dir)
+    if include_prices:
+        from price_feed import enrich_funds_with_prices
+
+        funds = enrich_funds_with_prices(funds)
+    return funds
+
+
 def screen_universe(
     funds: list[dict[str, Any]],
     min_score: int = 0,
@@ -643,7 +659,7 @@ def main() -> None:
         import pandas as pd
         df = screen_to_dataframe(scores)
         df.to_csv(args.csv, index=False)
-        print(f"\nWrote screener results → {args.csv}")
+        print(f"\nWrote screener results -> {args.csv}")
 
 
 if __name__ == "__main__":

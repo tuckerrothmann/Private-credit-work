@@ -11,34 +11,31 @@
   },
   "OBDC": {
     "ticker": "OBDC",
-    "score": 6,
-    "tier": "YELLOW",
-    "flags": [
-      "discount_moderate",
-      "discount_severe",
-      "headroom_limited",
-      "leverage_moderate",
-      "nonaccrual_elevated",
-      "pik_creep_moderate"
-    ],
-    "na_rate": 0.056381,
-    "as_of": "2025-12-31"
-  },
-  "BXSL": {
-    "ticker": "BXSL",
-    "score": 3,
+    "score": 4,
     "tier": "GREEN",
     "flags": [
       "discount_moderate",
       "headroom_limited",
+      "leverage_moderate",
+      "pik_creep_moderate"
+    ],
+    "na_rate": 0.016699,
+    "as_of": "2025-12-31"
+  },
+  "BXSL": {
+    "ticker": "BXSL",
+    "score": 2,
+    "tier": "GREEN",
+    "flags": [
+      "headroom_limited",
       "leverage_moderate"
     ],
-    "na_rate": 0.009228,
+    "na_rate": 0.008917,
     "as_of": "2025-12-31"
   },
   "FSK": {
     "ticker": "FSK",
-    "score": 9,
+    "score": 11,
     "tier": "ORANGE",
     "flags": [
       "coverage_below_1x",
@@ -49,7 +46,9 @@
       "nav_erosion_mild",
       "nonaccrual_elevated",
       "pik_creep_moderate",
-      "predecessor_fund_issues"
+      "predecessor_fund_issues",
+      "trend_coverage_declining",
+      "trend_nav_declining"
     ],
     "na_rate": 0.042,
     "as_of": "2025-12-31"
@@ -70,12 +69,12 @@
     "score": 0,
     "tier": "GREEN",
     "flags": [],
-    "na_rate": 0.022441,
+    "na_rate": 0.022095,
     "as_of": "2025-12-31"
   },
   "PSEC": {
     "ticker": "PSEC",
-    "score": 10,
+    "score": 11,
     "tier": "ORANGE",
     "flags": [
       "discount_moderate",
@@ -85,20 +84,19 @@
       "nav_erosion_mild",
       "nav_erosion_moderate",
       "persistent_nav_erosion",
-      "pik_creep_moderate",
       "pik_creep_severe",
-      "related_party_concern"
+      "related_party_concern",
+      "trend_nav_declining"
     ],
     "na_rate": 0.009007,
     "as_of": "2025-12-31"
   },
   "GBDC": {
     "ticker": "GBDC",
-    "score": 3,
+    "score": 2,
     "tier": "GREEN",
     "flags": [
       "coverage_below_1x",
-      "discount_moderate",
       "headroom_limited"
     ],
     "na_rate": 0.01357,
@@ -106,8 +104,8 @@
   },
   "PFLT": {
     "ticker": "PFLT",
-    "score": 11,
-    "tier": "ORANGE",
+    "score": 16,
+    "tier": "RED",
     "flags": [
       "coverage_below_070x",
       "coverage_below_085x",
@@ -119,15 +117,19 @@
       "leverage_high",
       "leverage_moderate",
       "nav_erosion_mild",
-      "nav_erosion_moderate"
+      "nav_erosion_moderate",
+      "trend_coverage_collapse",
+      "trend_dual_deterioration",
+      "trend_leverage_creep",
+      "trend_nav_declining"
     ],
     "na_rate": 0.002,
     "as_of": "2025-12-31"
   },
   "TCPC": {
     "ticker": "TCPC",
-    "score": 11,
-    "tier": "ORANGE",
+    "score": 15,
+    "tier": "RED",
     "flags": [
       "discount_moderate",
       "discount_severe",
@@ -139,7 +141,9 @@
       "leverage_moderate",
       "nav_erosion_mild",
       "nonaccrual_elevated",
-      "pik_creep_moderate"
+      "pik_creep_moderate",
+      "trend_leverage_surge",
+      "trend_nav_freefall"
     ],
     "na_rate": 0.04,
     "as_of": "2025-12-31"
@@ -161,7 +165,6 @@
       "nav_erosion_severe",
       "nonaccrual_elevated",
       "nonaccrual_high",
-      "pik_creep_moderate",
       "pik_creep_severe",
       "sector_concentration_stress",
       "severe_nav_erosion"
@@ -183,14 +186,15 @@
   },
   "CGBD": {
     "ticker": "CGBD",
-    "score": 5,
+    "score": 6,
     "tier": "YELLOW",
     "flags": [
       "coverage_below_1x",
       "discount_moderate",
       "discount_severe",
       "headroom_limited",
-      "leverage_moderate"
+      "leverage_moderate",
+      "trend_leverage_creep"
     ],
     "na_rate": 0.009919,
     "as_of": "2025-12-31"
@@ -211,34 +215,36 @@
     "score": 2,
     "tier": "GREEN",
     "flags": [
-      "discount_moderate",
-      "pik_creep_moderate"
+      "pik_creep_moderate",
+      "trend_leverage_creep"
     ],
     "na_rate": 0.001117,
     "as_of": "2025-12-31"
   },
   "SCM": {
     "ticker": "SCM",
-    "score": 9,
+    "score": 11,
     "tier": "ORANGE",
     "flags": [
       "coverage_below_085x",
       "coverage_below_1x",
       "discount_moderate",
-      "discount_severe",
       "headroom_limited",
       "headroom_tight",
       "leverage_high",
       "leverage_moderate",
-      "nonaccrual_elevated"
+      "nonaccrual_elevated",
+      "trend_coverage_declining",
+      "trend_dual_deterioration",
+      "trend_leverage_creep"
     ],
     "na_rate": 0.040999999999999995,
     "as_of": "2025-12-31"
   },
   "PNNT": {
     "ticker": "PNNT",
-    "score": 11,
-    "tier": "ORANGE",
+    "score": 14,
+    "tier": "RED",
     "flags": [
       "coverage_below_070x",
       "coverage_below_085x",
@@ -250,7 +256,9 @@
       "leverage_high",
       "leverage_moderate",
       "nav_erosion_mild",
-      "pik_creep_moderate"
+      "pik_creep_moderate",
+      "trend_coverage_collapse",
+      "trend_nav_declining"
     ],
     "na_rate": 0.019023,
     "as_of": "2025-12-31"
@@ -310,61 +318,61 @@
   },
   "OTF": {
     "ticker": "OTF",
-    "score": 3,
+    "score": 4,
     "tier": "GREEN",
     "flags": [
       "coverage_below_1x",
       "discount_moderate",
-      "discount_severe"
+      "discount_severe",
+      "trend_coverage_declining"
     ],
     "na_rate": null,
     "as_of": "2025-12-31"
   },
   "BCSF": {
     "ticker": "BCSF",
-    "score": 7,
-    "tier": "YELLOW",
+    "score": 8,
+    "tier": "ORANGE",
     "flags": [
       "coverage_below_070x",
       "coverage_below_085x",
       "coverage_below_1x",
       "discount_moderate",
-      "discount_severe",
       "headroom_limited",
-      "leverage_moderate"
+      "leverage_moderate",
+      "trend_coverage_collapse"
     ],
     "na_rate": 0.008,
     "as_of": "2025-12-31"
   },
   "GSBD": {
     "ticker": "GSBD",
-    "score": 7,
-    "tier": "YELLOW",
+    "score": 8,
+    "tier": "ORANGE",
     "flags": [
       "coverage_below_085x",
       "coverage_below_1x",
       "discount_moderate",
-      "discount_severe",
       "headroom_limited",
       "leverage_moderate",
-      "nav_erosion_mild"
+      "nav_erosion_mild",
+      "trend_coverage_collapse"
     ],
-    "na_rate": 0.015946,
+    "na_rate": 0.01165,
     "as_of": "2025-12-31"
   },
   "OCSL": {
     "ticker": "OCSL",
-    "score": 6,
+    "score": 5,
     "tier": "YELLOW",
     "flags": [
       "discount_moderate",
-      "discount_severe",
       "headroom_limited",
       "nav_erosion_mild",
       "nav_erosion_moderate",
       "nonaccrual_elevated"
     ],
-    "na_rate": 0.052433,
+    "na_rate": 0.052194,
     "as_of": "2025-12-31"
   },
   "TSLX": {
@@ -379,13 +387,12 @@
   },
   "MSDL": {
     "ticker": "MSDL",
-    "score": 5,
-    "tier": "YELLOW",
+    "score": 4,
+    "tier": "GREEN",
     "flags": [
       "coverage_below_085x",
       "coverage_below_1x",
       "discount_moderate",
-      "discount_severe",
       "headroom_limited"
     ],
     "na_rate": 0.014,
