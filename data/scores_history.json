@@ -326,7 +326,7 @@
       "discount_severe",
       "trend_coverage_declining"
     ],
-    "na_rate": null,
+    "na_rate": 0.005657,
     "as_of": "2025-12-31"
   },
   "BCSF": {
@@ -342,8 +342,8 @@
       "leverage_moderate",
       "trend_coverage_collapse"
     ],
-    "na_rate": 0.008,
-    "as_of": "2025-12-31"
+    "na_rate": 0.015589,
+    "as_of": "2025-09-30"
   },
   "GSBD": {
     "ticker": "GSBD",
@@ -382,8 +382,8 @@
     "flags": [
       "headroom_limited"
     ],
-    "na_rate": null,
-    "as_of": "2025-12-31"
+    "na_rate": 0.000889,
+    "as_of": "2025-09-30"
   },
   "MSDL": {
     "ticker": "MSDL",
@@ -395,22 +395,23 @@
       "discount_moderate",
       "headroom_limited"
     ],
-    "na_rate": 0.014,
+    "na_rate": 0.01164,
     "as_of": "2025-12-31"
   },
   "NMFC": {
     "ticker": "NMFC",
-    "score": 5,
+    "score": 6,
     "tier": "YELLOW",
     "flags": [
       "discount_moderate",
       "discount_severe",
       "headroom_limited",
       "leverage_moderate",
-      "nav_erosion_mild"
+      "nav_erosion_mild",
+      "nonaccrual_elevated"
     ],
-    "na_rate": 0.014,
-    "as_of": "2025-12-31"
+    "na_rate": 0.056937,
+    "as_of": "2025-09-30"
   },
   "MFIC": {
     "ticker": "MFIC",
@@ -424,7 +425,7 @@
       "leverage_moderate",
       "nav_erosion_mild"
     ],
-    "na_rate": 0.026,
+    "na_rate": 0.029926,
     "as_of": "2025-12-31"
   },
   "OCCI": {
