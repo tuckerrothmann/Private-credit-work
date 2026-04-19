@@ -5,7 +5,15 @@ from datetime import date
 from pathlib import Path
 from unittest.mock import patch
 
-from dashboard_helpers import compute_maturity_wall, summarize_portfolio_cache
+from dashboard_helpers import (
+    build_borrower_heatmap_records,
+    build_borrower_stress_rows,
+    build_non_accrual_rows,
+    build_pik_rows,
+    build_unrealized_loss_rows,
+    compute_maturity_wall,
+    summarize_portfolio_cache,
+)
 from portfolio_collector import compute_live_na_rates, latest_portfolio_cache_files
 import refresh
 from trade_signals import load_all_signals, load_signal_funds
@@ -13,6 +21,49 @@ from trade_signals import load_all_signals, load_signal_funds
 
 def _write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def _sample_borrowers() -> dict:
+    return {
+        "alpha": {
+            "canonical_name": "Alpha Software",
+            "fund_count": 2,
+            "funds": ["ARCC", "PFLT"],
+            "appearances": [
+                {"fund": "ARCC", "period": "2025-09-30", "fv_mm": 10.0},
+                {"fund": "ARCC", "period": "2025-12-31", "fv_mm": 14.0},
+                {"fund": "PFLT", "period": "2025-12-31", "cost_mm": 8.0},
+            ],
+            "non_accrual_funds": ["PFLT"],
+            "pik_funds": ["ARCC"],
+            "is_non_accrual_any": True,
+            "is_pik_any": True,
+            "stress_score": 6,
+            "stress_tier": "RED",
+            "unrealized_pct": -0.22,
+            "total_fv_mm": 22.0,
+            "total_cost_mm": 30.0,
+            "industries": ["Software", "Application"],
+        },
+        "beta": {
+            "canonical_name": "Beta Healthcare",
+            "fund_count": 1,
+            "funds": ["GSBD"],
+            "appearances": [
+                {"fund": "GSBD", "period": "2025-12-31", "fv_mm": 5.0},
+            ],
+            "non_accrual_funds": [],
+            "pik_funds": ["GSBD"],
+            "is_non_accrual_any": False,
+            "is_pik_any": True,
+            "stress_score": 2,
+            "stress_tier": "YELLOW",
+            "unrealized_pct": -0.04,
+            "total_fv_mm": 5.0,
+            "total_cost_mm": 5.4,
+            "industries": ["Healthcare"],
+        },
+    }
 
 
 def test_latest_portfolio_cache_files_prefers_newest_period(tmp_path: Path) -> None:
@@ -134,3 +185,36 @@ def test_compute_maturity_wall_uses_latest_files_and_deduplicates_positions(tmp_
     assert past_due_rows[0]["Fund"] == "ARCC"
     assert past_due_rows[0]["Issuer"] == "Beta LLC"
     assert past_due_rows[0]["FV ($M)"] == 11.0
+
+
+def test_build_borrower_heatmap_records_uses_latest_appearances_and_sorting() -> None:
+    records = build_borrower_heatmap_records(_sample_borrowers(), min_funds=1)
+
+    assert [record["name"] for record in records] == ["Alpha Software", "Beta Healthcare"]
+    assert records[0]["total_fv"] == 22.0
+    assert records[0]["latest"]["ARCC"]["period"] == "2025-12-31"
+    assert records[0]["na_funds"] == {"PFLT"}
+    assert records[0]["pik_funds"] == {"ARCC"}
+
+
+def test_build_borrower_table_rows_apply_filters_and_ordering() -> None:
+    borrowers = _sample_borrowers()
+
+    stress_rows = build_borrower_stress_rows(borrowers, min_score=3)
+    non_accrual_rows = build_non_accrual_rows(borrowers)
+    pik_rows = build_pik_rows(borrowers)
+    loss_rows = build_unrealized_loss_rows(borrowers)
+
+    assert [row["Issuer"] for row in stress_rows] == ["Alpha Software"]
+    assert stress_rows[0]["Tier"] == "RED"
+    assert stress_rows[0]["Unrealized G/L"] == "-22.0%"
+
+    assert [row["Issuer"] for row in non_accrual_rows] == ["Alpha Software"]
+    assert non_accrual_rows[0]["Non-Accrual At"] == "PFLT"
+
+    assert [row["Issuer"] for row in pik_rows] == ["Alpha Software", "Beta Healthcare"]
+    assert pik_rows[0]["Multi-Fund PIK"] is True
+    assert pik_rows[1]["Multi-Fund PIK"] is False
+
+    assert [row["Issuer"] for row in loss_rows] == ["Alpha Software"]
+    assert loss_rows[0]["Cost ($M)"] == 30.0

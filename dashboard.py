@@ -28,7 +28,15 @@ from red_flag_screener import (
 from trend_signals import compute_all_trend_signals, TrendSignal
 from edgar_collector import EdgarClient, load_cached_universe_metrics, collect_universe_metrics
 from bdc_historical import BdcHistorian, load_history, nav_indexed_to_100, compare_nav_trajectories
-from dashboard_helpers import compute_maturity_wall, summarize_portfolio_cache
+from dashboard_helpers import (
+    build_borrower_heatmap_records,
+    build_borrower_stress_rows,
+    build_non_accrual_rows,
+    build_pik_rows,
+    build_unrealized_loss_rows,
+    compute_maturity_wall,
+    summarize_portfolio_cache,
+)
 
 st.set_page_config(page_title="BDC Liquidity Dashboard", layout="wide")
 
@@ -2110,28 +2118,7 @@ def render_portfolio() -> None:
     heatmap_min_funds = st.slider("Minimum funds holding borrower", 2, 6, 2, key="heatmap_min_funds")
 
     # Build per-borrower records with latest-period FV per fund
-    heatmap_recs: list[dict] = []
-    for rec in borrowers.values():
-        if rec["fund_count"] < heatmap_min_funds:
-            continue
-        apps = rec.get("appearances", [])
-        latest: dict[str, dict] = {}
-        for a in apps:
-            f = a["fund"]
-            if f not in latest or a.get("period", "") > latest[f].get("period", ""):
-                latest[f] = a
-        total_fv = sum((v.get("fv_mm") or v.get("cost_mm") or 0) for v in latest.values())
-        heatmap_recs.append({
-            "name":       rec["canonical_name"],
-            "fund_count": rec["fund_count"],
-            "total_fv":   total_fv,
-            "latest":     latest,
-            "na_funds":   set(rec.get("non_accrual_funds", [])),
-            "pik_funds":  set(rec.get("pik_funds", [])),
-            "is_na_any":  rec.get("is_non_accrual_any", False),
-        })
-
-    heatmap_recs.sort(key=lambda r: (-r["fund_count"], -r["total_fv"]))
+    heatmap_recs = build_borrower_heatmap_records(borrowers, min_funds=heatmap_min_funds)
     top_recs = heatmap_recs[:heatmap_top_n]
 
     if not top_recs:
@@ -2250,24 +2237,7 @@ def render_portfolio() -> None:
 
     stress_min_score = st.slider("Minimum stress score to show", 0, 10, 3,
                                  key="stress_min_score")
-    stressed_borrowers = [
-        {
-            "Issuer": rec["canonical_name"],
-            "Score": rec.get("stress_score", 0),
-            "Tier": rec.get("stress_tier", "GREEN"),
-            "Unrealized G/L": f"{rec['unrealized_pct']*100:+.1f}%"
-                if rec.get("unrealized_pct") is not None else "—",
-            "Funds": ", ".join(rec["funds"]),
-            "Fund Count": rec["fund_count"],
-            "FV ($M)": round(rec["total_fv_mm"], 1) if rec["total_fv_mm"] else None,
-            "Non-Accrual": "YES" if rec["is_non_accrual_any"] else "",
-            "PIK": "Yes" if rec["is_pik_any"] else "",
-            "Industry": ", ".join(rec["industries"][:1]),
-        }
-        for rec in borrowers.values()
-        if rec.get("stress_score", 0) >= stress_min_score
-    ]
-    stressed_borrowers.sort(key=lambda x: (-x["Score"], -(x["FV ($M)"] or 0)))
+    stressed_borrowers = build_borrower_stress_rows(borrowers, min_score=stress_min_score)
 
     if stressed_borrowers:
         stress_df = pd.DataFrame(stressed_borrowers).set_index("Issuer")
@@ -2287,20 +2257,7 @@ def render_portfolio() -> None:
     # ── Non-accrual issuers ───────────────────────────────────────────────
     st.divider()
     st.subheader("Non-Accrual Positions")
-    non_acc = [
-        {
-            "Issuer": rec["canonical_name"],
-            "Non-Accrual At": ", ".join(rec["non_accrual_funds"]),
-            "Fund Count": rec["fund_count"],
-            "Total FV ($M)": round(rec["total_fv_mm"], 1) if rec["total_fv_mm"] else None,
-            "Unrealized G/L": f"{rec['unrealized_pct']*100:+.1f}%" if rec.get("unrealized_pct") is not None else "—",
-            "PIK": "Yes" if rec["is_pik_any"] else "",
-            "Industry": ", ".join(rec["industries"][:2]),
-        }
-        for rec in borrowers.values()
-        if rec["is_non_accrual_any"]
-    ]
-    non_acc.sort(key=lambda x: (-x["Fund Count"], -(x["Total FV ($M)"] or 0)))
+    non_acc = build_non_accrual_rows(borrowers)
 
     if non_acc:
         na_df = pd.DataFrame(non_acc).set_index("Issuer")
@@ -2313,18 +2270,7 @@ def render_portfolio() -> None:
     # ── PIK concentration ─────────────────────────────────────────────────
     st.divider()
     st.subheader("PIK Borrowers")
-    pik_list = [
-        {
-            "Issuer": rec["canonical_name"],
-            "PIK At": ", ".join(rec["pik_funds"]),
-            "Multi-Fund PIK": rec["fund_count"] >= 2,
-            "Total FV ($M)": round(rec["total_fv_mm"], 1) if rec["total_fv_mm"] else None,
-            "Industry": ", ".join(rec["industries"][:2]),
-        }
-        for rec in borrowers.values()
-        if rec["is_pik_any"]
-    ]
-    pik_list.sort(key=lambda x: (-int(x["Multi-Fund PIK"]), -(x["Total FV ($M)"] or 0)))
+    pik_list = build_pik_rows(borrowers)
     if pik_list:
         pik_df = pd.DataFrame(pik_list).set_index("Issuer")
         st.dataframe(pik_df, use_container_width=True)
@@ -2334,25 +2280,10 @@ def render_portfolio() -> None:
     # ── Unrealized loss ranking ───────────────────────────────────────────
     st.divider()
     st.subheader("Largest Unrealized Losses")
-    losses = [
-        {
-            "Issuer": rec["canonical_name"],
-            "Funds": ", ".join(rec["funds"]),
-            "Cost ($M)": round(rec["total_cost_mm"], 1) if rec["total_cost_mm"] else None,
-            "FV ($M)": round(rec["total_fv_mm"], 1) if rec["total_fv_mm"] else None,
-            "Unrealized G/L": f"{rec['unrealized_pct']*100:+.1f}%",
-            "Non-Accrual": "Yes" if rec["is_non_accrual_any"] else "",
-            "Industry": ", ".join(rec["industries"][:2]),
-        }
-        for rec in borrowers.values()
-        if rec.get("unrealized_pct") is not None
-        and rec["unrealized_pct"] < -0.05
-        and (rec["total_cost_mm"] or 0) > 1.0
-    ]
-    losses.sort(key=lambda x: float(x["Unrealized G/L"].replace("%", "").replace("+", "")))
+    losses = build_unrealized_loss_rows(borrowers)
 
     if losses:
-        loss_df = pd.DataFrame(losses[:30]).set_index("Issuer")
+        loss_df = pd.DataFrame(losses).set_index("Issuer")
         st.dataframe(loss_df, use_container_width=True)
     else:
         st.info("No significant unrealized losses detected in current data.")
