@@ -4,17 +4,57 @@
       "family_key": "alpine ii",
       "family_name": "Alpine Acquisition Corp II"
     },
+    "aa acquisition aggregator llc (autoalert)": {
+      "family_key": "autoalert",
+      "family_name": "AutoAlert, LLC"
+    },
+    "ao1 holdings (player's health)": {
+      "family_key": "ao1",
+      "family_name": "Ao1 Holdings, Inc."
+    },
     "asp conair holdings": {
       "family_key": "conair",
       "family_name": "Conair Holdings LLC"
+    },
+    "beacon hc": {
+      "family_key": "beacon dc",
+      "family_name": "Beacon Dc, Ltd."
+    },
+    "bynder bidco inc (netherlands)": {
+      "family_key": "bynder bv",
+      "family_name": "Bynder Bidco B.V. (Netherlands)"
     },
     "cambium learning group": {
       "family_key": "cambium",
       "family_name": "Cambium Learning Group, Inc."
     },
+    "caerus us 1": {
+      "family_key": "caerus srl",
+      "family_name": "Caerus Midco 2 S.à r.l."
+    },
     "carnegie dartlet": {
       "family_key": "carnegie",
       "family_name": "Carnegie Holdco, LLC"
+    },
+    "cfc group (cfc usa 2025 llc)": {
+      "family_key": "cfc usa",
+      "family_name": "CFC USA 2025 LLC"
+    },
+    "chartwell cumming holding": {
+      "family_key": "cumming group",
+      "family_name": "Cumming Group, Inc."
+    },
+    "connect finco sàrl": {
+      "family_key": "connect",
+      "family_name": "Connect Finco SARL"
+    },
+    "connect holding ii": {
+      "family_key": "connect",
+      "family_name": "Connect Finco SARL"
+    },
+    "curia receivables ii spv": {
+      "family_key": "curia global",
+      "family_name": "Curia Global Inc"
     },
     "daylight beta parent llc (benefytt technologies inc)": {
       "family_key": "daylight beta",
@@ -36,6 +76,10 @@
       "family_key": "bluebird bio",
       "family_name": "bluebird bio, Inc."
     },
+    "guidepoint security holdings": {
+      "family_key": "guidepoint",
+      "family_name": "Guidepoint"
+    },
     "heartland home services": {
       "family_key": "heartland",
       "family_name": "Heartland Home Services, Inc."
@@ -43,6 +87,10 @@
     "icims inc*": {
       "family_key": "icims",
       "family_name": "iCIMS, Inc."
+    },
+    "kpci co-invest 2": {
+      "family_key": "kpci",
+      "family_name": "KPCI Holdings, L.P."
     },
     "thrasio holdings": {
       "family_key": "thrasio",
@@ -68,6 +116,14 @@
       "family_key": "loparex",
       "family_name": "Loparex"
     },
+    "madrigal pharmaceutical": {
+      "family_key": "madrigal pharmaceuticals",
+      "family_name": "Madrigal Pharmaceuticals, Inc."
+    },
+    "megawatt acquisition partners": {
+      "family_key": "megawatt acquisitionco",
+      "family_name": "Megawatt Acquisitionco, Inc."
+    },
     "nelipak european holdings coöperatief ua": {
       "family_key": "nelipak",
       "family_name": "Nelipak Holding Company"
@@ -75,6 +131,10 @@
     "new medina health": {
       "family_key": "medina health",
       "family_name": "Medina Health, LLC"
+    },
+    "northwinds services group": {
+      "family_key": "northwinds",
+      "family_name": "Northwinds Holding, Inc."
     },
     "paving lessor": {
       "family_key": "paving",
@@ -96,6 +156,10 @@
       "family_key": "ps operating",
       "family_name": "PS Operating Company LLC"
     },
+    "researchgate gmbh (germany)": {
+      "family_key": "researchgate germany",
+      "family_name": "ResearchGate Corporation (Germany)"
+    },
     "aimbridge acquisition": {
       "family_key": "aimbridge",
       "family_name": "Aimbridge Topco, LLC"
@@ -116,6 +180,10 @@
       "family_key": "infolinks media",
       "family_name": "Infolinks Media Buyco, LLC"
     },
+    "urology partners": {
+      "family_key": "urology management",
+      "family_name": "Urology Management Holdings, Inc."
+    },
     "tpc us parent": {
       "family_key": "tpc",
       "family_name": "TPC Holding Company, LP"
@@ -124,9 +192,29 @@
       "family_key": "trucordia",
       "family_name": "Trucordia"
     },
+    "upstream newco": {
+      "family_key": "upstream",
+      "family_name": "Upstream Holdco, Inc."
+    },
     "walker edison holdco": {
       "family_key": "walker edison",
       "family_name": "Walker Edison Furniture Company LLC"
+    },
+    "whitewater holding": {
+      "family_key": "whitewater",
+      "family_name": "Whitewater Holding Company LLC"
+    },
+    "fs whitewater borrower": {
+      "family_key": "whitewater",
+      "family_name": "Whitewater Holding Company LLC"
+    },
+    "systems planning and analysis": {
+      "family_key": "system planning",
+      "family_name": "System Planning and Analysis, Inc."
+    },
+    "exigo intermediate ii": {
+      "family_key": "exigo",
+      "family_name": "Exigo, LLC"
     }
   }
 }

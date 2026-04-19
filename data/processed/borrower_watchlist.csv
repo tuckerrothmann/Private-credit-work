@@ -94,7 +94,7 @@ Burgess Point Purchaser Corporation,burgess point,15,ORANGE,3,4,4,3,"ARCC, PFLT,
 Symplr Software Inc.,symplr software,15,ORANGE,3,3,3,3,"ARCC, GBDC, PFLT","Ares Capital Management, GC Advisors, PennantPark Investment Advisers",Healthcare Technology,718.67,813.249,-0.1163,11/2018,11.31,,False,,True,ARCC,2025-09-30,2025-12-31,2,ARCC,683.8
 "OEConnection, LLC",oeconnection,15,ORANGE,3,3,3,3,"CGBD, FSK, GBDC","Carlyle Investment Management, FS/KKR Advisor, GC Advisors",Auto Aftermarket & Services,132.555,148.213,-0.1056,4/22/31,0.0,,False,,True,FSK,2025-09-30,2025-12-31,2,GBDC,73.428
 "Iracore International Holdings, Inc.",iracore international,15,ORANGE,4,2,2,2,"GSBD, TCPC","Goldman Sachs Asset Management, Tennenbaum Capital Partners (BlackRock)",Energy Equipment & Services,9.3326,31.2426,-0.7013,04/12/26,11.91,,False,,False,,2025-09-30,2025-12-31,2,GSBD,8.49
-"Guidepoint Security Holdings, LLC",guidepoint security,15,ORANGE,4,2,2,2,"ARCC, GSBD","Ares Capital Management, Goldman Sachs Asset Management",IT Services,6.832,23.686,-0.7116,10/02/29,8.97,,False,,False,,2025-09-30,2025-12-31,2,GSBD,6.832
+"Guidepoint Security Holdings, LLC",guidepoint,15,ORANGE,4,2,2,2,"ARCC, GSBD","Ares Capital Management, Goldman Sachs Asset Management",IT Services,6.832,23.686,-0.7116,10/02/29,8.97,,False,,False,,2025-09-30,2025-12-31,2,GSBD,6.832
 "Connatix Parent, LLC",connatix,15,ORANGE,4,2,2,2,"BXSL, PNNT","Blackstone Credit Advisors, PennantPark Investment Advisers",Software,0.517,1.102,-0.5309,7/14/2021,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,0.323
 Reliant Rehab Hospital Cincinnati LLC,reliant rehab,15,ORANGE,4,1,1,1,FSK,FS/KKR Advisor,Health Care Equipment & Services,140.9,179.7,-0.2159,2/28/26,0.0,,True,FSK,True,FSK,2025-09-30,2025-12-31,2,FSK,140.9
 "Inhance Parent, Inc.",inhance,15,ORANGE,4,1,1,1,GBDC,GC Advisors,Chemicals,59.381,70.157,-0.1536,07/2018,,,True,GBDC,True,GBDC,2025-09-30,2025-12-31,2,GBDC,59.381
@@ -220,7 +220,7 @@ Luminary Roli Limited,luminary roli,12,ORANGE,4,1,1,1,TPVG,TriplePoint Advisers,
 HDC/HW Intermediate Holdings,hdc hw,12,ORANGE,3,1,1,1,MAIN,Main Street Capital (internal),,10.614,12.966,-0.1814,,8.07,,True,MAIN,False,,2025-09-30,2025-12-31,2,MAIN,10.614
 Diligent Delivery Systems,diligent delivery,12,ORANGE,3,1,1,1,GAIN,Gladstone Management Corporation,,9.933,13.0,-0.2359,,,,True,GAIN,False,,2025-09-30,2025-12-31,2,GAIN,9.933
 "Elah Holdings, Inc.",elah,12,ORANGE,4,1,1,1,GSBD,Goldman Sachs Asset Management,Capital Markets,5.238,111.65,-0.9531,,,,False,,False,,2025-09-30,2025-12-31,2,GSBD,5.238
-Ao1 Holdings (Player's Health),ao1 player,12,ORANGE,4,1,1,1,TPVG,TriplePoint Advisers,Business/Productivity Software,4.09,53.657,-0.9238,,,,False,,False,,2025-09-30,2025-12-31,2,TPVG,4.09
+Ao1 Holdings (Player's Health),ao1,12,ORANGE,4,1,1,1,TPVG,TriplePoint Advisers,Business/Productivity Software,4.09,53.657,-0.9238,,,,False,,False,,2025-09-30,2025-12-31,2,TPVG,4.09
 Earnin,earnin,12,ORANGE,4,1,1,1,TPVG,TriplePoint Advisers,Consumer Finance,3.57,143.903,-0.9752,,,,False,,False,,2025-09-30,2025-12-31,2,TPVG,3.57
 Merama Inc.,merama,12,ORANGE,4,1,1,1,TPVG,TriplePoint Advisers,E-Commerce - Personal Goods,2.911,43.995,-0.9338,,,,False,,False,,2025-09-30,2025-12-31,2,TPVG,2.911
 Omio Corp.,omio,12,ORANGE,4,1,1,1,TPVG,TriplePoint Advisers,Travel & Leisure,2.551,57.723,-0.9558,,,,False,,False,,2025-09-30,2025-12-31,2,TPVG,2.551
@@ -335,7 +335,7 @@ SitusAMC Holdings Corporation,situsamc,11,YELLOW,2,3,3,3,"CGBD, FSK, TCPC","Carl
 "Radwell Parent, LLC",radwell,11,YELLOW,2,3,3,3,"ARCC, CGBD, GBDC","Ares Capital Management, Carlyle Investment Management, GC Advisors",Wholesale,34.767,33.907,0.0254,03/2022,9.17,,False,,False,,2025-09-30,2025-12-31,2,CGBD,31.42
 "Eagle Family Foods Group, LLC",eagle family,11,YELLOW,2,3,3,3,"GBDC, GSBD, OBDC","Blue Owl Credit Advisors, GC Advisors, Goldman Sachs Asset Management",Food Products,29.624,29.782,-0.0053,08/12/30,8.79,,False,,False,,2025-09-30,2025-12-31,2,GBDC,24.77
 "Avalara, Inc.",avalara,11,YELLOW,2,3,4,3,"CGBD, OCSL, TCPC","Carlyle Investment Management, Oaktree Capital Management, Tennenbaum Capital Partners (BlackRock)",Diversified Financial Services,28.1283,27.6219,0.0183,10/19/2028,4.98,,False,,False,,2025-09-30,2025-12-31,2,CGBD,23.853
-"Systems Planning and Analysis, Inc.",systems planning,11,YELLOW,2,3,3,2,"ARCC, PFLT, PNNT","Ares Capital Management, PennantPark Investment Advisers",Aerospace and Defense,158.292,180.227,-0.1217,08/16/27,8.67,,False,,False,,2025-09-30,2025-12-31,2,PFLT,124.681
+"Systems Planning and Analysis, Inc.",system planning,11,YELLOW,2,3,3,2,"ARCC, PFLT, PNNT","Ares Capital Management, PennantPark Investment Advisers",Aerospace and Defense,158.292,180.227,-0.1217,08/16/27,8.67,,False,,False,,2025-09-30,2025-12-31,2,PFLT,124.681
 "Medallia, Inc.",medallia,11,YELLOW,2,2,2,2,"BXSL, FSK","Blackstone Credit Advisors, FS/KKR Advisor",Software (continued),762.096,852.508,-0.1061,10/29/28,4.0,,False,,True,FSK,2025-09-30,2025-12-31,2,FSK,454.2
 "Shiftkey, LLC",shiftkey,11,YELLOW,2,2,2,2,"PNNT, PSEC","PennantPark Investment Advisers, Prospect Capital Management",Business Services,270.985,317.25,-0.1458,06/21/2027,10.0,575.0,False,,True,PSEC,2025-09-30,2025-12-31,2,PSEC,239.14
 "InterDent, Inc.",interdent,11,ORANGE,3,1,1,1,PSEC,Prospect Capital Management,Health Care Providers & Services,828.93,1477.447,-0.4389,9/5/2027,5.0,,False,,True,PSEC,2025-09-30,2025-12-31,2,PSEC,828.93
@@ -833,7 +833,7 @@ Divisions Holding Corp.,divisions,6,YELLOW,1,2,2,2,"BXSL, CGBD","Blackstone Cred
 "Argano, LLC",argano,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Business Services,117.805,122.363,-0.0372,09/13/29,9.5,,False,,False,,2025-09-30,2025-12-31,2,PFLT,72.354
 "Lash OpCo, LLC",lash opco,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Personal Products,113.002,124.931,-0.0955,02/18/27,11.55,,False,,False,,2025-09-30,2025-12-31,2,PFLT,63.491
 "Blackhawk Industrial Distribution, Inc.",blackhawk industrial,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Distributors,101.577,109.564,-0.0729,09/17/26,9.24,,False,,False,,2025-09-30,2025-12-31,2,PNNT,52.916
-"Exigo Intermediate II, LLC",exigo ii,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Software,100.916,105.73,-0.0455,03/15/27,10.29,,False,,False,,2025-09-30,2025-12-31,2,PNNT,66.637
+"Exigo Intermediate II, LLC",exigo,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Software,100.916,105.73,-0.0455,03/15/27,10.29,,False,,False,,2025-09-30,2025-12-31,2,PNNT,66.637
 "Case Works, LLC",case works,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Professional Services,99.226,104.475,-0.0502,10/01/29,9.07,,False,,False,,2025-09-30,2025-12-31,2,PFLT,74.574
 "TCG 3.0 Jogger Acquisitionco, Inc.",tcg jogger,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Media,96.667,102.064,-0.0529,01/23/29,10.35,,False,,False,,2025-09-30,2025-12-31,2,PFLT,58.512
 "SV-Aero Holdings, LLC",sv aero,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Aerospace and Defense,90.197,99.706,-0.0954,11/01/30,8.84,,False,,False,,2025-09-30,2025-12-31,2,PFLT,60.835
@@ -880,7 +880,7 @@ Paving Lessor Corp. First Lien,paving,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark 
 "New Medina Health, LLC",medina health,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Healthcare Providers and Services,7.713,2.858,1.6987,10/16/2023,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,5.04
 "US Fertility Enterprises, LLC",us fertility enterprises,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Healthcare Providers and Services,7.277,7.234,0.0059,10/11/31,8.67,,False,,False,,2025-09-30,2025-12-31,2,PNNT,5.238
 "Paving Parent, LLC",paving,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Business Services,5.458,5.389,0.0128,7/1/2025,,,False,,False,,2025-09-30,2025-12-31,2,PFLT,3.057
-"Urology Partners Co., LP",urology partners,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Healthcare Providers and Services,5.35,1.111,3.8155,1/20/2023,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,4.656
+"Urology Partners Co., LP",urology management,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Healthcare Providers and Services,5.35,1.111,3.8155,1/20/2023,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,4.656
 "RFMG Parent, LP",rfmg,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Healthcare Equipment and Supplies,4.622,2.1,1.201,5/1/2020,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,2.522
 "Rosco Topco, LLC",rosco,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Business Services,4.429,1.402,2.1591,12/16/2020,,,False,,False,,2025-09-30,2025-12-31,2,PFLT,3.034
 "SSC Dominion Holdings, LLC",ssc dominion,6,YELLOW,1,2,2,1,"PFLT, PNNT",PennantPark Investment Advisers,Capital Equipment,4.297,0.06,70.6167,7/11/2018,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,3.478
@@ -913,7 +913,7 @@ Equity in PSLF,equity in,6,YELLOW,1,1,1,1,PNNT,PennantPark Investment Advisers,,
 "Paramount Global Surfaces, Inc.",paramount global,6,YELLOW,1,1,1,1,BXSL,Blackstone Credit Advisors,Trading Companies & Distributors,41.393,55.217,-0.2504,12/31/2028,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,41.393
 "Datacom, LLC",datacom,6,YELLOW,1,1,1,1,MAIN,Main Street Capital (internal),,33.661,42.181,-0.202,12/31/2025,9.83,,False,,False,,2025-09-30,2025-12-31,2,MAIN,33.661
 CATO,cato,6,YELLOW,1,1,1,1,GSBD,Goldman Sachs Asset Management,Pharmaceuticals,33.491,40.113,-0.1651,06/16/27,11.47,,False,,False,,2025-09-30,2025-12-31,2,GSBD,33.491
-"Upstream Newco, Inc.",upstream newco,6,YELLOW,1,1,1,1,PSEC,Prospect Capital Management,Health Care Providers & Services,32.212,43.876,-0.2658,11/20/2027,12.88,850.0,False,,False,,2025-09-30,2025-12-31,2,PSEC,32.212
+"Upstream Newco, Inc.",upstream,6,YELLOW,1,1,1,1,PSEC,Prospect Capital Management,Health Care Providers & Services,32.212,43.876,-0.2658,11/20/2027,12.88,850.0,False,,False,,2025-09-30,2025-12-31,2,PSEC,32.212
 "C5 Technology Holdings, LLC",c5 technology,6,YELLOW,1,1,1,1,OCSL,Oaktree Capital Management,Data Processing & Outsourced Services,31.212,42.178,-0.26,,,,False,,False,,2025-09-30,2025-12-31,2,OCSL,31.212
 "Home Concepts Acquisition, Inc.",home concepts,6,YELLOW,1,1,1,1,GAIN,Gladstone Management Corporation,,19.554,26.4,-0.2593,,,,False,,False,,2025-09-30,2025-12-31,2,GAIN,19.554
 "United Land Services Intermediate Parent Holdings, LLC",united land services,6,YELLOW,1,1,1,1,PNNT,PennantPark Investment Advisers,Environmental Services,17.944,20.413,-0.121,01/12/2026,14.75,,False,,True,PNNT,2025-09-30,2025-12-31,2,PNNT,17.944
@@ -1201,7 +1201,7 @@ American Residential Services L.L.C. and Aragorn Parent Holdings LP,american res
 Project Carbo S.a.r.l. (Luxemburg),carbo luxemburg,4,YELLOW,1,1,1,1,CGBD,Carlyle Investment Management,High Tech Industries,2.409,2.172,0.1091,,14.3,,False,,True,CGBD,2025-12-31,2025-12-31,1,CGBD,2.409
 "Southern Veterinary Partners, LLC",southern veterinary,4,GREEN,0,1,2,1,GBDC,GC Advisors,Healthcare Providers & Services,2.129,0.356,4.9803,12/2024,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,2.129
 "Adweek Purchaser, LLC",adweek,4,GREEN,0,1,1,1,PNNT,PennantPark Investment Advisers,Printing and Publishing,2.105,2.374,-0.1133,11/30/2025,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,2.105
-"Megawatt Acquisition Partners, LLC",megawatt partners,4,GREEN,0,1,2,1,PNNT,PennantPark Investment Advisers,Electronics,0.476,0.535,-0.1103,,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,0.476
+"Megawatt Acquisition Partners, LLC",megawatt acquisitionco,4,GREEN,0,1,2,1,PNNT,PennantPark Investment Advisers,Electronics,0.476,0.535,-0.1103,,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,0.476
 "CRH Healthcare Purchaser, Inc.",crh healthcare,4,GREEN,0,1,1,1,GBDC,GC Advisors,Healthcare Providers & Services,0.456,0.531,-0.1412,12/2018,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,0.456
 "FS NU Investors, LP",fs nu,4,YELLOW,1,1,1,1,CGBD,Carlyle Investment Management,Consumer Services,0.346,0.003,114.3333,,20.0,,False,,True,CGBD,2025-09-30,2025-12-31,2,CGBD,0.346
 "Gauge Schlesinger Coinvest, LLC",gauge schlesinger,4,GREEN,0,1,2,1,PNNT,PennantPark Investment Advisers,Business Services,0.014,0.001,13.0,01/08/2026,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,0.014
@@ -1513,7 +1513,7 @@ Clearcourse Partnership Acquireco Finance Limited,clearcourse partnership,3,GREE
 "RumbleOn, Inc.",rumbleon,3,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Automotive Retail,33.85,35.702,-0.0519,9/30/2027,8.25,,False,,False,,2025-09-30,2025-12-31,2,OCSL,33.85
 "Hamilton Thorne, Inc.",hamilton thorne,3,GREEN,0,1,1,1,GSBD,Goldman Sachs Asset Management,Health Care Equipment & Supplies,33.374,32.772,0.0184,11/28/31,8.1,,False,,False,,2025-09-30,2025-12-31,2,GSBD,33.374
 "ATS Operating, LLC",ats operating,3,GREEN,0,1,1,1,MAIN,Main Street Capital (internal),,33.327,32.697,0.0193,1/18/2027,9.66,,False,,False,,2025-09-30,2025-12-31,2,MAIN,33.327
-"FS WhiteWater Borrower, LLC",fs whitewater,3,GREEN,0,1,1,1,GSBD,Goldman Sachs Asset Management,Diversified Consumer Services,33.21,33.059,0.0046,12/21/29,9.06,,False,,False,,2025-09-30,2025-12-31,2,GSBD,33.21
+"FS WhiteWater Borrower, LLC",whitewater,3,GREEN,0,1,1,1,GSBD,Goldman Sachs Asset Management,Diversified Consumer Services,33.21,33.059,0.0046,12/21/29,9.06,,False,,False,,2025-09-30,2025-12-31,2,GSBD,33.21
 "National Express Wash Parent Holdco, LLC",national express wash,3,GREEN,0,1,1,1,GBDC,GC Advisors,Automobiles,32.846,32.899,-0.0016,07/2022,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,32.846
 Aurora Lux FinCo S.Á.R.L. (Luxembourg),aurora lux,3,GREEN,0,1,1,1,CGBD,Carlyle Investment Management,Software,32.58,33.376,-0.0238,12/24/2026,,,False,,False,,2025-09-30,2025-12-31,2,CGBD,32.58
 Team Acquisition Corporation,team,3,GREEN,0,1,1,1,ARCC,Ares Capital Management,,32.4,37.6,-0.1383,11/2028,10.81,,False,,False,,2025-09-30,2025-12-31,2,ARCC,32.4
@@ -1710,7 +1710,7 @@ Reaction Biology Corporation,reaction biology,3,GREEN,0,1,1,1,GBDC,GC Advisors,L
 "EIS Acquisition Holdings, LP",eis,3,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Distributors,7.796,3.35,1.3272,11/1/2021,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,7.796
 "Lifelong Learner Holdings, LLC",lifelong learner,3,GREEN,0,1,1,1,CGBD,Carlyle Investment Management,Business Services,7.643,8.477,-0.0984,10/18/2025,,,False,,False,,2025-09-30,2025-12-31,2,CGBD,7.643
 USR Parent Inc.,usr,3,GREEN,0,1,1,1,CGBD,Carlyle Investment Management,Retail,7.578,7.613,-0.0046,4/25/2027,,,False,,False,,2025-09-30,2025-12-31,2,CGBD,7.578
-ResearchGate GmBH (Germany),researchgate gmbh,3,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Debt Investments (continued),7.4725,8.232,-0.0923,10/30/2025,,,False,,False,,2025-09-30,2025-12-31,2,TCPC,7.4725
+ResearchGate GmBH (Germany),researchgate germany,3,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Debt Investments (continued),7.4725,8.232,-0.0923,10/30/2025,,,False,,False,,2025-09-30,2025-12-31,2,TCPC,7.4725
 CWC Fund I Co-Invest (ALTI) LP,cwc fund,3,GREEN,0,1,1,1,ARCC,Ares Capital Management,Investment Funds and Vehicles,7.4,6.3,0.1746,03/2024,,,False,,False,,2025-09-30,2025-12-31,2,ARCC,7.4
 "Micross Topco, Inc.",micross,3,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Aerospace & Defense,7.198,4.767,0.51,3/28/2022,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,7.198
 ES Integrated,es integrated,3,GREEN,0,1,1,1,GSBD,Goldman Sachs Asset Management,Commercial Services & Supplies,7.166,7.144,0.0031,09/24/31,8.47,,False,,False,,2025-09-30,2025-12-31,2,GSBD,7.166
@@ -1819,7 +1819,7 @@ Freeport LNG Investments LLLP,freeport lng,3,GREEN,0,1,1,1,OCSL,Oaktree Capital 
 "GCP Boss Holdco, LLC",gcp boss,3,GREEN,0,1,2,1,PNNT,PennantPark Investment Advisers,Conglomerate Manufacturing,1.515,1.045,0.4498,,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,1.515
 "AGI Group Holdings, LP",agi group,3,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Air Freight & Logistics,1.511,0.902,0.6752,6/11/2021,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,1.511
 Carrier Industrial Fire,carrier industrial,3,GREEN,0,1,1,1,GSBD,Goldman Sachs Asset Management,Machinery,1.48,1.469,0.0075,07/01/30,8.53,,False,,False,,2025-09-30,2025-12-31,2,GSBD,1.48
-"Beacon HC, Ltd.",beacon hc,3,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Insurance,1.362,1.362,0.0,12/4/2025,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,1.362
+"Beacon HC, Ltd.",beacon dc,3,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Insurance,1.362,1.362,0.0,12/4/2025,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,1.362
 "LJ Avalon, LP",lj avalon,3,GREEN,0,1,2,1,PNNT,PennantPark Investment Advisers,Environmental Services,1.362,0.851,0.6005,,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,1.362
 "Project Alpha Intermediate Holdings, Inc.",alpha,3,GREEN,0,1,1,1,GBDC,GC Advisors,Diversified Consumer Services,1.359,0.327,3.156,05/2025,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,1.359
 "Superior Transportation, Inc.",superior transportation,3,GREEN,0,1,1,1,SLRC,SLR Capital Partners,Road & Rail,1.346,1.346,0.0,1/1/2026,10.63,,False,,False,,2025-09-30,2025-12-31,2,SLRC,1.346
@@ -2074,7 +2074,7 @@ DuBois Chemical,dubois chemical,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Ch
 "Brave Parent Holdings, Inc.",brave,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Software,134.871,133.752,0.0084,11/28/2030,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,134.871
 Carrera Bidco Limited,carrera,2,GREEN,0,1,1,1,ARCC,Ares Capital Management,Consumer Distribution and Retail,134.3,135.4,-0.0081,11/2032,7.34,,False,,False,,2025-12-31,2025-12-31,1,ARCC,134.3
 "PPL RVs, Inc.",ppl rvs,2,GREEN,0,1,1,1,MAIN,Main Street Capital (internal),,134.176,72.662,0.8466,11/15/2027,13.4,,False,,False,,2025-09-30,2025-12-31,2,MAIN,134.176
-"Chartwell Cumming Holding, Corp.",chartwell cumming,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Professional Services,134.062,133.184,0.0066,11/16/2029,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,134.062
+"Chartwell Cumming Holding, Corp.",cumming group,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Professional Services,134.062,133.184,0.0066,11/16/2029,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,134.062
 "RL Datix Holdings , Inc.",rl datix,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Healthcare technology,134.059,133.994,0.0005,4/2031,,,False,,False,,2025-09-30,2025-12-31,2,OBDC,134.059
 "FusionSite Midco, LLC",fusionsite,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Commercial Services & Supplies,132.804,131.085,0.0131,11/17/2029,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,132.804
 "Radwell Parent, LLC*",radwell,2,GREEN,0,1,1,1,GBDC,GC Advisors,,132.555,132.955,-0.003,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,132.555
@@ -2086,7 +2086,7 @@ Babel Street,babel street,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Debt 
 "Bulab Holdings, Inc. and Buckman PPC Co-Invest LP",bulab and,2,GREEN,0,1,1,1,ARCC,Ares Capital Management,Materials,128.6,128.0,0.0047,07/2032,8.17,,False,,False,,2025-09-30,2025-12-31,2,ARCC,128.6
 "ChenMed, LLC",chenmed,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Electronics & Computer Hardware,128.24,128.101,0.0011,,2.45,245.0,False,,False,,2025-09-30,2025-12-31,2,HTGC,128.24
 "Discovery Point Retreat, LLC",discovery point,2,GREEN,0,1,1,1,PSEC,Prospect Capital Management,Health Care Providers & Services,127.904,116.97,0.0935,6/14/2029,12.0,775.0,False,,False,,2025-09-30,2025-12-31,2,PSEC,127.904
-"Caerus US 1, Inc.",caerus us,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Health Care Technology,127.349,127.293,0.0004,5/25/2029,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,127.349
+"Caerus US 1, Inc.",caerus srl,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Health Care Technology,127.349,127.293,0.0004,5/25/2029,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,127.349
 ABB/Con-cise Optical Group LLC,abb con,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Distribution,126.647,127.39,-0.0058,2/2028,,,False,,False,,2025-09-30,2025-12-31,2,OBDC,126.647
 "Gannett Fleming, Inc.",gannett fleming,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Construction & Engineering,125.69,124.906,0.0063,8/5/2030,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,125.69
 "MAC Discount, LLC",mac discount,2,GREEN,0,1,1,1,PSEC,Prospect Capital Management,Distributors,125.4101,128.848,-0.0267,5/11/2028,12.73,850.0,False,,False,,2025-09-30,2025-12-31,2,PSEC,125.4101
@@ -2161,7 +2161,7 @@ VCI Asset Holdings 1 LLC,vci asset,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors
 Resa Power LLC,resa power,2,GREEN,0,1,1,1,FSK,FS/KKR Advisor,Commercial & Professional Services,87.7,88.0,-0.0034,,,,False,,False,,2025-09-30,2025-12-31,2,FSK,87.7
 "Specialized Aviation Holdings, LLC",specialized aviation,2,GREEN,0,1,1,1,MAIN,Main Street Capital (internal),,86.724,86.987,-0.003,8/29/2030,13.0,,False,,False,,2025-09-30,2025-12-31,2,MAIN,86.724
 Vet's Choice Radiology LLC,vet s,2,GREEN,0,1,1,1,GLAD,Gladstone Management Corporation,,86.703,85.5,0.0141,,,,False,,False,,2025-09-30,2025-12-31,2,GLAD,86.703
-"Madrigal Pharmaceutical, Inc.",madrigal pharmaceutical,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Drug Discovery & Development,86.482,81.239,0.0645,,2.45,245.0,False,,False,,2025-09-30,2025-12-31,2,HTGC,86.482
+"Madrigal Pharmaceutical, Inc.",madrigal pharmaceuticals,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Drug Discovery & Development,86.482,81.239,0.0645,,2.45,245.0,False,,False,,2025-09-30,2025-12-31,2,HTGC,86.482
 "Slick Innovations, LLC",slick innovations,2,GREEN,0,1,1,1,MAIN,Main Street Capital (internal),,86.232,81.632,0.0564,12/22/2027,14.0,,False,,False,,2025-09-30,2025-12-31,2,MAIN,86.232
 "NMC Crimson Holdings, Inc.",nmc crimson,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Health Care Technology,85.931,84.852,0.0127,3/1/2028,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,85.931
 "RGIS Services, LLC",rgis services,2,GREEN,0,1,1,1,PSEC,Prospect Capital Management,Commercial Services & Supplies,85.529,64.925,0.3174,,,,False,,False,,2025-09-30,2025-12-31,2,PSEC,85.529
@@ -2450,7 +2450,7 @@ Baduhenna Bidco Limited,baduhenna,2,GREEN,0,1,1,1,GBDC,GC Advisors,Healthcare Eq
 Ten-X LLC,ten x,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Interactive Media & Services,36.038,38.373,-0.0609,5/26/2028,6.0,,False,,False,,2025-09-30,2025-12-31,2,OCSL,36.038
 "Jones Fish Hatcheries & Distributors, LLC and Pond Management Group Holdings, LLC",jones fish,2,GREEN,0,1,1,1,ARCC,Ares Capital Management,,36.0,15.6,1.3077,11/2032,8.13,,False,,False,,2025-12-31,2025-12-31,1,ARCC,36.0
 Route 66 Development,route development,2,GREEN,0,1,1,1,PNNT,PennantPark Investment Advisers,Gaming,35.82,35.314,0.0143,01/24/2031,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,35.82
-Connect Holding II LLC,connect ii,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Alternative Carriers,35.717,37.858,-0.0566,4/3/2031,4.25,,False,,False,,2025-12-31,2025-12-31,1,OCSL,35.717
+Connect Holding II LLC,connect,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Alternative Carriers,35.717,37.858,-0.0566,4/3/2031,4.25,,False,,False,,2025-12-31,2025-12-31,1,OCSL,35.717
 MYOB Invest Co Pty Ltd,myob invest,2,GREEN,0,1,1,1,GBDC,GC Advisors,,35.684,36.988,-0.0353,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,35.684
 "Star Parent, Inc.",star,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Life Sciences Tools & Services,35.665,34.886,0.0223,9/27/2030,4.0,,False,,False,,2025-09-30,2025-12-31,2,OCSL,35.665
 "Smart Chemical Solutions, LLC",smart chemical,2,GREEN,0,1,1,1,GAIN,Gladstone Management Corporation,,35.66,35.66,0.0,,,,False,,False,,2025-09-30,2025-12-31,2,GAIN,35.66
@@ -2914,7 +2914,7 @@ Signet Marine Corporation,signet marine,2,GREEN,0,1,1,1,SLRC,SLR Capital Partner
 "Edmunds Govtech, Inc.",edmunds govtech,2,GREEN,0,1,1,1,ARCC,Ares Capital Management,,10.2,10.2,0.0,02/2030,8.25,,False,,False,,2025-09-30,2025-12-31,2,ARCC,10.2
 "DroneDeploy, Inc.",dronedeploy,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Warrant Investments,10.131,9.811,0.0326,,2.45,245.0,False,,False,,2025-09-30,2025-12-31,2,HTGC,10.131
 "TetraScience, Inc.",tetrascience,2,GREEN,0,1,1,1,TPVG,TriplePoint Advisers,Database Software,10.114,10.094,0.002,,,,False,,False,,2025-09-30,2025-12-31,2,TPVG,10.114
-"AA Acquisition Aggregator, LLC (AutoAlert)",aa autoalert,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Automobiles,10.064,1.0804,8.3151,,,,False,,False,,2025-12-31,2025-12-31,1,TCPC,10.064
+"AA Acquisition Aggregator, LLC (AutoAlert)",autoalert,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Automobiles,10.064,1.0804,8.3151,,,,False,,False,,2025-12-31,2025-12-31,1,TCPC,10.064
 Tecta America Corp,tecta america,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Construction & Engineering,10.012,9.985,0.0027,2/18/2032,2.88,,False,,False,,2025-09-30,2025-12-31,2,OCSL,10.012
 Alsay Incorporated,alsay incorporated,2,GREEN,0,1,1,1,GLAD,Gladstone Management Corporation,,10.0,10.0,0.0,,,,False,,False,,2025-09-30,2025-12-31,2,GLAD,10.0
 Excelitas Technologies Corp.*,excelitas technologies,2,GREEN,0,1,1,1,GBDC,GC Advisors,Industrial Conglomerates,9.974,10.022,-0.0048,,,,False,,False,,2025-12-31,2025-12-31,1,GBDC,9.974
@@ -2961,12 +2961,12 @@ Clio,clio,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,,8.719,8.722,-0.0003,10/
 "Triple Lift, Inc.*",triple lift,2,GREEN,0,1,1,1,GBDC,GC Advisors,Media,8.627,8.742,-0.0132,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,8.627
 PS Op Holdings LLC,ps op,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Distribution,8.6,4.3,1.0,,,,False,,False,,2025-09-30,2025-12-31,2,OBDC,8.6
 Beren Therapeutics P.B.C.,beren therapeutics,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Drug Discovery & Development,8.588,8.573,0.0017,,2.45,245.0,False,,False,,2025-12-31,2025-12-31,1,HTGC,8.588
-"Bynder Bidco, Inc. (Netherlands)",bynder netherlands,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Internet Software and Services,8.5789,8.3396,0.0287,1/26/2029,6.0,,False,,False,,2025-09-30,2025-12-31,2,TCPC,8.5789
+"Bynder Bidco, Inc. (Netherlands)",bynder bv,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Internet Software and Services,8.5789,8.3396,0.0287,1/26/2029,6.0,,False,,False,,2025-09-30,2025-12-31,2,TCPC,8.5789
 Prometheus Group,prometheus group,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Internet software and services,8.549,8.444,0.0124,8/2031,,,False,,False,,2025-09-30,2025-12-31,2,OBDC,8.549
 "Thunder Purchaser, Inc. (Vector Solutions)",thunder vector,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Debt Investments (continued),8.5345,8.4913,0.0051,6/30/2028,5.36,,False,,False,,2025-09-30,2025-12-31,2,TCPC,8.5345
 "AAH TOPCO, LLC *",aah,2,GREEN,0,1,1,1,GBDC,GC Advisors,Healthcare Providers & Services,8.529,8.56,-0.0036,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,8.529
 Chronicle Parent LLC (Lexitas),chronicle lexitas,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Professional Services,8.5264,8.421,0.0125,4/15/2031,5.0,,False,,False,,2025-09-30,2025-12-31,2,TCPC,8.5264
-"KPCI Co-Invest 2, L.P.",kpci invest,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Healthcare equipment and services,8.516,8.516,0.0,,,,False,,False,,2025-12-31,2025-12-31,1,OBDC,8.516
+"KPCI Co-Invest 2, L.P.",kpci,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Healthcare equipment and services,8.516,8.516,0.0,,,,False,,False,,2025-12-31,2025-12-31,1,OBDC,8.516
 "Leo BuyerCo, LLC",leo buyerco,2,GREEN,0,1,1,1,CGBD,Carlyle Investment Management,Capital Equipment,8.425,8.426,-0.0001,11/25/2032,,,False,,False,,2025-12-31,2025-12-31,1,CGBD,8.425
 Formulations Parent Corp.,formulations,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Chemicals,8.408,8.341,0.008,11/15/2030,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,8.408
 Vantage Bidco GMBH,vantage gmbh,2,GREEN,0,1,1,1,GBDC,GC Advisors,,8.395,9.232,-0.0907,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,8.395
@@ -2989,7 +2989,7 @@ Sigma Irish Acquico Limited (Ireland),sigma irish,2,GREEN,0,1,1,1,CGBD,Carlyle I
 "Cresset Capital Management, LLC",cresset capital,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Financial services,7.797,7.724,0.0095,6/2030,,,False,,False,,2025-09-30,2025-12-31,2,OBDC,7.797
 "GrubMarket, Inc.",grubmarket,2,GREEN,0,1,1,1,TPVG,TriplePoint Advisers,Consumer Products and Services,7.758,0.0,,,,,False,,False,,2025-09-30,2025-12-31,2,TPVG,7.758
 "Financial Information Technologies, LLC",financial information,2,GREEN,0,1,1,1,GBDC,GC Advisors,Beverages,7.745,7.761,-0.0021,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,7.745
-CFC Group (CFC USA 2025 LLC),cfc group,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Insurance Brokers,7.66,7.92,-0.0328,7/1/2032,3.75,,False,,False,,2025-09-30,2025-12-31,2,OCSL,7.66
+CFC Group (CFC USA 2025 LLC),cfc usa,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Insurance Brokers,7.66,7.92,-0.0328,7/1/2032,3.75,,False,,False,,2025-09-30,2025-12-31,2,OCSL,7.66
 "Krayden Holdings, Inc.",krayden,2,GREEN,0,1,1,1,GBDC,GC Advisors,Chemicals,7.658,7.807,-0.0191,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,7.658
 "Safety Borrower Holdings, LP",safety,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Transportation Infrastructure,7.636,7.614,0.0029,12/19/2032,,,False,,False,,2025-12-31,2025-12-31,1,BXSL,7.636
 Nabors Industries Inc,nabors industries,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Oil & Gas Drilling,7.612,7.746,-0.0173,11/15/2032,,,False,,False,,2025-12-31,2025-12-31,1,OCSL,7.612
@@ -3003,7 +3003,7 @@ Enkindle Limited (United Kingdom),enkindle united,2,GREEN,0,1,1,1,CGBD,Carlyle I
 Carlyle Global Market Strategies,carlyle global,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Multi-Sector Holdings,7.459,7.15,0.0432,10/21/2037,7.5,,False,,False,,2025-12-31,2025-12-31,1,OCSL,7.459
 "Continental Finance Company, LLC",continental finance,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Financial services,7.444,7.438,0.0008,3/2029,,,False,,False,,2025-09-30,2025-12-31,2,OBDC,7.444
 "Cutover, Inc.",cutover,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Warrant Investments,7.419,7.331,0.012,,5.2,520.0,False,,False,,2025-09-30,2025-12-31,2,HTGC,7.419
-Connect Finco S.À.R.L.,connect srl,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Alternative Carriers,7.401,7.39,0.0015,9/27/2029,4.5,,False,,False,,2025-09-30,2025-12-31,2,OCSL,7.401
+Connect Finco S.À.R.L.,connect,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Alternative Carriers,7.401,7.39,0.0015,9/27/2029,4.5,,False,,False,,2025-09-30,2025-12-31,2,OCSL,7.401
 "CHHJ Midco, LLC*",chhj,2,GREEN,0,1,1,1,GBDC,GC Advisors,,7.357,7.376,-0.0026,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,7.357
 "Flight Schedule Pro, LLC",flight schedule,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Debt Investments,7.271,7.145,0.0176,,7.8,780.0,False,,False,,2025-09-30,2025-12-31,2,HTGC,7.271
 "Disco Parent, Inc. (Duck Creek Technologies)",disco duck,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Software,7.2466,6.9878,0.037,3/30/2029,7.5,,False,,False,,2025-09-30,2025-12-31,2,TCPC,7.2466
@@ -3122,7 +3122,7 @@ Parexel International Corp,parexel international,2,GREEN,0,1,1,1,OCSL,Oaktree Ca
 PowerSchool,powerschool,2,GREEN,0,1,1,1,OBDC,Blue Owl Credit Advisors,Education,3.883,2.308,0.6824,10/2031,,,False,,False,,2025-09-30,2025-12-31,2,OBDC,3.883
 StubHub Holdco Sub LLC,stubhub sub,2,GREEN,0,1,1,1,OCSL,Oaktree Capital Management,Movies & Entertainment,3.88,3.795,0.0224,3/15/2030,4.75,,False,,False,,2025-09-30,2025-12-31,2,OCSL,3.88
 Mpulse Mobile Inc.,mpulse mobile,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Health Care Technology,3.8675,3.8678,-0.0001,8/26/2032,4.75,,False,,False,,2025-09-30,2025-12-31,2,TCPC,3.8675
-"Northwinds Services Group, LLC",northwinds services,2,GREEN,0,1,1,1,PNNT,PennantPark Investment Advisers,Consumer Services,3.851,3.36,0.1461,,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,3.851
+"Northwinds Services Group, LLC",northwinds,2,GREEN,0,1,1,1,PNNT,PennantPark Investment Advisers,Consumer Services,3.851,3.36,0.1461,,,,False,,False,,2025-09-30,2025-12-31,2,PNNT,3.851
 SirionLabs Pte. Ltd.,sirionlabs pte,2,GREEN,0,1,1,1,HTGC,Hercules Capital (internal),Equity Investments,3.823,3.584,0.0667,,,,False,,False,,2025-09-30,2025-12-31,2,HTGC,3.823
 Eternal Aus Bidco Pty Ltd,eternal aus,2,GREEN,0,1,1,1,ARCC,Ares Capital Management,,3.8,3.7,0.027,10/2029,8.71,,False,,False,,2025-09-30,2025-12-31,2,ARCC,3.8
 Railpros Inc,railpros,2,GREEN,0,1,1,1,FSK,FS/KKR Advisor,Commercial & Professional Services,3.8,3.8,0.0,,,,False,,False,,2025-09-30,2025-12-31,2,FSK,3.8
@@ -3440,7 +3440,7 @@ Metrodora S.L.,metrodora sl,2,GREEN,0,1,1,1,BXSL,Blackstone Credit Advisors,Dive
 MXP Prime Platform GmbH (SellerX) (Germany),mxp prime,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Diversified Consumer Services,0.0667,0.0054,11.3519,,,,False,,False,,2025-12-31,2025-12-31,1,TCPC,0.0667
 "Vial Health Technology, Inc.",vial health,2,GREEN,0,1,1,1,TPVG,TriplePoint Advisers,Healthcare Services,0.066,0.033,1.0,,,,False,,False,,2025-09-30,2025-12-31,2,TPVG,0.066
 "US Chemical Technologies, Inc.",us chemical technologies,2,GREEN,0,1,1,1,TPVG,TriplePoint Advisers,Aerospace and Defense,0.053,0.0,,,,,False,,False,,2025-12-31,2025-12-31,1,TPVG,0.053
-Curia Receivables II SPV LLC,curia receivables,2,GREEN,0,1,1,1,FSK,FS/KKR Advisor,"Pharmaceuticals, Biotechnology & Life Sciences",0.0417,0.0417,0.0,,,,False,,False,,2025-12-31,2025-12-31,1,FSK,0.0417
+Curia Receivables II SPV LLC,curia global,2,GREEN,0,1,1,1,FSK,FS/KKR Advisor,"Pharmaceuticals, Biotechnology & Life Sciences",0.0417,0.0417,0.0,,,,False,,False,,2025-12-31,2025-12-31,1,FSK,0.0417
 "Health Buyer, LLC",health,2,GREEN,0,1,1,1,GBDC,GC Advisors,,0.038,0.038,0.0,,,,False,,False,,2025-09-30,2025-12-31,2,GBDC,0.038
 Fortna AR LLC,fortna ar,2,GREEN,0,1,1,1,FSK,FS/KKR Advisor,Capital Goods,0.0369,0.0369,0.0,,,,False,,False,,2025-12-31,2025-12-31,1,FSK,0.0369
 Razor Group GmbH (Germany),razor group,2,GREEN,0,1,1,1,TCPC,Tennenbaum Capital Partners (BlackRock),Diversified Consumer Services,0.0344,0.0009,37.2222,,,,False,,False,,2025-12-31,2025-12-31,1,TCPC,0.0344

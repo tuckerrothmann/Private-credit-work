@@ -1,1 +1,19 @@
 Family,Family Key,Borrower Count,Borrowers,Fund Count,Funds,Max Pair Similarity,Shared Fund Pairs,Total FV ($M),Override Applied,Reason
+"CG Group Holdings, LLC*",cg group,2,"CG Group Holdings, LLC, CG Group Holdings, LLC*",1,GBDC,0.0,1,95.215,False,Low token cohesion
+"Ro Health, LLC",ro health,2,"Ro Health Holdings, Inc., Ro Health, LLC",2,"PFLT, PNNT",0.0,1,75.756,False,Low token cohesion
+A.T. Holdings II Ltd.,at ii,2,"A.T. Holdings II Ltd., A.T. Holdings II SÀRL",1,OCSL,0.0,1,56.819,False,Low token cohesion
+"Health Buyer, LLC*",health,2,"Health Buyer, LLC, Health Buyer, LLC*",1,GBDC,0.0,1,6.613,False,Low token cohesion
+"Quorum Health Corp, Trade Claim",quorum health,2,"Quorum Health Corp, Trade Claim, Quorum Health Corp, Trust Initial Funding Units",1,FSK,0.333,1,0.0009,False,Low token cohesion
+"TPG IX Cardiff CI II, L.P.",tpg ix,2,"TPG IX Cardiff CI II, L.P., TPG IX Newark CI, LP",2,"ARCC, BXSL",0.5,0,39.966,False,No shared fund overlap
+"BlueCat Networks, Inc. (Canada)",bluecat networks,2,"BlueCat Networks USA, Inc., BlueCat Networks, Inc. (Canada)",2,"BXSL, CGBD",0.5,0,34.364,False,No shared fund overlap
+MRH Trowe Germany GMBH,mrh trowe,2,"MRH Trowe Beteiligungsgesellschaft mbH, MRH Trowe Germany GMBH",2,"BXSL, GBDC",0.5,0,7.362,False,No shared fund overlap
+Apex Group Limited,apex group,2,"Apex Group Limited, Apex Group Treasury Ltd",2,"FSK, OCSL",0.5,0,5.984,False,No shared fund overlap
+DOC Generici Srl,doc generici,2,"DOC Generici Srl, Doc Generici (Diocle S.p.A.)",2,"BXSL, FSK",0.667,0,15.52,False,No shared fund overlap
+Conergy Asia Holdings Limited (United Kingdom),conergy asia,2,"Conergy Asia & ME Pte. LTD., Conergy Asia Holdings Limited (United Kingdom)",2,"GSBD, TCPC",0.667,0,9.8883,False,No shared fund overlap
+"Motive Technologies, Inc. (Keep Truckin)",motive technologies,2,"Motive Technologies, Inc. (Keep Truckin), Motive Technologies, Inc. (Keep Trucking)",1,TCPC,0.667,1,110.4202,False,Low token cohesion
+"TCG 3.0 Jogger Acquisitionco, Inc.",tcg jogger,2,"TCG 3.0 Jogger Acquisitionco, Inc., TCG 3.0 Jogger Co-Invest, LP",2,"PFLT, PNNT",0.667,1,101.755,False,Low token cohesion
+"WCP Ivyrehab QP CF Feeder, LP",wcp ivyrehab,2,"WCP Ivyrehab Coinvestment, LP, WCP Ivyrehab QP CF Feeder, LP",2,"PFLT, PNNT",0.667,1,18.821,False,Low token cohesion
+Blue Owl Credit SLF LLC,blue owl,3,"Blue Owl Credit SLF LLC, Blue Owl Cross-Strategy Opportunities LLC, Blue Owl Leasing LLC",1,OBDC,0.667,3,1251.54,False,Low token cohesion
+Saluda Grade Alternative Mortgage Trust 2023-LOC2,saluda grade,2,"Saluda Grade Alternative Mortgage Trust 2022-BC2, Saluda Grade Alternative Mortgage Trust 2023-LOC2",1,FSK,0.714,1,10.4,False,Low token cohesion
+"Daylight Beta Parent LLC and CFCo, LLC",daylight beta,2,"Daylight Beta Parent LLC and CFCo, LLC, Daylight Beta Parent, LLC (Benefytt Technologies, Inc.)",2,"ARCC, BXSL",0.667,0,4.702,True,No shared fund overlap
+"Infolinks Media Buyco, LLC",infolinks media,2,"Infolinks Media Buyco, LLC, Tower Arch Infolinks Media, LP",3,"PFLT, PNNT, SCM",0.667,1,46.874,True,Low token cohesion

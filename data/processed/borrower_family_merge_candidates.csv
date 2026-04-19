@@ -1,1 +1,433 @@
 Borrower A,Borrower B,Family A,Family B,Similarity,Shared Tokens,Shared Fund Count,Shared Funds,Shared Manager Count,Shared Managers,Industry Match,Combined FV ($M),Suggested Family Key,Override Present
+"Associations, Inc.","Associations Finance, Inc.",associations,associations finance,1.0,associations,1,OBDC,1,Blue Owl Credit Advisors,True,1214.841,associations,False
+SLR Business Credit,SLR Credit Solutions,slr business,slr credit,1.0,"credit, slr",1,SLRC,1,SLR Capital Partners,True,827.62,credit slr,False
+Trinity Air Consultants Holdings Corp.,"Trinity Partners Holdings, LLC",trinity air,trinity partners,1.0,trinity,1,BXSL,1,Blackstone Credit Advisors,True,200.766,trinity,False
+"AGI Group Holdings, LP","AGI-CFI Holdings, Inc.",agi group,agi cfi,1.0,agi,1,BXSL,1,Blackstone Credit Advisors,True,195.48,agi,False
+"Frontline Road Safety, LLC","Safety Borrower Holdings, LP",frontline road,safety,1.0,safety,1,BXSL,1,Blackstone Credit Advisors,True,171.977,safety,False
+"PennantPark Senior Loan Fund, LLC","PennantPark-TSO Senior Loan Fund II, LP",pennantpark senior,pennantpark tso,1.0,"pennantpark, senior",1,PNNT,1,PennantPark Investment Advisers,True,153.564,pennantpark senior,False
+"Capstone Logistics Acquisition, Inc.","The RK Logistics Group, Inc.",capstone logistics,rk logistics,1.0,logistics,1,PSEC,1,Prospect Capital Management,True,152.8863,logistics,False
+"GMP Hills, LP","Hills Distribution, Inc.",gmp hills,hills distribution,1.0,hills,1,PNNT,1,PennantPark Investment Advisers,True,116.754,hills,False
+"Inception Fertility Ventures, LLC","The Fertility Partners, Inc.",inception fertility,fertility partners,1.0,fertility,1,BXSL,1,Blackstone Credit Advisors,True,109.067,fertility,False
+"Bayside Opco, LLC","Bayside Parent, LLC *",bayside opco,bayside,1.0,bayside,1,SLRC,1,SLR Capital Partners,True,84.977,bayside,False
+"Bayside Opco, LLC","Bayside Parent, LLC",bayside opco,bayside,1.0,bayside,1,SLRC,1,SLR Capital Partners,True,78.242,bayside,False
+Cubic Corp,"Cubic Corp, Warrant",cubic,cubic warrant,1.0,cubic,1,FSK,1,FS/KKR Advisor,True,65.076,cubic,False
+"Consello Pacific Aggregator, LLC","Pacific Purchaser, LLC",consello pacific,pacific,1.0,pacific,1,PNNT,1,PennantPark Investment Advisers,True,63.182,pacific,False
+"Helix TS, LLC","Ncp Helix Holdings, LLC",helix ts,ncp helix,1.0,helix,1,BXSL,1,Blackstone Credit Advisors,True,59.631,helix,False
+"Ideal Image Development, LLC","Ideal Topco, L.P.",ideal image,ideal,1.0,ideal,1,OBDC,1,Blue Owl Credit Advisors,True,54.967,ideal,False
+"GCX Corporation Buyer, LLC","GCX Corporation Group Holdings, L.P.",gcx,gcx group,1.0,gcx,1,BXSL,1,Blackstone Credit Advisors,True,52.258,gcx,False
+"Cf512, Inc.","StellPen Holdings, LLC (CF512, Inc.)",cf512,stellpen cf512,1.0,cf512,1,PFLT,1,PennantPark Investment Advisers,True,51.574,cf512,False
+"SunMed Group Holdings, LLC","SunMed Receivables I, LLC",sunmed group,sunmed receivables,1.0,sunmed,1,SLRC,1,SLR Capital Partners,True,48.59,sunmed,False
+"Razor Group Holdings II, Inc. (Germany)",Razor US LP,razor group,razor us,1.0,razor,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,47.9604,razor,False
+O6 Environmental,Triumvirate Environmental,o6 environmental,triumvirate environmental,1.0,environmental,1,GSBD,1,Goldman Sachs Asset Management,True,47.31,environmental,False
+"Bayside HoldCo, LLC","Bayside OPCP, LLC",bayside,bayside opcp,1.0,bayside,1,CGBD,1,Carlyle Investment Management,True,42.821,bayside,False
+MXP Prime Platform GmbH (SellerX) (Germany),SellerX Germany GmbH (Germany),mxp prime,sellerx germany,1.0,"germany, gmbh, sellerx",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,37.021,germany gmbh,False
+"Gauge Schlesinger Coinvest, LLC","Schlesinger Global, Inc.",gauge schlesinger,schlesinger global,1.0,schlesinger,1,PNNT,1,PennantPark Investment Advisers,True,36.592,schlesinger,False
+"Aphix Buyer, Inc.","Gauge APHIX Blocker, LLC",aphix,gauge aphix,1.0,aphix,1,PNNT,1,PennantPark Investment Advisers,True,34.219,aphix,False
+"Crane 1 Acquisition Parent Holdings, LP","Crane 1 Services, Inc.",crane,crane services,1.0,crane,1,PNNT,1,PennantPark Investment Advisers,True,28.126,crane,False
+"Hissho Parent, LLC","Hissho Sushi Holdings, LLC",hissho,hissho sushi,1.0,hissho,1,OBDC,1,Blue Owl Credit Advisors,True,26.075,hissho,False
+MXP Prime Platform GmbH (SellerX) (Germany),SellerX Germany GMBH & Co. KG (Germany),mxp prime,sellerx germany,1.0,"germany, gmbh, sellerx",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,25.3889,germany gmbh,False
+"MES Intermediate, Inc.","MES Internediate, Inc.",mes,mes internediate,1.0,mes,1,PFLT,1,PennantPark Investment Advisers,True,25.072,mes,False
+"First Medical Holdings, LLC","First Medical MSO, LLC",first medical,first medical mso,1.0,first,1,PNNT,1,PennantPark Investment Advisers,True,24.628,first,False
+O6 Environmental,Superior Environmental Solutions,o6 environmental,superior environmental,1.0,environmental,1,GSBD,1,Goldman Sachs Asset Management,True,23.829,environmental,False
+Razor Group GmbH (Germany),Razor US LP,razor group,razor us,1.0,razor,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,22.7457,razor,False
+Infinite Commerce Holdings LLC (Razor),Razor US LP,infinite commerce,razor us,1.0,razor,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,22.7118,razor,False
+"Go Car Wash Parent, Corp.","Quick Quack Car Wash Holdings, LLC",go car,quick quack,1.0,"car, wash",1,GBDC,1,GC Advisors,True,12.5681,car wash,False
+"Iracore International Holdings, Inc.","Iracore Investments Holdings, Inc.",iracore international,iracore investments,1.0,iracore,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,10.383,iracore,False
+"Pragmatic Holdco, Inc.","Pragmatic Institute, LLC",pragmatic,pragmatic institute,1.0,pragmatic,1,PFLT,1,PennantPark Investment Advisers,True,4.035,pragmatic,False
+"ST Coaches, LLC",Star Coaches Inc.,st coaches,star coaches,1.0,coaches,1,SLRC,1,SLR Capital Partners,True,2.153,coaches,False
+"Extreme Steel Crane & Rigging, LLC","U.S. Crane & Rigging, LLC",extreme steel,us crane rigging,1.0,"crane, rigging",1,SLRC,1,SLR Capital Partners,True,1.965,crane rigging,False
+"A&A Crane and Rigging, LLC","U.S. Crane & Rigging, LLC",aa crane,us crane rigging,1.0,"crane, rigging",1,SLRC,1,SLR Capital Partners,True,1.445,crane rigging,False
+"Summit Bidco, Inc. (Canada)","Summit K2 Midco, Inc.",summit canada,summit k2,1.0,summit,1,CGBD,1,Carlyle Investment Management,True,0.662,summit,False
+"GTCR/Jupiter Blocker, LLC","Jupiter Ultimate Holdings, LLC",gtcr jupiter,jupiter,1.0,jupiter,1,BXSL,1,Blackstone Credit Advisors,True,0.591,jupiter,False
+"MedeAnalytics Group Holdings, LLC","MedeAnalytics Parent, Inc.",medeanalytics group,medeanalytics,1.0,medeanalytics,1,GSBD,1,Goldman Sachs Asset Management,True,0.158,medeanalytics,False
+"MedeAnalytics, Inc.","MedeAnalytics Group Holdings, LLC",medeanalytics,medeanalytics group,1.0,medeanalytics,1,GSBD,1,Goldman Sachs Asset Management,True,0.156,medeanalytics,False
+"StellPen Holdings, LLC","StellPen Holdings, LLC (CF512, Inc.)",stellpen,stellpen cf512,1.0,stellpen,0,,1,PennantPark Investment Advisers,True,0.55,stellpen,False
+"World Associates Holdings, LLC","World Insurance Associates, LLC",world associates,world insurance associates,1.0,"associates, world",0,,0,,False,614.449,associates world,False
+"Chase Industries, Inc.","R-V Industries, Inc.",chase industries,rv industries,1.0,industries,0,,0,,True,421.397,industries,False
+"eResearchTechnology, Inc.","eResearchTechnology, Inc. and Astorg VII Co-Invest ERT",eresearchtechnology,eresearchtechnology and,1.0,eresearchtechnology,0,,0,,False,384.154,eresearchtechnology,False
+PCF Insurance Services,"Peter C. Foy & Associates Insurance Services, LLC (PCF Insurance)",pcf insurance,peter c,1.0,pcf,0,,0,,True,357.0777,pcf,False
+"Crewline Buyer, Inc. (New Relic)",New Relic,crewline new,new relic,1.0,"new, relic",0,,0,,False,309.4354,new relic,False
+Galway Borrower LLC,Galway Partners Holdings LLC,galway,galway partners,1.0,galway,0,,0,,True,249.586,galway,False
+"Kaseya, Inc.",Kaseya Inc. and Knockout Intermediate Holdings I Inc.,kaseya,kaseya and,1.0,kaseya,0,,0,,False,215.0204,kaseya,False
+Chronicle Parent LLC (Lexitas),Lexitas Inc,chronicle lexitas,lexitas,1.0,lexitas,0,,0,,True,210.6094,lexitas,False
+"WebPT, Inc.","WebPT, Inc. and WPT Intermediate Holdco, Inc.",webpt,webpt and,1.0,webpt,0,,0,,False,197.095,webpt,False
+"Thunder Purchaser, Inc. (Vector Solutions)",Vector Solutions,thunder vector,vector solutions,1.0,vector,0,,0,,False,193.4005,vector,False
+"Crewline Buyer, Inc.","Crewline Buyer, Inc. (New Relic)",crewline,crewline new,1.0,crewline,0,,0,,True,191.7824,crewline,False
+"PT Intermediate Holdings III, LLC","Thermostat Purchaser III, Inc. (Reedy Industries)",pt iii,thermostat iii,1.0,iii,0,,0,,True,189.9002,iii,False
+Nelipak Holding Company,"Nelipak Holding Company, Nelipak European Holdings Cooperatief U.A., KNPAK Holdings, LP and PAKNK Netherlands Treasury B.V.",nelipak,nelipak nelipak,1.0,nelipak,0,,0,,False,189.859,nelipak,False
+Insightsoftware,Insightsoftware.Com Inc,insightsoftware,insightsoftware com,1.0,insightsoftware,0,,0,,False,169.864,insightsoftware,False
+West Monroe,"West Monroe Partners, LLC",west monroe,west monroe partners,1.0,"monroe, west",0,,0,,False,157.047,monroe west,False
+NEOGOV,NeoGov Newt Holdco Inc,neogov,neogov newt,1.0,neogov,0,,0,,False,136.493,neogov,False
+HTI Logistics Corporation,"The RK Logistics Group, Inc.",hti logistics,rk logistics,1.0,logistics,0,,0,,True,118.9373,logistics,False
+"SelectQuote, Inc.","SelectQuote, Inc. and SQ ABS Issuer, LLC",selectquote,selectquote and,1.0,selectquote,0,,0,,False,112.762,selectquote,False
+Community Brands Inc,"Community Brands ParentCo, LLC",community brands,community brands parentco,1.0,"brands, community",0,,0,,False,112.0,brands community,False
+"Elemica Parent, Inc.","Elemica Parent, Inc. & EZ Elemica Holdings, Inc.",elemica,elemica ez,1.0,elemica,0,,0,,False,105.28,elemica,False
+"GS Acquisitionco, Inc.","Imagine Acquisitionco, Inc.",gs acquisitionco,imagine acquisitionco,1.0,acquisitionco,0,,0,,True,102.12,acquisitionco,False
+"Express Wash Acquisition Company, LLC","National Express Wash Parent Holdco, LLC",express wash,national express wash,1.0,"express, wash",0,,0,,True,100.539,express wash,False
+Smarsh Inc.,"Smarsh Inc. and Skywalker TopCo, LLC",smarsh,smarsh and,1.0,smarsh,0,,0,,False,99.359,smarsh,False
+Go Car Wash Management Corp.,"Quick Quack Car Wash Holdings, LLC and KKR Game Changer Co-Invest Feeder II L.P.",go car,quick quack,1.0,"car, wash",0,,0,,False,94.811,car wash,False
+"Fleet Farm Group, LLC","Mills Fleet Farm Group, LLC",fleet farm,mills fleet,1.0,"farm, fleet",0,,0,,False,79.6186,farm fleet,False
+"Majesco and Magic Topco, L.P.",Majesco*,majesco and,majesco,1.0,majesco,0,,0,,False,77.306,majesco,False
+"Bluefin Holding, LLC","Bluefin Holding, LLC (Allvue)",bluefin,bluefin allvue,1.0,bluefin,0,,0,,True,77.2013,bluefin,False
+Turnpoint,Turnpoint Services Inc,turnpoint,turnpoint services,1.0,turnpoint,0,,0,,False,75.457,turnpoint,False
+"Modernizing Medicine, Inc. and ModMed Software Midco Holdings, Inc.",ModMed,modernizing medicine,modmed,1.0,modmed,0,,0,,False,71.45,modmed,False
+"Magnesium BorrowerCo, Inc.","Mimecast Borrowerco, Inc. and Magnesium Co- Invest SCSp",magnesium borrowerco,mimecast borrowerco,1.0,"borrowerco, magnesium",0,,0,,False,66.67,borrowerco magnesium,False
+"Edition Holdings, Inc. and Enverus, Inc.","Enverus, Inc.",edition and,enverus,1.0,enverus,0,,0,,False,66.186,enverus,False
+"CVP Holdco, Inc.","CVP Holdco, Inc. and OMERS Wildcats Investment Holdings LLC",cvp,cvp and,1.0,cvp,0,,0,,False,65.738,cvp,False
+"Khoros, LLC","Khoros, LLC (Lithium)",khoros,khoros lithium,1.0,khoros,0,,0,,False,65.5926,khoros,False
+"Dynata, LLC","Research Now Group, LLC and Dynata, LLC",dynata,research now,1.0,dynata,0,,0,,False,64.7753,dynata,False
+Absorb Software,Rodeo Buyer Company & Absorb Software Inc.,absorb software,rodeo absorb,1.0,"absorb, software",0,,0,,False,64.713,absorb software,False
+"Edition Holdings, Inc.","Edition Holdings, Inc. and Enverus, Inc.",edition,edition and,1.0,edition,0,,0,,False,63.526,edition,False
+"Metatiedot Bidco Oy & Metatiedot US, LLC","Metatiedot US, LLC",metatiedot oy,metatiedot us,1.0,metatiedot,0,,0,,False,62.766,metatiedot,False
+"Help/Systems Holdings, Inc.","HS Purchaser, LLC, and Help/Systems Holdings, Inc.",help systems,hs and,1.0,help,0,,0,,False,62.238,help,False
+Cradle Lux Bidco S.A.R.L. and Hamilton Thorne Inc.,"Hamilton Thorne, Inc.",cradle lux,hamilton thorne,1.0,"hamilton, thorne",0,,0,,False,61.074,hamilton thorne,False
+"Serrano Parent, LLC (Sumo Logic)","Sumo Logic, Inc.",serrano sumo,sumo logic,1.0,"logic, sumo",0,,0,,False,59.5201,logic sumo,False
+"Blackbird Holdco, Inc.","Blackbird Holdco, Inc. (Ohio Transmission Corp.)",blackbird,blackbird ohio,1.0,blackbird,0,,0,,False,59.2842,blackbird,False
+Go Car Wash Management Corp.,"Quick Quack Car Wash Holdings, LLC",go car,quick quack,1.0,"car, wash",0,,0,,False,55.226,car wash,False
+Alcami Corporation,"Alcami Corporation and ACM Note Holdings, LLC",alcami,alcami and,1.0,alcami,0,,0,,False,55.0341,alcami,False
+"Go Car Wash Parent, Corp.","Quick Quack Car Wash Holdings, LLC and KKR Game Changer Co-Invest Feeder II L.P.",go car,quick quack,1.0,"car, wash",0,,0,,False,52.1531,car wash,False
+"Express Wash Intermediate, LLC","National Express Wash Parent Holdco, LLC",express wash,national express wash,1.0,"express, wash",0,,0,,False,52.126,express wash,False
+"RD Holdco, Inc. (Rug Doctor) Class C *","Rug Doctor, LLC.",rd rug,rug doctor,1.0,"doctor, rug",0,,0,,False,50.597,doctor rug,False
+Majesco,"Majesco and Magic Topco, L.P.",majesco,majesco and,1.0,majesco,0,,0,,False,50.177,majesco,False
+Go Car Wash Management Corp.,"Splash Car Wash, Inc.",go car,splash car,1.0,"car, wash",0,,0,,True,43.999,car wash,False
+Heartland,Heartland Veterinary Partners LLC,heartland,heartland veterinary,1.0,heartland,0,,0,,False,43.606,heartland,False
+Sphera,Sphera Solutions Inc,sphera,sphera solutions,1.0,sphera,0,,0,,False,42.305,sphera,False
+"Griffon Bidco, Inc.",Griffon Bidco Inc. (Layerzero),griffon,griffon layerzero,1.0,griffon,0,,0,,True,41.583,griffon,False
+"SelectQuote, Inc. and SQ ABS Issuer, LLC","SQ ABS Issuer, LLC",selectquote and,sq abs,1.0,abs,0,,0,,False,38.935,abs,False
+"RD Holdco, Inc. (Rug Doctor) *","Rug Doctor, LLC.",rd rug,rug doctor,1.0,"doctor, rug",0,,0,,False,37.189,doctor rug,False
+"RD Holdco, Inc. (Rug Doctor) Class B *","Rug Doctor, LLC.",rd rug,rug doctor,1.0,"doctor, rug",0,,0,,False,37.189,doctor rug,False
+"Oranje Holdco, Inc.","Oranje Holdco, Inc. (KnowBe4)",oranje,oranje knowbe4,1.0,oranje,0,,0,,False,34.7407,oranje,False
+"Crane 1 Services, Inc.","U.S. Crane & Rigging, LLC",crane services,us crane rigging,1.0,crane,0,,0,,True,29.258,crane,False
+"Crane 1 Services, Inc.",Nimble Crane LLC,crane services,nimble crane,1.0,crane,0,,0,,True,28.668,crane,False
+"Crane 1 Services, Inc.","Extreme Steel Crane & Rigging, LLC",crane services,extreme steel,1.0,crane,0,,0,,True,28.519,crane,False
+"A&A Crane and Rigging, LLC","Crane 1 Services, Inc.",aa crane,crane services,1.0,crane,0,,0,,True,27.999,crane,False
+Entrust,Entrust Solutions Group,entrust,entrust solutions,1.0,entrust,0,,0,,False,25.735,entrust,False
+Prometheus,Prometheus Group,prometheus,prometheus group,1.0,prometheus,0,,0,,False,23.079,prometheus,False
+"AthenaHealth Group Inc., Minerva Holdco, Inc. and BCPE Co-Invest , LP","Minerva Holdco, Inc.",athenahealth group,minerva,1.0,minerva,0,,0,,False,22.789,minerva,False
+Astra Acquisition Corp.,Astra Acquisition Corp. (Anthology),astra,astra anthology,1.0,astra,0,,0,,False,22.0043,astra,False
+"Applied Technical Services, LLC","Ironclad Holdco, LLC (Applied Technical Services, LLC)",applied technical,ironclad applied,1.0,"applied, technical",0,,0,,False,20.993,applied technical,False
+"Griffon Aggregator, Ltd.",Griffon Bidco Inc. (Layerzero),griffon,griffon layerzero,1.0,griffon,0,,0,,True,19.91,griffon,False
+Divisions Holding Corp.,"Divisions Holding Corporation, Divisions, Inc. and RC V Tecmo Investor LLC",divisions,divisions divisions,1.0,divisions,0,,0,,False,19.337,divisions,False
+Disco Parent Inc,"Disco Parent, Inc. (Duck Creek Technologies)",disco,disco duck,1.0,disco,0,,0,,False,8.8086,disco,False
+"ASM Buyer, Inc.","Legends Hospitality Holding Company, LLC, ASM Buyer, Inc., Legends ASM Holdco I, LLC, and Stadium Coinvest -III, L.P.",asm,legends hospitality,1.0,asm,0,,0,,False,8.569,asm,False
+"QNNECT, LLC","Qnnect, LLC and Connector TopCo, LP",qnnect,qnnect and,1.0,qnnect,0,,0,,False,6.135,qnnect,False
+"CoreLogic, Inc. and T-VIII Celestial Co-Invest LP","EP Purchaser, LLC and TPG VIII EP Co-Invest II, L.P.",corelogic and,ep and,0.75,"and, invest, viii",1,ARCC,1,Ares Capital Management,False,516.6,and invest,False
+"KKR Altitude II Offshore Aggregator LP, Partnership Interest","KKR Rocket Loans Aggregator LLC, Partnership Interest",kkr altitude,kkr rocket,0.75,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,False,151.109,interest kkr,False
+"KKR Altitude II Offshore Aggregator LP, Partnership Interest","KKR Chord IP Aggregator LP, Partnership Interest",kkr altitude,kkr chord,0.75,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,False,146.9071,interest kkr,False
+Big Bus Tours Group Limited (United Kingdom),Hadrian Acquisition Limited (United Kingdom),big bus,hadrian united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,85.393,kingdom limited,False
+Hadrian Acquisition Limited (United Kingdom),Orthrus Limited (United Kingdom),hadrian united,orthrus united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,True,69.422,kingdom limited,False
+Hadrian Acquisition Limited (United Kingdom),PAM Bidco Limited (United Kingdom),hadrian united,pam united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,69.314,kingdom limited,False
+Hadrian Acquisition Limited (United Kingdom),Vienna Bidco Limited (United Kingdom),hadrian united,vienna united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,67.669,kingdom limited,False
+Enkindle Limited (United Kingdom),Hadrian Acquisition Limited (United Kingdom),enkindle united,hadrian united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,True,65.574,kingdom limited,False
+"Merit Financial Group, LLC and CWC Fund I Co-Invest LP","Perigon Wealth Management, LLC, Perigon Wealth Advisors Holdings Company, LLC and CWC Fund I Co-Invest (Prism) LP",merit financial,perigon wealth,0.75,"and, cwc, invest",1,ARCC,1,Ares Capital Management,False,38.7,and cwc,False
+Big Bus Tours Group Limited (United Kingdom),Orthrus Limited (United Kingdom),big bus,orthrus united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,38.619,kingdom limited,False
+Big Bus Tours Group Limited (United Kingdom),PAM Bidco Limited (United Kingdom),big bus,pam united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,38.511,kingdom limited,False
+Big Bus Tours Group Limited (United Kingdom),Vienna Bidco Limited (United Kingdom),big bus,vienna united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,36.866,kingdom limited,False
+Big Bus Tours Group Limited (United Kingdom),Enkindle Limited (United Kingdom),big bus,enkindle united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,34.771,kingdom limited,False
+Orthrus Limited (United Kingdom),PAM Bidco Limited (United Kingdom),orthrus united,pam united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,22.54,kingdom limited,False
+Orthrus Limited (United Kingdom),Vienna Bidco Limited (United Kingdom),orthrus united,vienna united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,20.895,kingdom limited,False
+PAM Bidco Limited (United Kingdom),Vienna Bidco Limited (United Kingdom),pam united,vienna united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,20.787,kingdom limited,False
+"KKR Central Park Leasing Aggregator L.P., Partnership Interest","KKR Rocket Loans Aggregator LLC, Partnership Interest",kkr central,kkr rocket,0.75,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,False,20.1411,interest kkr,False
+Enkindle Limited (United Kingdom),Orthrus Limited (United Kingdom),enkindle united,orthrus united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,True,18.8,kingdom limited,False
+Enkindle Limited (United Kingdom),PAM Bidco Limited (United Kingdom),enkindle united,pam united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,18.692,kingdom limited,False
+Enkindle Limited (United Kingdom),Vienna Bidco Limited (United Kingdom),enkindle united,vienna united,0.75,"kingdom, limited, united",1,CGBD,1,Carlyle Investment Management,False,17.047,kingdom limited,False
+"KKR Central Park Leasing Aggregator L.P., Partnership Interest","KKR Chord IP Aggregator LP, Partnership Interest",kkr central,kkr chord,0.75,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,False,15.9392,interest kkr,False
+"KKR Rocket Loans Aggregator LLC, Partnership Interest","KKR Zeno Aggregator LP (K2 Aviation), Partnership Interest",kkr rocket,kkr zeno,0.75,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,False,11.503,interest kkr,False
+Conergy Asia Holdings Limited (United Kingdom),Worldremit Group Limited (United Kingdom),conergy asia,worldremit group,0.75,"kingdom, limited, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,9.7116,kingdom limited,False
+"KKR Chord IP Aggregator LP, Partnership Interest","KKR Zeno Aggregator LP (K2 Aviation), Partnership Interest",kkr chord,kkr zeno,0.75,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,False,7.3011,interest kkr,False
+"KKR Chord IP Aggregator LP, Partnership Interest","KKR Rocket Loans Aggregator LLC, Partnership Interest",kkr chord,kkr rocket,0.75,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,False,4.4021,interest kkr,False
+Plate Newco 1 Limited (Avanti) (United Kingdom),Worldremit Group Limited (United Kingdom),plate newco,worldremit group,0.75,"kingdom, limited, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,1.9017,kingdom limited,False
+Conergy Asia Holdings Limited (United Kingdom),Hadrian Acquisition Limited (United Kingdom),conergy asia,hadrian united,0.75,"kingdom, limited, united",0,,0,,False,66.9313,kingdom limited,False
+Hadrian Acquisition Limited (United Kingdom),Plate Newco 1 Limited (Avanti) (United Kingdom),hadrian united,plate newco,0.75,"kingdom, limited, united",0,,0,,False,59.1214,kingdom limited,False
+Hadrian Acquisition Limited (United Kingdom),Worldremit Group Limited (United Kingdom),hadrian united,worldremit group,0.75,"kingdom, limited, united",0,,0,,True,58.9763,kingdom limited,False
+Big Bus Tours Group Limited (United Kingdom),Worldremit Group Limited (United Kingdom),big bus,worldremit group,0.75,"kingdom, limited, united",0,,0,,False,28.1733,kingdom limited,False
+Conergy Asia Holdings Limited (United Kingdom),Orthrus Limited (United Kingdom),conergy asia,orthrus united,0.75,"kingdom, limited, united",0,,0,,False,20.1573,kingdom limited,False
+Conergy Asia Holdings Limited (United Kingdom),PAM Bidco Limited (United Kingdom),conergy asia,pam united,0.75,"kingdom, limited, united",0,,0,,False,20.0493,kingdom limited,False
+Conergy Asia Holdings Limited (United Kingdom),Vienna Bidco Limited (United Kingdom),conergy asia,vienna united,0.75,"kingdom, limited, united",0,,0,,False,18.4043,kingdom limited,False
+Conergy Asia Holdings Limited (United Kingdom),Enkindle Limited (United Kingdom),conergy asia,enkindle united,0.75,"kingdom, limited, united",0,,0,,False,16.3093,kingdom limited,False
+Orthrus Limited (United Kingdom),Plate Newco 1 Limited (Avanti) (United Kingdom),orthrus united,plate newco,0.75,"kingdom, limited, united",0,,0,,False,12.3474,kingdom limited,False
+PAM Bidco Limited (United Kingdom),Plate Newco 1 Limited (Avanti) (United Kingdom),pam united,plate newco,0.75,"kingdom, limited, united",0,,0,,False,12.2394,kingdom limited,False
+Orthrus Limited (United Kingdom),Worldremit Group Limited (United Kingdom),orthrus united,worldremit group,0.75,"kingdom, limited, united",0,,0,,True,12.2023,kingdom limited,False
+PAM Bidco Limited (United Kingdom),Worldremit Group Limited (United Kingdom),pam united,worldremit group,0.75,"kingdom, limited, united",0,,0,,False,12.0943,kingdom limited,False
+Plate Newco 1 Limited (Avanti) (United Kingdom),Vienna Bidco Limited (United Kingdom),plate newco,vienna united,0.75,"kingdom, limited, united",0,,0,,False,10.5944,kingdom limited,False
+Vienna Bidco Limited (United Kingdom),Worldremit Group Limited (United Kingdom),vienna united,worldremit group,0.75,"kingdom, limited, united",0,,0,,False,10.4493,kingdom limited,False
+Enkindle Limited (United Kingdom),Plate Newco 1 Limited (Avanti) (United Kingdom),enkindle united,plate newco,0.75,"kingdom, limited, united",0,,0,,False,8.4994,kingdom limited,False
+Enkindle Limited (United Kingdom),Worldremit Group Limited (United Kingdom),enkindle united,worldremit group,0.75,"kingdom, limited, united",0,,0,,True,8.3543,kingdom limited,False
+"Sunrun Atlas Holdings 2019-2, LLC","Sunrun Xanadu Issuer 2019-1, LLC",sunrun atlas,sunrun xanadu,0.667,"2019, sunrun",1,ARCC,1,Ares Capital Management,True,487.2,2019 sunrun,False
+Optimizely North America Inc.,"Tufin Software North America, Inc.",optimizely north,tufin software,0.667,"america, north",1,CGBD,1,Carlyle Investment Management,False,173.66,america north,False
+Cority Software Inc. (Canada),Prophix Software Inc. (Canada),cority software,prophix software,0.667,"canada, software",1,CGBD,1,Carlyle Investment Management,True,83.667,canada software,False
+Dance Midco S.a.r.l. (United Kingdom),Hadrian Acquisition Limited (United Kingdom),dance united,hadrian united,0.667,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,75.107,kingdom united,False
+"North Haven Fairway Buyer, LLC","North Haven Goldfinch Topco, LLC",north haven fairway,north haven goldfinch,0.667,"haven, north",1,CGBD,1,Carlyle Investment Management,False,52.465,haven north,False
+ResearchGate GmBH (Germany),SellerX Germany GmbH (Germany),researchgate germany,sellerx germany,0.667,"germany, gmbh",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,44.4268,germany gmbh,True
+Big Bus Tours Group Limited (United Kingdom),Dance Midco S.a.r.l. (United Kingdom),big bus,dance united,0.667,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,44.304,kingdom united,False
+"North Haven Falcon Buyer, LLC","North Haven Stack Buyer, LLC",north haven falcon,north haven stack,0.667,"haven, north",1,GBDC,1,GC Advisors,False,42.755,haven north,False
+CWC Fund I Co-Invest (ALTI) LP,"Merit Financial Group, LLC and CWC Fund I Co-Invest LP",cwc fund,merit financial,0.667,"cwc, invest",1,ARCC,1,Ares Capital Management,False,39.6,cwc invest,False
+Razor Group GmbH (Germany),SellerX Germany GmbH (Germany),razor group,sellerx germany,0.667,"germany, gmbh",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,36.9887,germany gmbh,False
+ResearchGate GmBH (Germany),SellerX Germany GMBH & Co. KG (Germany),researchgate germany,sellerx germany,0.667,"germany, gmbh",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,32.7947,germany gmbh,True
+Pineapple German Bidco GMBH,Varinem German Midco GMBH,pineapple german,varinem german,0.667,"german, gmbh",1,GBDC,1,GC Advisors,False,32.162,german gmbh,False
+Dance Midco S.a.r.l. (United Kingdom),Orthrus Limited (United Kingdom),dance united,orthrus united,0.667,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,28.333,kingdom united,False
+Dance Midco S.a.r.l. (United Kingdom),PAM Bidco Limited (United Kingdom),dance united,pam united,0.667,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,28.225,kingdom united,False
+Dance Midco S.a.r.l. (United Kingdom),Vienna Bidco Limited (United Kingdom),dance united,vienna united,0.667,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,26.58,kingdom united,False
+Razor Group GmbH (Germany),SellerX Germany GMBH & Co. KG (Germany),razor group,sellerx germany,0.667,"germany, gmbh",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,25.3566,germany gmbh,False
+"North Haven Falcon Buyer, LLC","North Haven Stack Buyer, LLC*",north haven falcon,north haven stack,0.667,"haven, north",1,GBDC,1,GC Advisors,False,24.532,haven north,False
+Dance Midco S.a.r.l. (United Kingdom),Enkindle Limited (United Kingdom),dance united,enkindle united,0.667,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,24.485,kingdom united,False
+"Ascent Resources Utica Holdings LLC / ARU Finance Corp, Trade Claim","Quorum Health Corp, Trade Claim",ascent resources,quorum health,0.667,"claim, trade",1,FSK,1,FS/KKR Advisor,False,17.7007,claim trade,False
+Ardonagh Midco 3 PLC (United Kingdom),Dance Midco S.a.r.l. (United Kingdom),ardonagh plc,dance united,0.667,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,17.246,kingdom united,False
+CWC Fund I Co-Invest (ALTI) LP,"Perigon Wealth Management, LLC, Perigon Wealth Advisors Holdings Company, LLC and CWC Fund I Co-Invest (Prism) LP",cwc fund,perigon wealth,0.667,"cwc, invest",1,ARCC,1,Ares Capital Management,False,13.9,cwc invest,False
+MXP Prime Platform GmbH (SellerX) (Germany),ResearchGate GmBH (Germany),mxp prime,researchgate germany,0.667,"germany, gmbh",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,7.5392,germany gmbh,True
+Razor Group GmbH (Germany),ResearchGate GmBH (Germany),razor group,researchgate germany,0.667,"germany, gmbh",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,7.5069,germany gmbh,True
+Arrotex Australia Group Pty Ltd,iNova Pharmaceuticals (Australia) Pty Limited,arrotex australia,inova pharmaceuticals,0.667,"australia, pty",1,FSK,1,FS/KKR Advisor,True,5.1,australia pty,False
+"Galaxy Universal LLC, Trade Claim","Quorum Health Corp, Trade Claim",galaxy universal,quorum health,0.667,"claim, trade",1,FSK,1,FS/KKR Advisor,False,2.5017,claim trade,False
+"Gauge Lash Coinvest, LLC","Gauge Schlesinger Coinvest, LLC",gauge lash,gauge schlesinger,0.667,"coinvest, gauge",1,PNNT,1,PennantPark Investment Advisers,False,2.444,coinvest gauge,False
+"Complete Equipment Rentals, LLC","Trinity Equipment Rentals, Inc.",complete equipment,trinity equipment,0.667,"equipment, rentals",1,SLRC,1,SLR Capital Partners,True,1.578,equipment rentals,False
+"A&A Crane and Rigging, LLC","Extreme Steel Crane & Rigging, LLC",aa crane,extreme steel,0.667,"crane, rigging",1,SLRC,1,SLR Capital Partners,True,0.706,crane rigging,False
+MXP Prime Platform GmbH (SellerX) (Germany),Razor Group GmbH (Germany),mxp prime,razor group,0.667,"germany, gmbh",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,0.1011,germany gmbh,False
+"GSF Group Holdings, L.P. Class A2 Units","Naumann Hobbs Holdings, L.P. Class A-1 Units",gsf group,naumann hobbs,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+"GSF Group Holdings, L.P. Class A2 Units","Naumann Hobbs Holdings, L.P. Class A-2 Units",gsf group,naumann hobbs,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+"GSF Group Holdings, L.P. Class A2 Units","Naumann Hobbs Holdings, L.P. Class W-2 Units",gsf group,naumann hobbs,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+"GSF Group Holdings, L.P. Class A2 Units",Impact Holdings Georgia LLC Class A-1 Units,gsf group,impact georgia,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+"Mari Miami II LLC and South Florida Tennis, LLC","South Florida Motorsports, LLC",mari miami,south florida motorsports,0.667,"florida, south",1,ARCC,1,Ares Capital Management,False,0.0,florida south,False
+Cority Software Inc. (Canada),"Elastic Path Software, Inc. (Canada)",cority software,elastic path,0.667,"canada, software",0,,0,,True,68.6389,canada software,False
+"Elastic Path Software, Inc. (Canada)",Prophix Software Inc. (Canada),elastic path,prophix software,0.667,"canada, software",0,,0,,True,57.5239,canada software,False
+Essential Services Holding Corporation and OMERS Mahomes Investment Holdings LLC,"Modigent, LLC and OMERS PMC Investment Holdings LLC",essential services,modigent and,0.6,"and, investment, omers",1,ARCC,1,Ares Capital Management,False,403.1,and investment,False
+"CVP Holdco, Inc. and OMERS Wildcats Investment Holdings LLC",Essential Services Holding Corporation and OMERS Mahomes Investment Holdings LLC,cvp and,essential services,0.6,"and, investment, omers",1,ARCC,1,Ares Capital Management,False,395.8,and investment,False
+Essential Services Holding Corporation and OMERS Mahomes Investment Holdings LLC,Premise Health Holding Corp. and OMERS Bluejay Investment Holdings LP,essential services,premise health,0.6,"and, investment, omers",1,ARCC,1,Ares Capital Management,False,344.3,and investment,False
+"KKR Altitude II Offshore Aggregator LP, Partnership Interest","KKR Central Park Leasing Aggregator L.P., Partnership Interest",kkr altitude,kkr central,0.6,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,True,162.6461,interest kkr,False
+"KKR Altitude II Offshore Aggregator LP, Partnership Interest","KKR Zeno Aggregator LP (K2 Aviation), Partnership Interest",kkr altitude,kkr zeno,0.6,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,True,154.008,interest kkr,False
+"CVP Holdco, Inc. and OMERS Wildcats Investment Holdings LLC","Modigent, LLC and OMERS PMC Investment Holdings LLC",cvp and,modigent and,0.6,"and, investment, omers",1,ARCC,1,Ares Capital Management,False,110.3,and investment,False
+"Modigent, LLC and OMERS PMC Investment Holdings LLC",Premise Health Holding Corp. and OMERS Bluejay Investment Holdings LP,modigent and,premise health,0.6,"and, investment, omers",1,ARCC,1,Ares Capital Management,False,58.8,and investment,False
+"Mimecast Borrowerco, Inc. and Magnesium Co- Invest SCSp","Spirit RR Holdings, Inc. and Winterfell Co-Invest SCSp",mimecast borrowerco,spirit rr,0.6,"and, invest, scsp",1,ARCC,1,Ares Capital Management,False,56.9,and invest,False
+"CVP Holdco, Inc. and OMERS Wildcats Investment Holdings LLC",Premise Health Holding Corp. and OMERS Bluejay Investment Holdings LP,cvp and,premise health,0.6,"and, investment, omers",1,ARCC,1,Ares Capital Management,False,51.5,and investment,False
+"KKR Central Park Leasing Aggregator L.P., Partnership Interest","KKR Zeno Aggregator LP (K2 Aviation), Partnership Interest",kkr central,kkr zeno,0.6,"interest, kkr, partnership",1,FSK,1,FS/KKR Advisor,True,23.0401,interest kkr,False
+Conergy Asia Holdings Limited (United Kingdom),Plate Newco 1 Limited (Avanti) (United Kingdom),conergy asia,plate newco,0.6,"kingdom, limited, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,9.8567,kingdom limited,False
+"ACP Avenu Buyer, LLC","ACP Falcon Buyer, Inc.",acp avenu,acp falcon,0.5,acp,2,"PFLT, PNNT",1,PennantPark Investment Advisers,True,200.012,acp,False
+"First Medical MSO, LLC","Rancho Health MSO, Inc.",first medical mso,rancho health,0.5,mso,2,"PFLT, PNNT",1,PennantPark Investment Advisers,True,130.003,mso,False
+"Emergency Care Partners, LLC","Eval Home Care Solutions Intermediate, LLC",emergency care,eval home,0.5,care,2,"PFLT, PNNT",1,PennantPark Investment Advisers,True,124.444,care,False
+"Imagine Acquisitionco, Inc.","Megawatt Acquisitionco, Inc.",imagine acquisitionco,megawatt acquisitionco,0.5,acquisitionco,2,"PFLT, PNNT",1,PennantPark Investment Advisers,True,94.616,acquisitionco,False
+"Apex Service Partners, LLC",Service Express Inc,apex service,service express,0.5,service,1,FSK,1,FS/KKR Advisor,True,916.66,service,False
+"Gehl Foods, LLC",Winland Foods,gehl foods,winland foods,0.5,foods,1,OBDC,1,Blue Owl Credit Advisors,True,807.7,foods,False
+"Apex Service Partners, LLC",Service Logic LLC,apex service,service logic,0.5,service,1,FSK,1,FS/KKR Advisor,True,799.46,service,False
+"Eagle Family Foods Group, LLC",Winland Foods,eagle family,winland foods,0.5,foods,1,OBDC,1,Blue Owl Credit Advisors,True,661.027,foods,False
+SLR Credit Solutions,SLR Healthcare ABL,slr credit,slr healthcare,0.5,slr,1,SLRC,1,SLR Capital Partners,True,650.4,slr,False
+Dental Care Alliance Inc,"MB2 Dental Solutions, LLC",dental care,mb2 dental,0.5,dental,1,FSK,1,FS/KKR Advisor,True,650.148,dental,False
+Shearer's Foods,Winland Foods,shearer s,winland foods,0.5,foods,1,OBDC,1,Blue Owl Credit Advisors,True,632.348,foods,False
+DuBois Chemical,"Gaylord Chemical Company, L.L.C.",dubois chemical,gaylord chemical,0.5,chemical,1,OBDC,1,Blue Owl Credit Advisors,True,461.119,chemical,False
+Colosseum Dental Group,"MB2 Dental Solutions, LLC",colosseum dental,mb2 dental,0.5,dental,1,FSK,1,FS/KKR Advisor,True,447.648,dental,False
+"Eagle Infrastructure Services, LLC",Valor Compute Infrastructure L.P.,eagle infrastructure,valor compute,0.5,infrastructure,1,OBDC,1,Blue Owl Credit Advisors,True,404.428,infrastructure,False
+"PetVet Care Centers, LLC",US Renal Care Inc.,petvet care,us renal care,0.5,care,1,OCSL,1,Oaktree Capital Management,True,359.877,care,False
+Affordable Care Inc,Dental Care Alliance Inc,affordable care,dental care,0.5,care,1,FSK,1,FS/KKR Advisor,True,354.1,care,False
+SLR Business Credit,SLR Healthcare ABL,slr business,slr healthcare,0.5,slr,1,SLRC,1,SLR Capital Partners,True,339.52,slr,False
+"Divisions Holding Corporation, Divisions, Inc. and RC V Tecmo Investor LLC",Neptune Bidco US Inc. and Elliott Metron Co-Investor Aggregator L.P.,divisions divisions,neptune us,0.5,"and, investor",1,ARCC,1,Ares Capital Management,False,244.9,and investor,False
+Acron Aviation,STS Aviation Group,acron aviation,sts aviation,0.5,aviation,1,OBDC,1,Blue Owl Credit Advisors,True,237.5048,aviation,False
+Colosseum Dental Group,Dental Care Alliance Inc,colosseum dental,dental care,0.5,dental,1,FSK,1,FS/KKR Advisor,True,225.9,dental,False
+"Eagle Family Foods Group, LLC","Gehl Foods, LLC",eagle family,gehl foods,0.5,foods,1,OBDC,1,Blue Owl Credit Advisors,True,205.921,foods,False
+Affordable Care Inc,One Call Care Management Inc,affordable care,one call,0.5,care,1,FSK,1,FS/KKR Advisor,True,201.1,care,False
+Service Express Inc,Service Logic LLC,service express,service logic,0.5,service,1,FSK,1,FS/KKR Advisor,True,198.8,service,False
+"Gehl Foods, LLC",Shearer's Foods,gehl foods,shearer s,0.5,foods,1,OBDC,1,Blue Owl Credit Advisors,True,177.242,foods,False
+"Lido Advisors, LLC and LAL Group Holdings, LLC","Waverly Advisors, LLC and WAAM Topco, LLC",lido advisors,waverly advisors,0.5,"advisors, and",1,ARCC,1,Ares Capital Management,False,166.4,advisors and,False
+"JobandTalent USA, Inc. (United Kingdom)","OpenMarket, Inc. (Infobip) (United Kingdom)",jobandtalent usa,openmarket infobip,0.5,"kingdom, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,156.831,kingdom united,False
+Altitude II IRL WH Borrower DAC,"KKR Altitude II Offshore Aggregator LP, Partnership Interest",altitude ii,kkr altitude,0.5,altitude,1,FSK,1,FS/KKR Advisor,True,156.607,altitude,False
+Arcwood Environmental,Heritage Environmental Services Inc,arcwood environmental,heritage environmental,0.5,environmental,1,FSK,1,FS/KKR Advisor,True,150.1,environmental,False
+"Express Wash Acquisition Company, LLC",Wash & Wax Systems LLC,express wash,wash wax,0.5,wash,1,PFLT,1,PennantPark Investment Advisers,True,139.033,wash,False
+Conergy Asia Holdings Limited (United Kingdom),"JobandTalent USA, Inc. (United Kingdom)",conergy asia,jobandtalent usa,0.5,"kingdom, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,137.0224,kingdom united,False
+"JobandTalent USA, Inc. (United Kingdom)",Plate Newco 1 Limited (Avanti) (United Kingdom),jobandtalent usa,plate newco,0.5,"kingdom, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,129.2125,kingdom united,False
+"JobandTalent USA, Inc. (United Kingdom)",Worldremit Group Limited (United Kingdom),jobandtalent usa,worldremit group,0.5,"kingdom, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,129.0674,kingdom united,False
+Com Laude Group Ltd,Insightsoftware.Com Inc,com laude,insightsoftware com,0.5,com,1,FSK,1,FS/KKR Advisor,True,127.5,com,False
+"Arcus Biosciences, Inc.","Dare Biosciences, Inc.",arcus biosciences,dare biosciences,0.5,biosciences,1,HTGC,1,Hercules Capital (internal),True,122.045,biosciences,False
+"OSP PAR Holdings, LP","PAR Excellence Holdings, Inc.",osp par,par excellence,0.5,par,1,PNNT,1,PennantPark Investment Advisers,True,121.63,par,False
+"Inventus Power, Inc.","Power Grid Holdings, Inc.",inventus power,power grid,0.5,power,1,GBDC,1,GC Advisors,True,121.548,power,False
+"OSP PAR Aggregator, LP","PAR Excellence Holdings, Inc.",osp par,par excellence,0.5,par,1,PFLT,1,PennantPark Investment Advisers,True,121.5,par,False
+Optimizely North America Inc.,Optimizely Sweden Holdings AB,optimizely north,optimizely sweden,0.5,optimizely,1,OCSL,1,Oaktree Capital Management,True,119.256,optimizely,False
+"Gauge Lash Coinvest, LLC","Lash OpCo, LLC",gauge lash,lash opco,0.5,lash,1,PNNT,1,PennantPark Investment Advisers,True,115.432,lash,False
+GoEuro Travel GmbH,"Peek Travel, Inc.",goeuro travel,peek travel,0.5,travel,1,HTGC,1,Hercules Capital (internal),True,113.856,travel,False
+"Perigon Wealth Management, LLC, Perigon Wealth Advisors Holdings Company, LLC and CWC Fund I Co-Invest (Prism) LP","Waverly Advisors, LLC and WAAM Topco, LLC",perigon wealth,waverly advisors,0.5,"advisors, and",1,ARCC,1,Ares Capital Management,False,100.7,advisors and,False
+Streamland Media Midco LLC,"Terraboost Media Operating Company, LLC",streamland media,terraboost media,0.5,media,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,95.0254,media,False
+Inovar Packaging Group,PPC Flexible Packaging,inovar packaging,ppc flexible,0.5,packaging,1,OBDC,1,Blue Owl Credit Advisors,True,93.233,packaging,False
+"Express Wash Intermediate, LLC",Wash & Wax Systems LLC,express wash,wash wax,0.5,wash,1,PNNT,1,PennantPark Investment Advisers,True,90.62,wash,False
+"DOXA Insurance Holdings LLC and Rocket Co-Invest, SLP","Raptor Technologies, LLC, Sycamore Bidco LTD and Rocket Parent, LLC",doxa insurance,raptor technologies,0.5,"and, rocket",1,ARCC,1,Ares Capital Management,False,84.2,and rocket,False
+Adaptimmune Therapeutics plc,COMPASS Pathways plc,adaptimmune therapeutics,compass pathways,0.5,plc,1,HTGC,1,Hercules Capital (internal),True,82.524,plc,False
+"Higginbotham Insurance Agency, Inc.",Keystone Agency Partners LLC,higginbotham insurance,keystone agency,0.5,agency,1,FSK,1,FS/KKR Advisor,True,81.218,agency,False
+"Lido Advisors, LLC and LAL Group Holdings, LLC","Perigon Wealth Management, LLC, Perigon Wealth Advisors Holdings Company, LLC and CWC Fund I Co-Invest (Prism) LP",lido advisors,perigon wealth,0.5,"advisors, and",1,ARCC,1,Ares Capital Management,False,78.7,advisors and,False
+"COP Home Services TopCo IV, Inc.","Home Service TopCo IV, Inc.",cop home,home service,0.5,home,1,BXSL,1,Blackstone Credit Advisors,True,77.092,home,False
+"Stoke Space Technologies, Inc.",Subtotal: Space Technologies ( 2.30 %)*,stoke space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,76.786,space,False
+"K2 Towers III, LLC",Tarpon Towers II LLC,k2 towers,tarpon towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,75.501,towers,False
+"Fertility Investment Holdco, LLC","Pinnacle Fertility, Inc.",fertility investment,pinnacle fertility,0.5,fertility,1,SLRC,1,SLR Capital Partners,True,73.626,fertility,False
+"ONS MSO, LLC","United Digestive MSO Parent, LLC",ons mso,united digestive mso,0.5,mso,1,SLRC,1,SLR Capital Partners,True,70.871,mso,False
+"K2 Towers III, LLC",Skyway Towers Intermediate LLC,k2 towers,skyway towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,70.401,towers,False
+"AFC Acquisitions, Inc. (F-2 Series)",AFC-Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,67.967,afc,False
+"AFC Acquisitions, Inc. (J-2 Series)",AFC-Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,67.168,afc,False
+"AFC Acquisitions, Inc. (G-2 Series)",AFC-Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,67.167,afc,False
+"AFC Acquisitions, Inc. (H-2 Series)",AFC-Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,67.161,afc,False
+"AFC Acquisitions, Inc. (I-2 Series)",AFC-Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,67.159,afc,False
+"Cart.Com, Inc.","Integrate.com, Inc.",cart com,integrate com,0.5,com,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,65.9654,com,False
+Fidelity Payment Services,Priority Payment,fidelity payment,priority payment,0.5,payment,1,GSBD,1,Goldman Sachs Asset Management,True,63.558,payment,False
+Alpha Financial Markets Consulting PLC,CLEAResult Consulting Inc,alpha financial,clearesult consulting,0.5,consulting,1,FSK,1,FS/KKR Advisor,True,63.4,consulting,False
+"K2 Towers III, LLC",Octagon Towers LLC,k2 towers,octagon towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,62.459,towers,False
+"Razor Group Holdings II, Inc. (Germany)",SellerX Germany GmbH (Germany),razor group,sellerx germany,0.5,germany,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,62.2034,germany,False
+"Boss Industries, LLC","GCP Boss Holdco, LLC",boss industries,gcp boss,0.5,boss,1,PNNT,1,PennantPark Investment Advisers,True,59.205,boss,False
+Ardonagh Midco 3 PLC (United Kingdom),Hadrian Acquisition Limited (United Kingdom),ardonagh plc,hadrian united,0.5,"kingdom, united",1,CGBD,1,Carlyle Investment Management,True,58.335,kingdom united,False
+Superior Environmental Solutions,Triumvirate Environmental,superior environmental,triumvirate environmental,0.5,environmental,1,GSBD,1,Goldman Sachs Asset Management,True,57.729,environmental,False
+Harmoni Towers,"K2 Towers III, LLC",harmoni towers,k2 towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,56.658,towers,False
+Bicycle Therapeutics PLC,COMPASS Pathways plc,bicycle therapeutics,compass pathways,0.5,plc,1,HTGC,1,Hercules Capital (internal),True,53.394,plc,False
+"Eagle Family Foods Group, LLC","Rubix Foods, LLC",eagle family,rubix foods,0.5,foods,1,GSBD,1,Goldman Sachs Asset Management,True,52.503,foods,False
+DECA Dental Holdings LLC,"Highfive Dental Holdco, LLC",deca dental,highfive dental,0.5,dental,1,GSBD,1,Goldman Sachs Asset Management,True,52.396,dental,False
+"Active Day, Inc.*",Opening Day Borrower 111 LLC,active day,opening day,0.5,day,1,GBDC,1,GC Advisors,True,52.17,day,False
+"Active Day, Inc.",Opening Day Borrower 111 LLC,active day,opening day,0.5,day,1,GBDC,1,GC Advisors,True,51.662,day,False
+MC Accelerate Co-Invest Feeder LP and MC CIF Wealth Management Ltd.,"Quick Quack Car Wash Holdings, LLC and KKR Game Changer Co-Invest Feeder II L.P.",mc accelerate,quick quack,0.5,"and, feeder, invest",1,ARCC,1,Ares Capital Management,False,51.6,and feeder,False
+"Nest Topco Borrower Inc., KKR Nest Co-Invest L.P., and NBLY 2021-1","Quick Quack Car Wash Holdings, LLC and KKR Game Changer Co-Invest Feeder II L.P.",nest kkr,quick quack,0.5,"and, invest, kkr",1,ARCC,1,Ares Capital Management,False,51.6,and invest,False
+"Razor Group Holdings II, Inc. (Germany)",SellerX Germany GMBH & Co. KG (Germany),razor group,sellerx germany,0.5,germany,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,50.5713,germany,False
+"Madison Logic Holdings, Inc.","Serrano Parent, LLC (Sumo Logic)",madison logic,serrano sumo,0.5,logic,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,49.9755,logic,False
+Eyesouth Eye Care Holdco LLC,US Renal Care Inc.,eyesouth eye,us renal care,0.5,care,1,OCSL,1,Oaktree Capital Management,True,49.262,care,False
+DECA Dental Holdings LLC,Specialty Dental Brands,deca dental,specialty dental,0.5,dental,1,GSBD,1,Goldman Sachs Asset Management,True,48.459,dental,False
+Capella Space Corp.,Subtotal: Space Technologies ( 2.30 %)*,capella space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,45.7,space,False
+Scorpio BidCo SAS,"Tango Bidco, SAS",scorpio sas,tango sas,0.5,sas,1,BXSL,1,Blackstone Credit Advisors,True,40.503,sas,False
+Skyway Towers Intermediate LLC,Tarpon Towers II LLC,skyway towers,tarpon towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,40.198,towers,False
+"Higginbotham Insurance Agency, Inc.",Oakbridge Insurance Agency LLC,higginbotham insurance,oakbridge insurance,0.5,agency,1,GBDC,1,GC Advisors,True,39.978,agency,False
+"Ascent Resources Utica Holdings LLC / ARU Finance Corp, Trade Claim",Warren Resources Inc,ascent resources,warren resources,0.5,resources,1,FSK,1,FS/KKR Advisor,True,38.7,resources,False
+Conergy Asia Holdings Limited (United Kingdom),"OpenMarket, Inc. (Infobip) (United Kingdom)",conergy asia,openmarket infobip,0.5,"kingdom, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,37.4752,kingdom united,False
+"Stoke Space Technologies, Inc.",Subtotal: Space Technologies ( 0.12 %)*,stoke space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,33.864,space,False
+GTCR Investors LP,"GTCR/Jupiter Blocker, LLC",gtcr investors,gtcr jupiter,0.5,gtcr,1,BXSL,1,Blackstone Credit Advisors,True,33.694,gtcr,False
+"Go Car Wash Parent, Corp.","National Express Wash Parent Holdco, LLC",go car,national express wash,0.5,wash,1,GBDC,1,GC Advisors,True,33.3991,wash,False
+Adaptimmune Therapeutics plc,Bicycle Therapeutics PLC,adaptimmune therapeutics,bicycle therapeutics,0.5,plc,1,HTGC,1,Hercules Capital (internal),True,33.266,plc,False
+"Razor Group Holdings II, Inc. (Germany)",ResearchGate GmBH (Germany),razor group,researchgate germany,0.5,germany,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,32.7216,germany,True
+Octagon Towers LLC,Tarpon Towers II LLC,octagon towers,tarpon towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,32.256,towers,False
+Akeyless Security Ltd.,Morphisec Information Security 2014 Ltd.,akeyless security,morphisec information,0.5,security,1,HTGC,1,Hercules Capital (internal),True,31.418,security,False
+Bianalisi S.p.A. (Italy),Birsa S.p.A. (Italy),bianalisi spa,birsa spa,0.5,italy,1,CGBD,1,Carlyle Investment Management,True,31.188,italy,False
+Capella Space Corp.,"Stoke Space Technologies, Inc.",capella space,stoke space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,31.106,space,False
+"Stoke Space Technologies, Inc.",Subtotal: Space Technologies ( 0.00 %)*,stoke space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,31.096,space,False
+"Stoke Space Technologies, Inc.",Subtotal: Space Technologies ( 0.06 %)*,stoke space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,31.096,space,False
+"Southern Lifting and Hoisting, LLC",Southern Transport LLC,southern lifting,southern transport,0.5,southern,1,SLRC,1,SLR Capital Partners,True,31.073,southern,False
+"Eagle Family Foods Group, LLC",Shearer's Foods,eagle family,shearer s,0.5,foods,1,OBDC,1,Blue Owl Credit Advisors,True,30.569,foods,False
+"Imagine Acquisitionco, Inc.","Imagine Topco, LP Preferred",imagine acquisitionco,imagine preferred,0.5,imagine,1,PNNT,1,PennantPark Investment Advisers,True,29.73,imagine,False
+"OpenMarket, Inc. (Infobip) (United Kingdom)",Plate Newco 1 Limited (Avanti) (United Kingdom),openmarket infobip,plate newco,0.5,"kingdom, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,29.6653,kingdom united,False
+"OpenMarket, Inc. (Infobip) (United Kingdom)",Worldremit Group Limited (United Kingdom),openmarket infobip,worldremit group,0.5,"kingdom, united",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),False,29.5202,kingdom united,False
+"Pink Lilly Holdco, LLC","Pink Lily Holdco, LLC",pink lilly,pink lily,0.5,pink,1,PFLT,1,PennantPark Investment Advisers,True,27.978,pink,False
+Ardonagh Midco 3 PLC (United Kingdom),Big Bus Tours Group Limited (United Kingdom),ardonagh plc,big bus,0.5,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,27.532,kingdom united,False
+Akeyless Security Ltd.,Coronet Cyber Security Ltd.,akeyless security,coronet cyber,0.5,security,1,HTGC,1,Hercules Capital (internal),True,27.391,security,False
+Octagon Towers LLC,Skyway Towers Intermediate LLC,octagon towers,skyway towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,27.156,towers,False
+Harmoni Towers,Tarpon Towers II LLC,harmoni towers,tarpon towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,26.455,towers,False
+SellerX Germany GMBH & Co. KG (Germany),Vingil Holdings 2 S.a r.l (Germany),sellerx germany,vingil germany,0.5,germany,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,25.3227,germany,False
+MXP Prime Platform GmbH (SellerX) (Germany),"Razor Group Holdings II, Inc. (Germany)",mxp prime,razor group,0.5,germany,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,25.3158,germany,False
+Infinite Commerce Holdings LLC (Razor),"Razor Group Holdings II, Inc. (Germany)",infinite commerce,razor group,0.5,razor,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,25.2496,razor,False
+"Razor Group Holdings II, Inc. (Germany)",Vingil Holdings 2 S.a r.l (Germany),razor group,vingil germany,0.5,germany,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,25.2496,germany,False
+Scorpio BidCo SAS,"Solis Midco, SAS",scorpio sas,solis sas,0.5,sas,1,BXSL,1,Blackstone Credit Advisors,True,24.803,sas,False
+"Meadowlark Acquirer, LLC","Meadowlark Title, LLC",meadowlark acquirer,meadowlark title,0.5,meadowlark,1,PNNT,1,PennantPark Investment Advisers,True,23.955,meadowlark,False
+"Eagle Family Foods Group Holdings, LLC","Rubix Foods, LLC",eagle family,rubix foods,0.5,foods,1,GSBD,1,Goldman Sachs Asset Management,True,23.745,foods,False
+Harmoni Towers,Skyway Towers Intermediate LLC,harmoni towers,skyway towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,21.355,towers,False
+"Easy Mile Fitness, LLC","Supreme Fitness Group NY Holdings, LLC",easy mile,supreme fitness,0.5,fitness,1,GSBD,1,Goldman Sachs Asset Management,True,20.729,fitness,False
+"Ascent Resources Utica Holdings LLC / ARU Finance Corp, Trade Claim","Galaxy Universal LLC, Trade Claim",ascent resources,galaxy universal,0.5,"claim, trade",1,FSK,1,FS/KKR Advisor,False,20.201,claim trade,False
+"Alvogen Pharma US, Inc.","Verona Pharma, Inc.",alvogen pharma,verona pharma,0.5,pharma,1,OCSL,1,Oaktree Capital Management,True,18.796,pharma,False
+"Solis Midco, SAS","Tango Bidco, SAS",solis sas,tango sas,0.5,sas,1,BXSL,1,Blackstone Credit Advisors,True,16.652,sas,False
+Omega Fitness Holdings,"Supreme Fitness Group NY Holdings, LLC",omega fitness,supreme fitness,0.5,fitness,1,GSBD,1,Goldman Sachs Asset Management,True,16.636,fitness,False
+"1440 Foods Topco, LLC",Shearers Foods LLC,foods,shearers foods,0.5,foods,1,OCSL,1,Oaktree Capital Management,True,16.596,foods,False
+"Equipment Operating Leases, LLC",SLR Equipment Finance,equipment operating,slr equipment,0.5,equipment,1,SLRC,1,SLR Capital Partners,True,14.312,equipment,False
+Berwick Industrial Park,"NP Riverhead Industrial, LLC",berwick industrial,np riverhead,0.5,industrial,1,PNNT,1,PennantPark Investment Advisers,True,14.035,industrial,False
+Harmoni Towers,Octagon Towers LLC,harmoni towers,octagon towers,0.5,towers,1,GSBD,1,Goldman Sachs Asset Management,True,13.413,towers,False
+"Easy Mile Fitness, LLC",Omega Fitness Holdings,easy mile,omega fitness,0.5,fitness,1,GSBD,1,Goldman Sachs Asset Management,True,12.471,fitness,False
+Ardonagh Midco 3 PLC (United Kingdom),Orthrus Limited (United Kingdom),ardonagh plc,orthrus united,0.5,"kingdom, united",1,CGBD,1,Carlyle Investment Management,True,11.561,kingdom united,False
+Ardonagh Midco 3 PLC (United Kingdom),PAM Bidco Limited (United Kingdom),ardonagh plc,pam united,0.5,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,11.453,kingdom united,False
+Ardonagh Midco 3 PLC (United Kingdom),Vienna Bidco Limited (United Kingdom),ardonagh plc,vienna united,0.5,"kingdom, united",1,CGBD,1,Carlyle Investment Management,False,9.808,kingdom united,False
+"Aduro Advisors, LLC","Clearstead Advisors, LLC",aduro advisors,clearstead advisors,0.5,advisors,1,ARCC,1,Ares Capital Management,True,8.7,advisors,False
+Ardonagh Midco 3 PLC (United Kingdom),Enkindle Limited (United Kingdom),ardonagh plc,enkindle united,0.5,"kingdom, united",1,CGBD,1,Carlyle Investment Management,True,7.713,kingdom united,False
+"PCG-Ares Sidecar Investment, L.P.","PCG-TAC-CV, LP",pcg ares,pcg tac,0.5,pcg,1,ARCC,1,Ares Capital Management,True,7.3,pcg,False
+"Highfive Dental Holdco, LLC",Specialty Dental Brands,highfive dental,specialty dental,0.5,dental,1,GSBD,1,Goldman Sachs Asset Management,True,6.995,dental,False
+MC Accelerate Co-Invest Feeder LP and MC CIF Wealth Management Ltd.,"Perigon Wealth Management, LLC, Perigon Wealth Advisors Holdings Company, LLC and CWC Fund I Co-Invest (Prism) LP",mc accelerate,perigon wealth,0.5,"and, invest, wealth",1,ARCC,1,Ares Capital Management,False,6.5,and invest,False
+"First American Commercial Bancorp, Inc.","First National Capital, LLC",first american commercial,first national capital,0.5,first,1,SLRC,1,SLR Capital Partners,True,5.701,first,False
+"Global Lending Services LLC, Bond","Sallie Mae Levered, Bond",global lending services,sallie mae,0.5,bond,1,FSK,1,FS/KKR Advisor,True,4.6,bond,False
+"Complete Equipment Rentals, LLC","Trinity Equipment, Inc.",complete equipment,trinity equipment,0.5,equipment,1,SLRC,1,SLR Capital Partners,True,3.327,equipment,False
+"FedHC InvestCo II, LP","QuantiTech InvestCo, LP",fedhc investco,quantitech investco,0.5,investco,1,PNNT,1,PennantPark Investment Advisers,True,3.195,investco,False
+"FedHC InvestCo II, LP","QuantiTech InvestCo II, LP",fedhc investco,quantitech investco,0.5,investco,1,PNNT,1,PennantPark Investment Advisers,True,3.021,investco,False
+"Legacy Service Partners, LLC",Rotten Rock Hardscaping & Tree Service,legacy service,rotten rock,0.5,service,1,SLRC,1,SLR Capital Partners,True,3.002,service,False
+Builders Capital Loan Acquisition Trust 2022-RTL1,Saluda Grade Alternative Mortgage Trust 2022-BC2,builders capital,saluda grade,0.5,"2022, trust",1,FSK,1,FS/KKR Advisor,True,2.9026,2022 trust,False
+"JSG II, Inc. and Checkers USA, Inc.","Microstar Logistics LLC, Microstar Global Asset Management LLC, MStar Holding Corporation and Kegstar USA Inc.",jsg ii,microstar logistics,0.5,"and, usa",1,ARCC,1,Ares Capital Management,False,2.865,and usa,False
+Capella Space Corp.,Subtotal: Space Technologies ( 0.12 %)*,capella space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,2.778,space,False
+"FedHC InvestCo, LP","QuantiTech InvestCo, LP",fedhc investco,quantitech investco,0.5,investco,1,PNNT,1,PennantPark Investment Advisers,True,2.216,investco,False
+Nimble Crane LLC,"U.S. Crane & Rigging, LLC",nimble crane,us crane rigging,0.5,crane,1,SLRC,1,SLR Capital Partners,True,2.114,crane,False
+"FedHC InvestCo, LP","QuantiTech InvestCo II, LP",fedhc investco,quantitech investco,0.5,investco,1,PNNT,1,PennantPark Investment Advisers,True,2.042,investco,False
+Iridium Communications Inc,Level 3 Communications Inc,iridium communications,level communications,0.5,communications,1,OCSL,1,Oaktree Capital Management,True,1.684,communications,False
+"Avida Holding AB, Subordinated Bond","Global Lending Services LLC, Bond",avida ab,global lending services,0.5,bond,1,FSK,1,FS/KKR Advisor,True,1.6,bond,False
+"Extreme Steel Crane & Rigging, LLC",Nimble Crane LLC,extreme steel,nimble crane,0.5,crane,1,SLRC,1,SLR Capital Partners,True,1.375,crane,False
+"Passport Labs, Inc.","Radar Labs, Inc.",passport labs,radar labs,0.5,labs,1,TPVG,1,TriplePoint Advisers,True,1.315,labs,False
+"AFC Acquisitions, Inc. (F-2 Series)",AFC Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,0.908,afc,False
+"A&A Crane and Rigging, LLC",Nimble Crane LLC,aa crane,nimble crane,0.5,crane,1,SLRC,1,SLR Capital Partners,True,0.855,crane,False
+"Gauge APHIX Blocker, LLC","Gauge Schlesinger Coinvest, LLC",gauge aphix,gauge schlesinger,0.5,gauge,1,PNNT,1,PennantPark Investment Advisers,True,0.533,gauge,False
+"Scientian 2 Spain, S.L.","Scientian France, SAS",scientian spain,scientian france,0.5,scientian,1,BXSL,1,Blackstone Credit Advisors,True,0.394,scientian,False
+"AFC Acquisitions, Inc. (J-2 Series)",AFC Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,0.109,afc,False
+"AFC Acquisitions, Inc. (G-2 Series)",AFC Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,0.108,afc,False
+"AFC Acquisitions, Inc. (H-2 Series)",AFC Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,0.102,afc,False
+"AFC Acquisitions, Inc. (I-2 Series)",AFC Dell Holding Corp.,afc acquisitions,afc dell,0.5,afc,1,PNNT,1,PennantPark Investment Advisers,True,0.1,afc,False
+MXP Prime Platform GmbH (SellerX) (Germany),Vingil Holdings 2 S.a r.l (Germany),mxp prime,vingil germany,0.5,germany,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,0.0672,germany,False
+Razor Group GmbH (Germany),Vingil Holdings 2 S.a r.l (Germany),razor group,vingil germany,0.5,germany,1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,0.0349,germany,False
+Capella Space Corp.,Subtotal: Space Technologies ( 0.00 %)*,capella space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,0.01,space,False
+Capella Space Corp.,Subtotal: Space Technologies ( 0.06 %)*,capella space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,0.01,space,False
+"AthenaHealth Group Inc., Minerva Holdco, Inc. and BCPE Co-Invest , LP","Himalaya TopCo LLC and BCPE Hyperlink Holdings, LP",athenahealth group,himalaya and,0.5,"and, bcpe",1,ARCC,1,Ares Capital Management,False,0.0,and bcpe,False
+"CIVC VI-A 829 Blocker, LLC Units","NINJIO Holdings, LLC Units",civc vi,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+"GSF Group Holdings, L.P. Class A2 Units","NINJIO Holdings, LLC Units",gsf group,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+"Gauge Vimergy Coinvest, LLC Units","NINJIO Holdings, LLC Units",gauge vimergy,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+Impact Holdings Georgia LLC Class A-1 Units,"Naumann Hobbs Holdings, L.P. Class A-1 Units",impact georgia,naumann hobbs,0.5,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+Impact Holdings Georgia LLC Class A-1 Units,"Naumann Hobbs Holdings, L.P. Class A-2 Units",impact georgia,naumann hobbs,0.5,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+Impact Holdings Georgia LLC Class A-1 Units,"Naumann Hobbs Holdings, L.P. Class W-2 Units",impact georgia,naumann hobbs,0.5,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+Impact Holdings Georgia LLC Class A-1 Units,"NINJIO Holdings, LLC Units",impact georgia,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+Mari Events Midco LLC and AE EventsCo Holdings LLC,"Mari Miami II LLC and South Florida Tennis, LLC",mari events,mari miami,0.5,"and, mari",1,ARCC,1,Ares Capital Management,False,0.0,and mari,False
+"NINJIO Holdings, LLC Units","SG AL Investment, LLC Common-A Units",ninjio units,sg al,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+"Naumann Hobbs Holdings, L.P. Class A-1 Units","NINJIO Holdings, LLC Units",naumann hobbs,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+"Naumann Hobbs Holdings, L.P. Class A-2 Units","NINJIO Holdings, LLC Units",naumann hobbs,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+"Naumann Hobbs Holdings, L.P. Class W-2 Units","NINJIO Holdings, LLC Units",naumann hobbs,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+"Apex Service Partners, LLC","Seacoast Service Partners NA, LLC",apex service,seacoast service,0.5,service,0,,0,,True,798.375,service,False
+"Apex Service Partners, LLC","Legacy Service Partners, LLC",apex service,legacy service,0.5,service,0,,0,,True,761.393,service,False
+"Apex Service Partners, LLC","Seacoast Service Partners, LLC",apex service,seacoast service,0.5,service,0,,0,,True,760.021,service,False
+"Apex Service Partners, LLC",Rotten Rock Hardscaping & Tree Service,apex service,rotten rock,0.5,service,0,,0,,True,758.929,service,False
+LSI Financing LLC,PAI Financing Merger Sub LLC,lsi financing,pai financing,0.5,financing,0,,0,,True,629.03,financing,False
+DECA Dental Holdings LLC,"MB2 Dental Solutions, LLC",deca dental,mb2 dental,0.5,dental,0,,0,,True,482.878,dental,False
+Oliver Packaging,"Packaging Coordinators Midco, Inc.",oliver packaging,packaging coordinators,0.5,packaging,0,,0,,True,480.489,packaging,False
+"Oliver Packaging and Equipment Company, LLC","Packaging Coordinators Midco, Inc.",oliver packaging,packaging coordinators,0.5,packaging,0,,0,,True,480.048,packaging,False
+"Highfive Dental Holdco, LLC","MB2 Dental Solutions, LLC",highfive dental,mb2 dental,0.5,dental,0,,0,,True,441.414,dental,False
+"MB2 Dental Solutions, LLC",Specialty Dental Brands,mb2 dental,specialty dental,0.5,dental,0,,0,,True,437.477,dental,False
+"Foundation Risk Partners, Corp.",United Risk,foundation risk,united risk,0.5,risk,0,,0,,True,427.843,risk,False
+"Accession Risk Management Group, Inc.","Foundation Risk Partners, Corp.",accession risk,foundation risk,0.5,risk,0,,0,,True,408.612,risk,False
+"Emergency Power Holdings, LLC","Inventus Power, Inc.",emergency power,inventus power,0.5,power,0,,0,,True,224.756,power,False
+"Fertility Investment Holdco, LLC","Inception Fertility Ventures, LLC",fertility investment,inception fertility,0.5,fertility,0,,0,,True,151.056,fertility,False
+"Horizon Avionics Buyer, LLC","Horizon CTS Buyer, LLC",horizon avionics,horizon cts,0.5,horizon,0,,0,,True,114.333,horizon,False
+"Infolinks Media Buyco, LLC",Streamland Media Midco LLC,infolinks media,streamland media,0.5,media,0,,0,,True,114.0439,media,False
+"APT OPCO, LLC","Bayside Opco, LLC",apt opco,bayside opco,0.5,opco,0,,0,,True,110.588,opco,False
+"Emergency Power Holdings, LLC","Power Grid Holdings, Inc.",emergency power,power grid,0.5,power,0,,0,,True,108.252,power,False
+"Inception Fertility Ventures, LLC","Pinnacle Fertility, Inc.",inception fertility,pinnacle fertility,0.5,fertility,0,,0,,True,106.192,fertility,False
+"Businessolver.com, Inc.","Cart.Com, Inc.",businessolver com,cart com,0.5,com,0,,0,,True,104.6232,com,False
+"National Express Wash Parent Holdco, LLC",Wash & Wax Systems LLC,national express wash,wash wax,0.5,wash,0,,0,,True,104.186,wash,False
+"Clearstead Advisors, LLC",Mercer Advisors Inc,clearstead advisors,mercer advisors,0.5,advisors,0,,0,,True,99.0,advisors,False
+"All States Ag Parts, LLC",Parts Town,all states,parts town,0.5,parts,0,,0,,True,95.461,parts,False
+"Emergency Care Partners, LLC","PHC Buyer, LLC (Patriot Home Care)",emergency care,phc patriot,0.5,care,0,,0,,True,91.2381,care,False
+"8th Avenue Food & Provisions, Inc.","P&P Food Safety Holdings, Inc.*",8th avenue,pp food,0.5,food,0,,0,,True,90.577,food,False
+"Aduro Advisors, LLC",Mercer Advisors Inc,aduro advisors,mercer advisors,0.5,advisors,0,,0,,True,90.3,advisors,False
+"8th Avenue Food & Provisions, Inc.","P&P Food Safety Holdings, Inc.",8th avenue,pp food,0.5,food,0,,0,,True,88.166,food,False
+"Quick Quack Car Wash Holdings, LLC",Wash & Wax Systems LLC,quick quack,wash wax,0.5,wash,0,,0,,True,83.355,wash,False
+"BDG Media, Inc.",Streamland Media Midco LLC,bdg media,streamland media,0.5,media,0,,0,,True,81.7619,media,False
+"Pave America Holding, LLC",Tecta America Corp,pave america,tecta america,0.5,america,0,,0,,True,80.218,america,False
+"Express Wash Acquisition Company, LLC","Quick Quack Car Wash Holdings, LLC",express wash,quick quack,0.5,wash,0,,0,,True,79.708,wash,False
+"Cobalt Buyer Sub, Inc.",PAI Financing Merger Sub LLC,cobalt sub,pai financing,0.5,sub,0,,0,,True,78.941,sub,False
+"Clarion Home Services Group, LLC and LBC Breeze Holdings LLC","Heartland Home Services, Inc.",clarion home,heartland,0.5,home,0,,0,,True,74.369,home,True
+"Go Car Wash Parent, Corp.",Wash & Wax Systems LLC,go car,wash wax,0.5,wash,0,,0,,True,71.8931,wash,False
+Lazer Logistics Inc,Lazer Spot,lazer logistics,lazer spot,0.5,lazer,0,,0,,True,70.766,lazer,False
+Streamland Media Midco LLC,"Tower Arch Infolinks Media, LP",streamland media,infolinks media,0.5,media,0,,0,,True,69.7479,media,True
+"Express Wash Acquisition Company, LLC (Whistle)",Go Car Wash Management Corp.,express wash,go car,0.5,wash,0,,0,,True,69.6521,wash,False
+"Cobalt Buyer Sub, Inc.*",PAI Financing Merger Sub LLC,cobalt sub,pai financing,0.5,sub,0,,0,,True,68.451,sub,False
+"Express Wash Acquisition Company, LLC","Go Car Wash Parent, Corp.",express wash,go car,0.5,wash,0,,0,,True,68.2461,wash,False
+LSI Financing 1 DAC,PAI Financing Merger Sub LLC,lsi financing,pai financing,0.5,financing,0,,0,,True,67.023,financing,False
+"Businessolver.com, Inc.","Integrate.com, Inc.",businessolver com,integrate com,0.5,com,0,,0,,True,64.6282,com,False
+"BDG Media, Inc.","Infolinks Media Buyco, LLC",bdg media,infolinks media,0.5,media,0,,0,,True,58.888,media,False
+"Compex Legal Services, Inc.","U.S. Legal Support, Inc.",compex legal,us legal support,0.5,legal,0,,0,,True,53.765,legal,False
+"Accession Risk Management Group, Inc.",United Risk,accession risk,united risk,0.5,risk,0,,0,,True,53.299,risk,False
+Inovex Information Systems Incorporated,"iWave Information Systems, Inc.",inovex information,iwave information,0.5,information,0,,0,,True,50.304,information,False
+Keystone Agency Partners LLC,Oakbridge Insurance Agency LLC,keystone agency,oakbridge insurance,0.5,agency,0,,0,,True,49.56,agency,False
+Aurora Lux FinCo S.Á.R.L. (Luxembourg),Bond Lux HoldCo S.à r.l.,aurora lux,bond lux,0.5,lux,0,,0,,True,43.93,lux,False
+"Legacy Service Partners, LLC","Seacoast Service Partners NA, LLC",legacy service,seacoast service,0.5,service,0,,0,,True,42.448,service,False
+Rotten Rock Hardscaping & Tree Service,"Seacoast Service Partners NA, LLC",rotten rock,seacoast service,0.5,service,0,,0,,True,39.984,service,False
+"BDG Media, Inc.","Terraboost Media Operating Company, LLC",bdg media,terraboost media,0.5,media,0,,0,,True,39.8695,media,False
+"Capstone Logistics Acquisition, Inc.",HTI Logistics Corporation,capstone logistics,hti logistics,0.5,logistics,0,,0,,True,34.051,logistics,False
+"ABC Legal Holdings, LLC",ABC Plumbing,abc legal,abc plumbing,0.5,abc,0,,0,,True,24.554,abc,False
+"Callodine Commercial Finance, LLC","First American Commercial Bancorp, Inc.",callodine commercial,first american commercial,0.5,commercial,0,,0,,True,24.4578,commercial,False
+Global Critical Logistics,"SEKO Global Logistics Network, LLC",global critical logistics,seko global,0.5,logistics,0,,0,,True,18.64,logistics,False
+Galileo Pharma Bidco S.p.A,"Verona Pharma, Inc.",galileo pharma,verona pharma,0.5,pharma,0,,0,,True,15.155,pharma,False
+"Alvogen Pharma US, Inc.",Galileo Pharma Bidco S.p.A,alvogen pharma,galileo pharma,0.5,pharma,0,,0,,True,15.039,pharma,False
+"BDG Media, Inc.","Tower Arch Infolinks Media, LP",bdg media,infolinks media,0.5,media,0,,0,,True,14.592,media,True
+"Compex Legal Services, Inc.","U.S. Legal Support Investment Holdings, LLC",compex legal,us legal support,0.5,legal,0,,0,,True,14.375,legal,False
