@@ -1212,16 +1212,32 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             # Some iXBRL filings have a column-shift artefact where the header and data
             # rows use different <td> widths, so cost/fv land at wrong positions.  Those
             # rows still carry correct issuer + footnote markers → extract NA/PIK info here.
+
+            # Identify "metadata-empty" rows: par, rate, and pct_nav are all blank.
+            # These are almost always prior-year comparison-column entries or subtotal rows
+            # (e.g. OBDC's iXBRL SOI includes a Dec 31 prior-year column alongside the
+            # current-period column in the same HTML table; the parser captures both).
+            # We must NOT use these rows to populate _tbl_na / _tbl_pik — doing so causes
+            # prior-period non-accrual/PIK flags to contaminate current-period data via
+            # the issuer-level carry-forward.  The flag on the row itself is still set
+            # correctly if the row text directly asserts NA/PIK, but the issuer is not
+            # added to the table-level tracking sets.
+            _metadata_empty = (
+                not (inv.par_str or "").strip()
+                and not (inv.rate_str or "").strip()
+                and not (inv.pct_nav_str or "").strip()
+            )
+
             row_is_na = _is_non_accrual(row_text, na_marks)
             if not row_is_na and na_marks and issuer_markers:
                 row_is_na = bool(issuer_markers & na_marks)
-            if row_is_na and inv.issuer:
+            if row_is_na and inv.issuer and not _metadata_empty:
                 _tbl_na.add(inv.issuer)
                 na_issuers.add(inv.issuer)
             row_is_pik = bool(pik_marks and (
                 any(m in row_text for m in pik_marks) or bool(issuer_markers & pik_marks)
             )) if pik_marks else False
-            if row_is_pik and inv.issuer:
+            if row_is_pik and inv.issuer and not _metadata_empty:
                 _tbl_pik.add(inv.issuer)
                 pik_issuers.add(inv.issuer)
 
@@ -1305,9 +1321,17 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
         _tbl_na  = {s for s in _tbl_na  if not _GENERIC_LABEL_RE.search(s) and not _continued_re_tbl.search(s)}
         _tbl_pik = {s for s in _tbl_pik if not _GENERIC_LABEL_RE.search(s) and not _continued_re_tbl.search(s)}
         for inv in investments[_tbl_start:]:
-            if inv.issuer in _tbl_na:
+            # Do not carry-forward NA/PIK to metadata-empty rows (prior-year comparison
+            # column entries or subtotal rows).  Their flags should only come from direct
+            # row-text or footnote-marker matches, not from the issuer-level carry-forward.
+            _inv_meta_empty = (
+                not (inv.par_str or "").strip()
+                and not (inv.rate_str or "").strip()
+                and not (inv.pct_nav_str or "").strip()
+            )
+            if inv.issuer in _tbl_na and not _inv_meta_empty:
                 inv.is_non_accrual = True
-            if inv.issuer in _tbl_pik:
+            if inv.issuer in _tbl_pik and not _inv_meta_empty:
                 inv.is_pik = True
 
         sibling = sibling.find_next("table")
@@ -1333,6 +1357,33 @@ def parse_soi_html(html: str, fund_ticker: str, period: str, filing_type: str,
             seen.discard(key)
 
     investments = deduped
+
+    # Secondary deduplication: remove metadata-empty rows whose (issuer, cost_mm, fv_mm)
+    # exactly duplicates a filled row for the same issuer in this filing.
+    # This catches prior-year comparison column entries that slipped through: they have
+    # the same numeric values as the prior-period row but lack par/rate/pct_nav.
+    # Only remove the metadata-empty copy; keep the filled copy.
+    _filled_numeric: set[tuple] = set()
+    for inv in investments:
+        _inv_me = (
+            not (inv.par_str or "").strip()
+            and not (inv.rate_str or "").strip()
+            and not (inv.pct_nav_str or "").strip()
+        )
+        if not _inv_me and inv.cost_mm is not None and inv.fv_mm is not None:
+            _filled_numeric.add((inv.issuer[:60], inv.cost_mm, inv.fv_mm))
+
+    investments = [
+        inv for inv in investments
+        if not (
+            not (inv.par_str or "").strip()
+            and not (inv.rate_str or "").strip()
+            and not (inv.pct_nav_str or "").strip()
+            and inv.cost_mm is not None
+            and inv.fv_mm is not None
+            and (inv.issuer[:60], inv.cost_mm, inv.fv_mm) in _filled_numeric
+        )
+    ]
 
     # Post-filter global na_issuers for verbose logging only.
     # Per-position NA/PIK flags are now applied per-table (above) so there is no
@@ -1517,8 +1568,20 @@ def build_borrower_db(
       borrowers:  dict[issuer_name, BorrowerRecord]
       meta:       {build_time, funds_included, total_positions}
     """
-    files = sorted(cache_dir.glob("*.json"))
-    files = [f for f in files if not f.name.startswith("_")]
+    # Keep only the most recent period per fund ticker (TICKER_YYYY-MM-DD.json).
+    # Without this, aggregating Q3 + Q4 files would double-count every position.
+    _ticker_files: dict[str, Path] = {}
+    for fpath in sorted(cache_dir.glob("*.json")):
+        if fpath.name.startswith("_"):
+            continue
+        parts = fpath.stem.split("_", 1)
+        if len(parts) != 2:
+            _ticker_files.setdefault(fpath.stem, fpath)
+            continue
+        ticker, period = parts[0].upper(), parts[1]
+        if ticker not in _ticker_files or period > _ticker_files[ticker].stem.split("_", 1)[1]:
+            _ticker_files[ticker] = fpath
+    files = sorted(_ticker_files.values())
 
     # issuer_key -> record
     borrowers: dict[str, dict] = {}

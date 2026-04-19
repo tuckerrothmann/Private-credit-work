@@ -23,10 +23,10 @@ from cclf_liquidity_model import (
 )
 from red_flag_screener import (
     load_universe, load_universe_with_trends, screen_universe, screen_to_dataframe,
-    flag_frequency_table, FLAG_LABELS,
+    flag_frequency_table, FLAG_LABELS, enrich_funds_with_edgar_metrics,
 )
 from trend_signals import compute_all_trend_signals, TrendSignal
-from edgar_collector import EdgarClient, load_cached_universe_metrics
+from edgar_collector import EdgarClient, load_cached_universe_metrics, collect_universe_metrics
 from bdc_historical import BdcHistorian, load_history, nav_indexed_to_100, compare_nav_trajectories
 
 st.set_page_config(page_title="BDC Liquidity Dashboard", layout="wide")

@@ -569,7 +569,7 @@
     "fv_mm": 1.622,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null

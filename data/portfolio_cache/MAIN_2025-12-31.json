@@ -3927,7 +3927,7 @@
     "fv_mm": 0.928,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -15082,7 +15082,7 @@
     "fv_mm": 3.998,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
@@ -27916,7 +27916,7 @@
     "fv_mm": 3.91,
     "pct_nav": null,
     "is_pik": false,
-    "is_non_accrual": true,
+    "is_non_accrual": false,
     "is_equity": false,
     "rate_base": "Fixed",
     "spread_bps": null
