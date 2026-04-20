@@ -89,6 +89,8 @@ Universe metadata lives in `data/bdc_universe.json`.
 - `scenarios/`: liquidity-model scenario configs
 - `tests/`: regression coverage
 
+The Streamlit dashboard now surfaces the monthly watchlist and parser-health outputs directly in the Portfolio view so the refresh workflow and the operating UI stay aligned.
+
 ## Issuer surveillance starting points
 
 If you are jumping into the borrower side first, start here:

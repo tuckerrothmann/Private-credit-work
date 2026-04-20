@@ -70,9 +70,9 @@ Fifty AU Bidco Pty Ltd,Fifty U.S. Bidco Inc,fifty au,fifty us,1.0,fifty,1,BCSF,1
 "World Associates Holdings, LLC","World Insurance Associates, LLC",world associates,world insurance associates,1.0,"associates, world",0,,0,,False,1128.032,associates world,False
 Business Services,"Leadpoint Business Services, LLC",business services,leadpoint business,1.0,business,0,,0,,False,972.2103,business,False
 Business Services,Subtotal: Consumer & Business Services ( 0.29 %)*,business services,subtotal consumer,1.0,business,0,,0,,False,943.8123,business,False
+Business Services,Subtotal: Consumer & Business Services ( 0.32 %)*,business services,subtotal consumer,1.0,business,0,,0,,False,943.8123,business,False
 Business Services,Subtotal: Consumer & Business Services ( 0.33 %)*,business services,subtotal consumer,1.0,business,0,,0,,False,943.8123,business,False
 Business Services,Subtotal: Consumer & Business Services ( 18.03 %)*,business services,subtotal consumer,1.0,business,0,,0,,False,943.8123,business,False
-Business Services,Subtotal: Consumer & Business Services ( 0.32 %)*,business services,subtotal consumer,1.0,business,0,,0,,False,943.8123,business,False
 Packaging,"Packaging Coordinators Midco, Inc.",packaging,packaging coordinators,1.0,packaging,0,,0,,False,718.311,packaging,False
 "Crewline Buyer, Inc. (New Relic)",New Relic,crewline new,new relic,1.0,"new, relic",0,,0,,False,613.8534,new relic,False
 "Apex Clean Energy TopCo, LLC",Energy,apex clean,energy,1.0,energy,0,,0,,False,595.0743,energy,False
@@ -165,9 +165,9 @@ Go Car Wash Management Corp.,LUV Car Wash,go car,luv car,1.0,"car, wash",0,,0,,T
 Go Car Wash Management Corp.,"LUV Car Wash Group, LLC",go car,luv car,1.0,"car, wash",0,,0,,False,54.828,car wash,False
 Go Car Wash Management Corp.,"Splash Car Wash, Inc.",go car,splash car,1.0,"car, wash",0,,0,,True,54.734,car wash,False
 "Hancock Claims Consultants Investors, LLC","TS Investors, LLC",hancock claims,ts investors,1.0,investors,0,,0,,False,54.65,investors,False
-Business Products,Subtotal: Consumer & Business Products ( 0.04 %)*,business products,subtotal consumer,1.0,business,0,,0,,False,53.526,business,False
-Business Products,Subtotal: Consumer & Business Products ( 0.03 %)*,business products,subtotal consumer,1.0,business,0,,0,,False,53.526,business,False
 Business Products,Subtotal: Consumer & Business Products ( 0.02 %)*,business products,subtotal consumer,1.0,business,0,,0,,False,53.526,business,False
+Business Products,Subtotal: Consumer & Business Products ( 0.03 %)*,business products,subtotal consumer,1.0,business,0,,0,,False,53.526,business,False
+Business Products,Subtotal: Consumer & Business Products ( 0.04 %)*,business products,subtotal consumer,1.0,business,0,,0,,False,53.526,business,False
 Appriss,"Appriss Health, LLC",appriss,appriss health,1.0,appriss,0,,0,,False,53.334,appriss,False
 "Go Car Wash Parent, Corp.","Quick Quack Car Wash Holdings, LLC and KKR Game Changer Co-Invest Feeder II L.P.",go car,quick quack,1.0,"car, wash",0,,0,,False,52.1531,car wash,False
 "Express Wash Intermediate, LLC","National Express Wash Parent Holdco, LLC",express wash,national express wash,1.0,"express, wash",0,,0,,False,52.126,express wash,False
@@ -293,10 +293,10 @@ Arrotex Australia Group Pty Ltd,iNova Pharmaceuticals (Australia) Pty Limited,ar
 "Complete Equipment Rentals, LLC","Trinity Equipment Rentals, Inc.",complete equipment,trinity equipment,0.667,"equipment, rentals",1,SLRC,1,SLR Capital Partners,True,1.578,equipment rentals,False
 "A&A Crane and Rigging, LLC","Extreme Steel Crane & Rigging, LLC",aa crane,extreme steel,0.667,"crane, rigging",1,SLRC,1,SLR Capital Partners,True,0.706,crane rigging,False
 MXP Prime Platform GmbH (SellerX) (Germany),Razor Group GmbH (Germany),mxp prime,razor group,0.667,"germany, gmbh",1,TCPC,1,Tennenbaum Capital Partners (BlackRock),True,0.1011,germany gmbh,False
-"GSF Group Holdings, L.P. Class A2 Units","Naumann Hobbs Holdings, L.P. Class W-2 Units",gsf group,naumann hobbs,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
-"GSF Group Holdings, L.P. Class A2 Units","Naumann Hobbs Holdings, L.P. Class A-1 Units",gsf group,naumann hobbs,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
 "GSF Group Holdings, L.P. Class A2 Units",Impact Holdings Georgia LLC Class A-1 Units,gsf group,impact georgia,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+"GSF Group Holdings, L.P. Class A2 Units","Naumann Hobbs Holdings, L.P. Class A-1 Units",gsf group,naumann hobbs,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
 "GSF Group Holdings, L.P. Class A2 Units","Naumann Hobbs Holdings, L.P. Class A-2 Units",gsf group,naumann hobbs,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+"GSF Group Holdings, L.P. Class A2 Units","Naumann Hobbs Holdings, L.P. Class W-2 Units",gsf group,naumann hobbs,0.667,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
 "Mari Miami II LLC and South Florida Tennis, LLC","South Florida Motorsports, LLC",mari miami,south florida motorsports,0.667,"florida, south",1,ARCC,1,Ares Capital Management,False,0.0,florida south,False
 Cority Software Inc. (Canada),"Elastic Path Software, Inc. (Canada)",cority software,elastic path,0.667,"canada, software",0,,0,,True,68.6389,canada software,False
 "Elastic Path Software, Inc. (Canada)",Prophix Software Inc. (Canada),elastic path,prophix software,0.667,"canada, software",0,,0,,True,57.5239,canada software,False
@@ -479,17 +479,17 @@ Capella Space Corp.,Subtotal: Space Technologies ( 0.00 %)*,capella space,subtot
 Capella Space Corp.,Subtotal: Space Technologies ( 0.06 %)*,capella space,subtotal space,0.5,space,1,HTGC,1,Hercules Capital (internal),True,0.01,space,False
 "AthenaHealth Group Inc., Minerva Holdco, Inc. and BCPE Co-Invest , LP","Himalaya TopCo LLC and BCPE Hyperlink Holdings, LP",athenahealth group,himalaya and,0.5,"and, bcpe",1,ARCC,1,Ares Capital Management,False,0.0,and bcpe,False
 "CIVC VI-A 829 Blocker, LLC Units","NINJIO Holdings, LLC Units",civc vi,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
-"GSF Group Holdings, L.P. Class A2 Units","NINJIO Holdings, LLC Units",gsf group,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
 "Gauge Vimergy Coinvest, LLC Units","NINJIO Holdings, LLC Units",gauge vimergy,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
-Impact Holdings Georgia LLC Class A-1 Units,"NINJIO Holdings, LLC Units",impact georgia,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
-Impact Holdings Georgia LLC Class A-1 Units,"Naumann Hobbs Holdings, L.P. Class W-2 Units",impact georgia,naumann hobbs,0.5,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+"GSF Group Holdings, L.P. Class A2 Units","NINJIO Holdings, LLC Units",gsf group,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
 Impact Holdings Georgia LLC Class A-1 Units,"Naumann Hobbs Holdings, L.P. Class A-1 Units",impact georgia,naumann hobbs,0.5,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
 Impact Holdings Georgia LLC Class A-1 Units,"Naumann Hobbs Holdings, L.P. Class A-2 Units",impact georgia,naumann hobbs,0.5,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+Impact Holdings Georgia LLC Class A-1 Units,"Naumann Hobbs Holdings, L.P. Class W-2 Units",impact georgia,naumann hobbs,0.5,"class, units",1,SCM,1,Stellus Capital Management,True,0.0,class units,False
+Impact Holdings Georgia LLC Class A-1 Units,"NINJIO Holdings, LLC Units",impact georgia,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
 Mari Events Midco LLC and AE EventsCo Holdings LLC,"Mari Miami II LLC and South Florida Tennis, LLC",mari events,mari miami,0.5,"and, mari",1,ARCC,1,Ares Capital Management,False,0.0,and mari,False
-"NINJIO Holdings, LLC Units","SG AL Investment, LLC Common-A Units",ninjio units,sg al,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
 "Naumann Hobbs Holdings, L.P. Class A-1 Units","NINJIO Holdings, LLC Units",naumann hobbs,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
 "Naumann Hobbs Holdings, L.P. Class A-2 Units","NINJIO Holdings, LLC Units",naumann hobbs,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
 "Naumann Hobbs Holdings, L.P. Class W-2 Units","NINJIO Holdings, LLC Units",naumann hobbs,ninjio units,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
+"NINJIO Holdings, LLC Units","SG AL Investment, LLC Common-A Units",ninjio units,sg al,0.5,units,1,SCM,1,Stellus Capital Management,True,0.0,units,False
 LSI Financing LLC,PAI Financing Merger Sub LLC,lsi financing,pai financing,0.5,financing,0,,0,,True,966.604,financing,False
 "Apex Service Partners, LLC","Seacoast Service Partners NA, LLC",apex service,seacoast service,0.5,service,0,,0,,True,882.811,service,False
 "Apex Service Partners, LLC","Legacy Service Partners, LLC",apex service,legacy service,0.5,service,0,,0,,True,845.829,service,False

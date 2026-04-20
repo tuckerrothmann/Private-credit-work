@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import csv
 from datetime import date
 from pathlib import Path
 
@@ -424,3 +425,58 @@ def build_family_split_candidate_rows(
         )
     )
     return rows[:limit]
+
+
+def load_csv_records(path: Path) -> list[dict]:
+    """Load CSV rows with UTF-8 BOM handling for dashboard display."""
+    if not path.exists():
+        return []
+    try:
+        with path.open(encoding="utf-8-sig", newline="") as fh:
+            return list(csv.DictReader(fh))
+    except Exception:
+        return []
+
+
+def build_monthly_watchlist_rows(
+    rows: list[dict],
+    bucket: str = "All",
+) -> list[dict]:
+    """Filter and sort monthly watchlist rows for dashboard use."""
+    order = {
+        "Overweight core": 0,
+        "Overweight selectively": 1,
+        "Hold / neutral": 2,
+        "Underweight / caution": 3,
+        "Avoid / trim first": 4,
+    }
+    filtered = [row for row in rows if bucket == "All" or row.get("Bucket") == bucket]
+    filtered.sort(
+        key=lambda row: (
+            order.get(row.get("Bucket", ""), 99),
+            -int(row.get("Risk Score") or 0),
+            row.get("Ticker", ""),
+        )
+    )
+    return filtered
+
+
+def build_parser_health_rows(
+    rows: list[dict],
+    status: str = "All",
+) -> list[dict]:
+    """Filter and sort parser-health rows for dashboard use."""
+    order = {
+        "needs_manual_review": 0,
+        "used_fallback": 1,
+        "parsed_cleanly": 2,
+    }
+    filtered = [row for row in rows if status == "All" or row.get("Status") == status]
+    filtered.sort(
+        key=lambda row: (
+            order.get(row.get("Status", ""), 99),
+            row.get("Ticker", ""),
+            row.get("Period", ""),
+        )
+    )
+    return filtered

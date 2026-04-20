@@ -8,6 +8,8 @@ from unittest.mock import patch
 from monthly_watchlist import build_monthly_watchlist_rows
 from dashboard_helpers import (
     build_borrower_heatmap_records,
+    build_monthly_watchlist_rows as build_dashboard_monthly_watchlist_rows,
+    build_parser_health_rows,
     build_borrower_stress_rows,
     build_family_heatmap_records,
     build_family_merge_candidate_rows,
@@ -448,6 +450,28 @@ def test_build_monthly_watchlist_rows_merges_live_metrics_and_transmission_notes
     assert rows[0]["Risk Tier"] == "GREEN"
     assert rows[1]["PM Action"] == "Trim / avoid"
     assert rows[1]["Signal"] == "Avoid"
+
+
+def test_dashboard_operating_helper_rows_filter_and_sort() -> None:
+    watchlist_rows = [
+        {"Bucket": "Avoid / trim first", "Ticker": "PFLT", "Risk Score": "16"},
+        {"Bucket": "Overweight core", "Ticker": "ARCC", "Risk Score": "1"},
+        {"Bucket": "Overweight core", "Ticker": "BXSL", "Risk Score": "2"},
+    ]
+    parser_rows = [
+        {"Ticker": "ARCC", "Period": "2025-12-31", "Status": "parsed_cleanly"},
+        {"Ticker": "PFLT", "Period": "2025-12-31", "Status": "needs_manual_review"},
+        {"Ticker": "TCPC", "Period": "2025-12-31", "Status": "used_fallback"},
+    ]
+
+    filtered_watchlist = build_dashboard_monthly_watchlist_rows(
+        watchlist_rows,
+        bucket="Overweight core",
+    )
+    filtered_parser = build_parser_health_rows(parser_rows, status="All")
+
+    assert [row["Ticker"] for row in filtered_watchlist] == ["BXSL", "ARCC"]
+    assert [row["Ticker"] for row in filtered_parser] == ["PFLT", "TCPC", "ARCC"]
 
 
 def test_summarize_portfolio_cache_handles_counts_and_totals(tmp_path: Path) -> None:
@@ -1174,6 +1198,63 @@ def test_write_family_review_candidates_exports_merge_and_split_rows(tmp_path: P
 
     assert "Alpha OpCo" in merge_text
     assert "Gamma Family" in split_text
+
+
+def test_write_family_review_candidates_uses_stable_tiebreakers(tmp_path: Path) -> None:
+    merge_path = tmp_path / "merge.csv"
+    split_path = tmp_path / "split.csv"
+
+    rows = write_family_review_candidates(
+        {
+            "family_review": {
+                "merge_candidates": [
+                    {
+                        "Borrower A": "Business Services",
+                        "Borrower B": "Subtotal B",
+                        "Family A": "business services",
+                        "Family B": "subtotal consumer",
+                        "Similarity": 1.0,
+                        "Shared Fund Count": 0,
+                        "Shared Manager Count": 0,
+                        "Combined FV ($M)": 10.0,
+                    },
+                    {
+                        "Borrower A": "Business Services",
+                        "Borrower B": "Subtotal A",
+                        "Family A": "business services",
+                        "Family B": "subtotal consumer",
+                        "Similarity": 1.0,
+                        "Shared Fund Count": 0,
+                        "Shared Manager Count": 0,
+                        "Combined FV ($M)": 10.0,
+                    },
+                ],
+                "split_candidates": [
+                    {
+                        "Family": "Alpha Family",
+                        "Family Key": "alpha family b",
+                        "Override Applied": False,
+                        "Max Pair Similarity": 0.1,
+                        "Shared Fund Pairs": 0,
+                        "Total FV ($M)": 20.0,
+                    },
+                    {
+                        "Family": "Alpha Family",
+                        "Family Key": "alpha family a",
+                        "Override Applied": False,
+                        "Max Pair Similarity": 0.1,
+                        "Shared Fund Pairs": 0,
+                        "Total FV ($M)": 20.0,
+                    },
+                ],
+            }
+        },
+        merge_output_path=merge_path,
+        split_output_path=split_path,
+    )
+
+    assert [row["Borrower B"] for row in rows["merge_candidates"]] == ["Subtotal A", "Subtotal B"]
+    assert [row["Family Key"] for row in rows["split_candidates"]] == ["alpha family a", "alpha family b"]
 
 
 def test_review_token_signature_drops_generic_industry_words() -> None:

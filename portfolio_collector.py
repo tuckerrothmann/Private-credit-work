@@ -2688,7 +2688,10 @@ def _build_family_review_candidates(
             -(row["Shared Fund Count"] or 0),
             -(row["Shared Manager Count"] or 0),
             -(row["Combined FV ($M)"] or 0),
+            row["Family A"],
+            row["Family B"],
             row["Borrower A"],
+            row["Borrower B"],
         )
     )
     split_candidates.sort(
@@ -2698,6 +2701,7 @@ def _build_family_review_candidates(
             row["Shared Fund Pairs"] or 0,
             -(row["Total FV ($M)"] or 0),
             row["Family"],
+            row["Family Key"],
         )
     )
 
@@ -2782,8 +2786,34 @@ def write_family_review_candidates(
     split_output_path: Path = BORROWER_FAMILY_SPLIT_CANDIDATES,
 ) -> dict[str, list[dict]]:
     review = db.get("family_review", {})
+    merge_candidates = list(review.get("merge_candidates", []))
+    split_candidates = list(review.get("split_candidates", []))
+
+    merge_candidates.sort(
+        key=lambda row: (
+            -(row.get("Similarity") or 0),
+            -(row.get("Shared Fund Count") or 0),
+            -(row.get("Shared Manager Count") or 0),
+            -(row.get("Combined FV ($M)") or 0),
+            row.get("Family A", ""),
+            row.get("Family B", ""),
+            row.get("Borrower A", ""),
+            row.get("Borrower B", ""),
+        )
+    )
+    split_candidates.sort(
+        key=lambda row: (
+            row.get("Override Applied", False),
+            row.get("Max Pair Similarity") or 0,
+            row.get("Shared Fund Pairs") or 0,
+            -(row.get("Total FV ($M)") or 0),
+            row.get("Family", ""),
+            row.get("Family Key", ""),
+        )
+    )
+
     merge_rows = _write_review_csv(
-        review.get("merge_candidates", []),
+        merge_candidates,
         merge_output_path,
         [
             "Borrower A", "Borrower B", "Family A", "Family B", "Similarity",
@@ -2793,7 +2823,7 @@ def write_family_review_candidates(
         ],
     )
     split_rows = _write_review_csv(
-        review.get("split_candidates", []),
+        split_candidates,
         split_output_path,
         [
             "Family", "Family Key", "Borrower Count", "Borrowers", "Fund Count", "Funds",
