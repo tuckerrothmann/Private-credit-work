@@ -1,5 +1,7 @@
 # Next Steps
 
+Latest decision artifact: `memo/portfolio_decision_pack_2026-04-19.md`
+
 ## Portfolio manager priorities
 
 1. Re-underwrite the highest-risk listed names after the merged parser and scoring changes: `PFLT`, `TPVG`, `TCPC`, `PNNT`, `FSK`, `SCM`, `BCSF`, `GSBD`.
