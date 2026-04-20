@@ -75,10 +75,14 @@ Universe metadata lives in `data/bdc_universe.json`.
 ## High-value folders
 
 - `data/processed/`: generated outputs, digests, and summaries
+- `data/processed/monthly_watchlist.csv`: portfolio-action sheet combining PM actions, live signals, and borrower transmission names
+- `data/processed/monthly_watchlist.md`: markdown companion to the monthly watchlist for quick review
+- `data/processed/parser_health.csv`: latest parser-health snapshot showing which cached filings parsed cleanly or used fallbacks
 - `data/processed/borrower_watchlist.csv`: ranked issuer surveillance sheet with stress, manager overlap, maturities, and mark pressure
 - `data/processed/borrower_family_watchlist.csv`: related-entity rollup of the borrower watchlist for family-level transmission and refinancing mapping
 - `data/processed/borrower_family_merge_candidates.csv`: candidate borrower pairs that may belong in the same family alias bucket
 - `data/processed/borrower_family_split_candidates.csv`: low-cohesion family buckets that may deserve a split or alias cleanup
+- `data/monthly_watchlist_config.json`: curated PM-level watchlist instructions that get merged with live scores and borrower-family data
 - `data/borrower_family_aliases.json`: curated borrower-key overrides for family rollups where heuristics need explicit steering
 - `memo/`: fund-level investment memos, including the CCLF liquidity work
 - `issuer-surveillance/`: borrower and sector surveillance artifacts
@@ -91,7 +95,8 @@ If you are jumping into the borrower side first, start here:
 
 1. `issuer-surveillance/private_credit_software_synthesis.md`
 2. `issuer-surveillance/bdc_bond_positioning.md`
-3. `issuer-surveillance/NEXT_ACTIONS.md`
+3. `issuer-surveillance/pluralsight_transmission_note.md`
+4. `issuer-surveillance/NEXT_ACTIONS.md`
 
 ## Data notes
 

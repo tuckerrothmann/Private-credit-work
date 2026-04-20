@@ -1,6 +1,7 @@
 # Next Steps
 
 Latest decision artifact: `memo/portfolio_decision_pack_2026-04-19.md`
+Latest operating artifacts: `data/processed/monthly_watchlist.csv`, `data/processed/parser_health.csv`
 
 ## Portfolio manager priorities
 

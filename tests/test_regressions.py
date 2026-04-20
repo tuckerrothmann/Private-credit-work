@@ -5,6 +5,7 @@ from datetime import date
 from pathlib import Path
 from unittest.mock import patch
 
+from monthly_watchlist import build_monthly_watchlist_rows
 from dashboard_helpers import (
     build_borrower_heatmap_records,
     build_borrower_stress_rows,
@@ -27,6 +28,7 @@ from portfolio_collector import (
     _borrower_family_key,
     _clean_issuer_name,
     _review_token_signature,
+    build_parser_health_report,
     build_borrower_db,
     compute_live_na_rates,
     latest_portfolio_cache_files,
@@ -34,7 +36,7 @@ from portfolio_collector import (
     write_family_review_candidates,
 )
 import refresh
-from trade_signals import load_all_signals, load_signal_funds
+from trade_signals import TradeSignal, load_all_signals, load_signal_funds
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -325,6 +327,127 @@ def test_get_latest_10kq_period_skips_cache_writes_in_dry_run(tmp_path: Path) ->
 
     assert period == "2025-12-31"
     assert not (tmp_path / "submissions" / "CIK0000017313.json").exists()
+
+
+def test_build_parser_health_report_uses_recorded_and_inferred_statuses(tmp_path: Path) -> None:
+    _write_json(tmp_path / "ARCC_2025-12-31.json", [{"issuer": "Alpha", "fv_mm": 10.0}])
+    _write_json(tmp_path / "PFLT_2025-12-31.json", [{"issuer": "Beta", "fv_mm": 5.0}])
+
+    details_path = tmp_path / "parser_health_details.json"
+    _write_json(
+        details_path,
+        {
+            "ARCC::2025-12-31": {
+                "ticker": "ARCC",
+                "period": "2025-12-31",
+                "filing_type": "10-Q",
+                "positions_parsed": 1,
+                "status": "used_fallback",
+                "fallbacks": ["full_html_retry:no_rows"],
+                "doc_source": "primary_document",
+                "metadata_source": "recorded",
+            }
+        },
+    )
+
+    rows = build_parser_health_report(
+        cache_dir=tmp_path,
+        details_path=details_path,
+        output_path=None,
+    )
+
+    assert rows[0]["Ticker"] == "ARCC"
+    assert rows[0]["Status"] == "used_fallback"
+    assert rows[0]["Fallbacks"] == "full_html_retry:no_rows"
+    assert rows[1]["Ticker"] == "PFLT"
+    assert rows[1]["Status"] == "parsed_cleanly"
+    assert rows[1]["Metadata Source"] == "inferred_from_cache"
+
+
+def test_build_monthly_watchlist_rows_merges_live_metrics_and_transmission_notes() -> None:
+    funds = [
+        {
+            "ticker": "ARCC",
+            "name": "Ares Capital Corporation",
+            "price_to_nav": 1.05,
+            "nii_coverage": 1.15,
+            "nonaccrual_pct_fair_value": 0.006,
+            "nav_change_yoy_pct": 0.02,
+            "leverage_de": 1.12,
+            "as_of": "2025-12-31",
+        },
+        {
+            "ticker": "PFLT",
+            "name": "PennantPark Floating Rate Capital",
+            "price_to_nav": 0.85,
+            "nii_coverage": 0.59,
+            "nonaccrual_pct_fair_value": 0.002,
+            "nav_change_yoy_pct": -0.076,
+            "leverage_de": 1.61,
+            "as_of": "2025-12-31",
+        },
+    ]
+    signals = [
+        TradeSignal(
+            ticker="ARCC",
+            name="Ares Capital Corporation",
+            signal="HOLD",
+            risk_score=1,
+            risk_bucket="LOW",
+            val_bucket="FAIR",
+            price_to_nav=1.05,
+            nav_discount_pct=5.0,
+            key_flags=[],
+            listed=True,
+            rationale="",
+        ),
+        TradeSignal(
+            ticker="PFLT",
+            name="PennantPark Floating Rate Capital",
+            signal="AVOID",
+            risk_score=15,
+            risk_bucket="HIGH",
+            val_bucket="DISCOUNT",
+            price_to_nav=0.85,
+            nav_discount_pct=-15.0,
+            key_flags=[],
+            listed=True,
+            rationale="",
+        ),
+    ]
+    config = {
+        "tickers": {
+            "ARCC": {
+                "bucket": "Overweight core",
+                "pm_action": "Overweight core",
+                "why_now": "Clean benchmark-quality lender.",
+                "what_changes_view": "Credit metrics worsen.",
+                "borrower_family_keys": ["alpha"],
+            },
+            "PFLT": {
+                "bucket": "Avoid / trim first",
+                "pm_action": "Trim / avoid",
+                "why_now": "Coverage collapse plus leverage drift.",
+                "what_changes_view": "Coverage above 0.90x.",
+                "borrower_family_keys": [],
+            },
+        }
+    }
+
+    rows = build_monthly_watchlist_rows(
+        funds,
+        signals,
+        {"families": _sample_families()},
+        config,
+        as_of="2026-04-19 20:00",
+    )
+
+    assert [row["Ticker"] for row in rows] == ["ARCC", "PFLT"]
+    assert rows[0]["Borrower Transmission"] == "Alpha Family"
+    assert rows[0]["Transmission Snapshot"] == "Alpha Family (RED, 2 funds, $22.0M FV)"
+    assert rows[0]["Risk Tier"] == "GREEN"
+    assert rows[1]["PM Action"] == "Trim / avoid"
+    assert rows[1]["Signal"] == "Avoid"
 
 
 def test_summarize_portfolio_cache_handles_counts_and_totals(tmp_path: Path) -> None:

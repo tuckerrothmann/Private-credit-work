@@ -1,0 +1,123 @@
+{
+  "tickers": {
+    "ARCC": {
+      "bucket": "Overweight core",
+      "pm_action": "Overweight core",
+      "why_now": "Benchmark-quality platform with clean credit metrics, positive NAV trend, and low live non-accruals.",
+      "what_changes_view": "A real rise in non-accruals or a clear deterioration in earnings coverage.",
+      "borrower_family_keys": ["pluralsight", "flexera software"]
+    },
+    "BXSL": {
+      "bucket": "Overweight core",
+      "pm_action": "Overweight core",
+      "why_now": "Large-scale first-lien lender with good credit stats and cleaner underwriting than the discounted trouble spots.",
+      "what_changes_view": "Meaningful credit slippage without corresponding valuation reset.",
+      "borrower_family_keys": ["zendesk", "flexera software"]
+    },
+    "MAIN": {
+      "bucket": "Overweight core",
+      "pm_action": "Overweight but valuation-aware",
+      "why_now": "Best-in-class franchise, excellent coverage, and sustained NAV compounding justify premium status.",
+      "what_changes_view": "A meaningful premium compression or evidence that fundamentals no longer justify the valuation.",
+      "borrower_family_keys": []
+    },
+    "TSLX": {
+      "bucket": "Overweight core",
+      "pm_action": "Overweight core",
+      "why_now": "Still one of the cleanest public credit-quality names in the universe with strong coverage and negligible non-accruals.",
+      "what_changes_view": "Coverage or credit quality cracking visibly across consecutive filings.",
+      "borrower_family_keys": []
+    },
+    "HTGC": {
+      "bucket": "Overweight selectively",
+      "pm_action": "Overweight selectively",
+      "why_now": "Strong platform with good coverage, but venture and life-science exposure makes the risk profile different from first-lien peers.",
+      "what_changes_view": "PIK mix or venture stress worsening while the valuation premium stays elevated.",
+      "borrower_family_keys": []
+    },
+    "OTF": {
+      "bucket": "Overweight selectively",
+      "pm_action": "Selective add",
+      "why_now": "Low leverage and low non-accruals make this the cleanest deep-discount opportunity in the pack.",
+      "what_changes_view": "Coverage continues slipping below 1.0x without offsetting NAV resilience.",
+      "borrower_family_keys": ["pluralsight", "kaseya", "zendesk", "flexera software"]
+    },
+    "MSDL": {
+      "bucket": "Hold / neutral",
+      "pm_action": "Hold / starter only",
+      "why_now": "Valuation is interesting after the dividend reset, but the post-cut stabilization case still needs proof.",
+      "what_changes_view": "Two cleaner periods of coverage and follow-through after the dividend cut.",
+      "borrower_family_keys": ["kaseya", "icims"]
+    },
+    "CGBD": {
+      "bucket": "Hold / neutral",
+      "pm_action": "Hold",
+      "why_now": "Reasonable discount and manageable stats, but not compelling enough to outrank the higher-quality anchors.",
+      "what_changes_view": "Either more earnings cushion or a wider discount without credit deterioration.",
+      "borrower_family_keys": ["kaseya", "icims", "flexera software"]
+    },
+    "MFIC": {
+      "bucket": "Hold / neutral",
+      "pm_action": "Hold / monitor",
+      "why_now": "Not broken, but balance-sheet pressure remains real and the discount alone is not enough yet.",
+      "what_changes_view": "Leverage and NAV stabilizing together without fresh credit leakage.",
+      "borrower_family_keys": ["zendesk"]
+    },
+    "FSK": {
+      "bucket": "Underweight / caution",
+      "pm_action": "Underweight / monitor",
+      "why_now": "Cheap for a reason: elevated non-accruals, thin coverage, and a history that warrants skepticism.",
+      "what_changes_view": "A visible recovery in coverage plus a cleaner non-accrual trend.",
+      "borrower_family_keys": ["zendesk", "flexera software"]
+    },
+    "SCM": {
+      "bucket": "Underweight / caution",
+      "pm_action": "Underweight / monitor",
+      "why_now": "Small-cap balance-sheet strain story with high leverage and too little margin for error.",
+      "what_changes_view": "Leverage backing down or coverage materially improving.",
+      "borrower_family_keys": []
+    },
+    "BCSF": {
+      "bucket": "Underweight / caution",
+      "pm_action": "Hold with caution",
+      "why_now": "Coverage deterioration is severe enough to matter even if the underlying credit picture is less visibly broken than the red bucket.",
+      "what_changes_view": "Coverage recovering above 0.85x or a cleaner payout reset.",
+      "borrower_family_keys": ["pluralsight"]
+    },
+    "GSBD": {
+      "bucket": "Underweight / caution",
+      "pm_action": "Hold with caution",
+      "why_now": "Manageable on the surface, but declining coverage and NAV trend keep this out of the safe-discount bucket.",
+      "what_changes_view": "Better earnings coverage and a steadier NAV trajectory.",
+      "borrower_family_keys": ["pluralsight", "kaseya", "icims"]
+    },
+    "TPVG": {
+      "bucket": "Avoid / trim first",
+      "pm_action": "Trim / avoid",
+      "why_now": "This looks like real credit stress, not just a valuation air pocket: critical non-accruals and severe NAV erosion.",
+      "what_changes_view": "Non-accruals stabilizing materially and NAV erosion stopping across two reporting periods.",
+      "borrower_family_keys": []
+    },
+    "PFLT": {
+      "bucket": "Avoid / trim first",
+      "pm_action": "Trim / avoid",
+      "why_now": "Coverage collapse plus leverage drift creates the weakest risk/reward among the nominal income names.",
+      "what_changes_view": "Coverage returning above 0.90x without more leverage.",
+      "borrower_family_keys": ["pluralsight"]
+    },
+    "TCPC": {
+      "bucket": "Avoid / trim first",
+      "pm_action": "Avoid",
+      "why_now": "Cheap valuation is being offset by persistently high leverage, elevated non-accruals, and weak balance-sheet flexibility.",
+      "what_changes_view": "Leverage and non-accruals both improving at the same time.",
+      "borrower_family_keys": ["pluralsight", "kaseya", "zendesk", "icims"]
+    },
+    "PNNT": {
+      "bucket": "Avoid / trim first",
+      "pm_action": "Avoid / small only if forced",
+      "why_now": "Sister-fund version of the same problem: weak coverage and too much leverage for the operating trend.",
+      "what_changes_view": "Coverage and leverage inflecting in the right direction together.",
+      "borrower_family_keys": []
+    }
+  }
+}

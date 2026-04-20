@@ -1,0 +1,26 @@
+Ticker,Period,Filing Type,Positions Parsed,Status,Fallbacks,Metadata Source,Cache File,Notes
+ARCC,2025-12-31,,1517,parsed_cleanly,,inferred_from_cache,ARCC_2025-12-31.json,no parser metadata
+BCSF,2025-09-30,,516,parsed_cleanly,,inferred_from_cache,BCSF_2025-09-30.json,no parser metadata
+BXSL,2025-12-31,,1035,parsed_cleanly,,inferred_from_cache,BXSL_2025-12-31.json,no parser metadata
+CGBD,2025-12-31,,629,parsed_cleanly,,inferred_from_cache,CGBD_2025-12-31.json,no parser metadata
+FSK,2025-12-31,,1091,parsed_cleanly,,inferred_from_cache,FSK_2025-12-31.json,no parser metadata
+GAIN,2025-12-31,,67,parsed_cleanly,,inferred_from_cache,GAIN_2025-12-31.json,no parser metadata
+GBDC,2025-12-31,,2253,parsed_cleanly,,inferred_from_cache,GBDC_2025-12-31.json,no parser metadata
+GLAD,2025-12-31,,86,parsed_cleanly,,inferred_from_cache,GLAD_2025-12-31.json,no parser metadata
+GSBD,2025-12-31,,1005,parsed_cleanly,,inferred_from_cache,GSBD_2025-12-31.json,no parser metadata
+HTGC,2025-12-31,,704,parsed_cleanly,,inferred_from_cache,HTGC_2025-12-31.json,no parser metadata
+MAIN,2025-12-31,,1245,parsed_cleanly,,inferred_from_cache,MAIN_2025-12-31.json,no parser metadata
+MFIC,2025-12-31,,606,parsed_cleanly,,inferred_from_cache,MFIC_2025-12-31.json,no parser metadata
+MSDL,2025-12-31,,1125,parsed_cleanly,,inferred_from_cache,MSDL_2025-12-31.json,no parser metadata
+NMFC,2025-09-30,,778,parsed_cleanly,,inferred_from_cache,NMFC_2025-09-30.json,no parser metadata
+OBDC,2025-12-31,,757,parsed_cleanly,,inferred_from_cache,OBDC_2025-12-31.json,no parser metadata
+OCSL,2025-12-31,,1026,parsed_cleanly,,inferred_from_cache,OCSL_2025-12-31.json,no parser metadata
+OTF,2025-12-31,,540,parsed_cleanly,,inferred_from_cache,OTF_2025-12-31.json,no parser metadata
+PFLT,2025-12-31,,975,parsed_cleanly,,inferred_from_cache,PFLT_2025-12-31.json,no parser metadata
+PNNT,2025-12-31,,906,parsed_cleanly,,inferred_from_cache,PNNT_2025-12-31.json,no parser metadata
+PSEC,2025-12-31,,647,parsed_cleanly,,inferred_from_cache,PSEC_2025-12-31.json,no parser metadata
+SCM,2025-12-31,,755,parsed_cleanly,,inferred_from_cache,SCM_2025-12-31.json,no parser metadata
+SLRC,2025-12-31,,263,parsed_cleanly,,inferred_from_cache,SLRC_2025-12-31.json,no parser metadata
+TCPC,2025-12-31,,578,parsed_cleanly,,inferred_from_cache,TCPC_2025-12-31.json,no parser metadata
+TPVG,2025-12-31,,575,parsed_cleanly,,inferred_from_cache,TPVG_2025-12-31.json,no parser metadata
+TSLX,2025-09-30,,32,parsed_cleanly,,inferred_from_cache,TSLX_2025-09-30.json,no parser metadata

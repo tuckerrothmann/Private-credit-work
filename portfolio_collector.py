@@ -64,6 +64,8 @@ BORROWER_FAMILY_WATCHLIST = PROCESSED_DIR / "borrower_family_watchlist.csv"
 BORROWER_FAMILY_ALIASES = Path("data/borrower_family_aliases.json")
 BORROWER_FAMILY_MERGE_CANDIDATES = PROCESSED_DIR / "borrower_family_merge_candidates.csv"
 BORROWER_FAMILY_SPLIT_CANDIDATES = PROCESSED_DIR / "borrower_family_split_candidates.csv"
+PARSER_HEALTH_DETAILS = PROCESSED_DIR / "parser_health_details.json"
+PARSER_HEALTH_CSV = PROCESSED_DIR / "parser_health.csv"
 
 # SOI section headers we search for in filing HTML
 SOI_HEADINGS = [
@@ -873,6 +875,7 @@ def parse_soi_html(
     *,
     _use_chunking: bool = True,
     _allow_full_retry: bool = True,
+    _parse_report: Optional[dict[str, Any]] = None,
 ) -> list[Investment]:
     """Parse a complete 10-K/10-Q HTML filing and extract all SOI investments."""
     if not _BS4_OK:
@@ -882,7 +885,13 @@ def parse_soi_html(
 
     # For large filings (>3MB), extract just the SOI section(s) first to avoid
     # parsing tens of megabytes of iXBRL boilerplate
-    if _use_chunking and len(html) > 3_000_000:
+    chunking_used = _use_chunking and len(html) > 3_000_000
+    if _parse_report is not None:
+        _parse_report.setdefault("chunking_used", chunking_used)
+        _parse_report.setdefault("used_full_html_retry", False)
+        _parse_report.setdefault("full_html_retry_reason", "")
+
+    if chunking_used:
         html_chunk = _extract_soi_chunk(html, max_bytes=20_000_000)
         if verbose:
             print(f"    Large filing ({len(html)//1000}KB) — using SOI chunk "
@@ -895,6 +904,9 @@ def parse_soi_html(
     soi_tag = _find_soi_section(soup)
     if soi_tag is None:
         if _use_chunking and _allow_full_retry and html_chunk != html:
+            if _parse_report is not None:
+                _parse_report["used_full_html_retry"] = True
+                _parse_report["full_html_retry_reason"] = "heading_missing"
             if verbose:
                 print(f"    [!] Chunked SOI search missed {fund_ticker} {period}; retrying full filing HTML")
             return parse_soi_html(
@@ -905,9 +917,12 @@ def parse_soi_html(
                 verbose=verbose,
                 _use_chunking=False,
                 _allow_full_retry=False,
+                _parse_report=_parse_report,
             )
         if verbose:
             print(f"  [!] SOI heading not found in {fund_ticker} {period}")
+        if _parse_report is not None:
+            _parse_report["positions_parsed"] = 0
         return []
 
     # Extract footnote legend to detect fund-specific non-accrual / PIK markers
@@ -1472,6 +1487,9 @@ def parse_soi_html(
         print(f"  Parsed {len(investments)} investments, {na} non-accrual, {pik} PIK")
 
     if not investments and _use_chunking and _allow_full_retry and html_chunk != html:
+        if _parse_report is not None:
+            _parse_report["used_full_html_retry"] = True
+            _parse_report["full_html_retry_reason"] = "no_rows"
         if verbose:
             print(f"    [!] Chunked SOI parse found no rows for {fund_ticker} {period}; retrying full filing HTML")
         return parse_soi_html(
@@ -1482,9 +1500,105 @@ def parse_soi_html(
             verbose=verbose,
             _use_chunking=False,
             _allow_full_retry=False,
+            _parse_report=_parse_report,
         )
 
+    if _parse_report is not None:
+        _parse_report["positions_parsed"] = len(investments)
+
     return investments
+
+
+# ---------------------------------------------------------------------------
+# Parser health tracking
+# ---------------------------------------------------------------------------
+
+def _parser_health_key(ticker: str, period: str) -> str:
+    return f"{ticker.upper()}::{period}"
+
+
+def _load_parser_health_details(details_path: Path = PARSER_HEALTH_DETAILS) -> dict[str, dict]:
+    if not details_path.exists():
+        return {}
+    try:
+        data = json.loads(details_path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _save_parser_health_details(details: dict[str, dict], details_path: Path = PARSER_HEALTH_DETAILS) -> None:
+    details_path.parent.mkdir(parents=True, exist_ok=True)
+    details_path.write_text(json.dumps(details, indent=2), encoding="utf-8")
+
+
+def _infer_parser_health_status(positions_parsed: int, detail: dict) -> str:
+    if positions_parsed <= 0:
+        return "needs_manual_review"
+    if detail.get("fallbacks"):
+        return "used_fallback"
+    return "parsed_cleanly"
+
+
+def build_parser_health_report(
+    cache_dir: Path = PORTFOLIO_CACHE,
+    details_path: Path = PARSER_HEALTH_DETAILS,
+    output_path: Optional[Path] = PARSER_HEALTH_CSV,
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    details = _load_parser_health_details(details_path)
+
+    for ticker, fpath in sorted(latest_portfolio_cache_files(cache_dir).items()):
+        period = fpath.stem.split("_", 1)[1]
+        try:
+            positions = json.loads(fpath.read_text(encoding="utf-8"))
+        except Exception:
+            positions = []
+
+        detail = details.get(_parser_health_key(ticker, period), {})
+        positions_parsed = int(detail.get("positions_parsed", len(positions) if isinstance(positions, list) else 0))
+        status = detail.get("status") or _infer_parser_health_status(positions_parsed, detail)
+        fallbacks = detail.get("fallbacks") or []
+        metadata_source = detail.get("metadata_source") or ("recorded" if detail else "inferred_from_cache")
+        note_bits = []
+        if detail.get("issue"):
+            note_bits.append(detail["issue"])
+        if detail.get("doc_source") and detail["doc_source"] != "primary_document":
+            note_bits.append(f"doc={detail['doc_source']}")
+        if metadata_source == "inferred_from_cache":
+            note_bits.append("no parser metadata")
+
+        rows.append({
+            "Ticker": ticker,
+            "Period": period,
+            "Filing Type": detail.get("filing_type", ""),
+            "Positions Parsed": positions_parsed,
+            "Status": status,
+            "Fallbacks": ", ".join(fallbacks),
+            "Metadata Source": metadata_source,
+            "Cache File": fpath.name,
+            "Notes": "; ".join(note_bits),
+        })
+
+    rows.sort(
+        key=lambda row: (
+            {"needs_manual_review": 0, "used_fallback": 1, "parsed_cleanly": 2}.get(row["Status"], 3),
+            row["Ticker"],
+        )
+    )
+
+    if output_path is not None:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with output_path.open("w", newline="", encoding="utf-8") as fh:
+            fieldnames = list(rows[0].keys()) if rows else [
+                "Ticker", "Period", "Filing Type", "Positions Parsed", "Status",
+                "Fallbacks", "Metadata Source", "Cache File", "Notes",
+            ]
+            writer = csv.DictWriter(fh, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+
+    return rows
 
 
 # ---------------------------------------------------------------------------
@@ -1531,18 +1645,32 @@ class PortfolioCollector:
             print(f"  [!] No 10-K/10-Q filings found for {ticker}")
             return []
 
+        parser_details = _load_parser_health_details()
         all_investments = []
         for filing in filings:
             period   = filing["period"]
             form     = filing["form"]
             accession = filing["accession"]
             primary  = filing["primary_doc"]
+            health_key = _parser_health_key(ticker, period)
 
             cache_key = self.cache_dir / f"{ticker}_{period}.json"
             if cache_key.exists() and not force_refresh:
                 if verbose:
                     print(f"  {ticker} {period} {form}: loaded from cache ({cache_key.name})")
                 data = json.loads(cache_key.read_text(encoding="utf-8"))
+                if health_key not in parser_details:
+                    parser_details[health_key] = {
+                        "ticker": ticker,
+                        "period": period,
+                        "filing_type": form,
+                        "positions_parsed": len(data) if isinstance(data, list) else 0,
+                        "status": _infer_parser_health_status(len(data) if isinstance(data, list) else 0, {}),
+                        "fallbacks": [],
+                        "doc_source": "cache",
+                        "metadata_source": "inferred_from_cache",
+                        "collected_at": datetime.now().isoformat(),
+                    }
                 all_investments.extend(data)
                 continue
 
@@ -1551,6 +1679,8 @@ class PortfolioCollector:
 
             # Build document URL
             doc_url = _primary_doc_url(cik, accession, primary)
+            doc_source = "primary_document"
+            fallback_reasons: list[str] = []
 
             try:
                 html = _fetch(doc_url, timeout=60)
@@ -1568,26 +1698,90 @@ class PortfolioCollector:
                         alt_url = (f"{EDGAR_FILING}/Archives/edgar/data/"
                                    f"{int(cik.zfill(10))}/{accession}/{htm_items[0]['name']}")
                         html = _fetch(alt_url, timeout=60)
+                        doc_source = "index_html_fallback"
+                        fallback_reasons.append("index_html_fallback")
                     else:
+                        parser_details[health_key] = {
+                            "ticker": ticker,
+                            "period": period,
+                            "filing_type": form,
+                            "positions_parsed": 0,
+                            "status": "needs_manual_review",
+                            "fallbacks": fallback_reasons,
+                            "doc_source": doc_source,
+                            "metadata_source": "recorded",
+                            "issue": "download_failed_no_html_index_match",
+                            "collected_at": datetime.now().isoformat(),
+                        }
                         continue
                 except Exception as e2:
                     if verbose:
                         print(f"    [!] Index fallback also failed: {e2}")
+                    parser_details[health_key] = {
+                        "ticker": ticker,
+                        "period": period,
+                        "filing_type": form,
+                        "positions_parsed": 0,
+                        "status": "needs_manual_review",
+                        "fallbacks": fallback_reasons,
+                        "doc_source": doc_source,
+                        "metadata_source": "recorded",
+                        "issue": f"download_failed: {e2}",
+                        "collected_at": datetime.now().isoformat(),
+                    }
                     continue
 
-            investments = parse_soi_html(html, ticker, period, form, verbose=verbose)
+            parse_report: dict[str, Any] = {}
+            investments = parse_soi_html(
+                html,
+                ticker,
+                period,
+                form,
+                verbose=verbose,
+                _parse_report=parse_report,
+            )
+            if parse_report.get("used_full_html_retry"):
+                fallback_reasons.append(
+                    f"full_html_retry:{parse_report.get('full_html_retry_reason', 'unknown')}"
+                )
             if not investments:
                 if verbose:
                     print(f"    [!] No investments parsed from {ticker} {period}")
+                parser_details[health_key] = {
+                    "ticker": ticker,
+                    "period": period,
+                    "filing_type": form,
+                    "positions_parsed": 0,
+                    "status": "needs_manual_review",
+                    "fallbacks": fallback_reasons,
+                    "doc_source": doc_source,
+                    "metadata_source": "recorded",
+                    "issue": "no_positions_parsed",
+                    "chunking_used": parse_report.get("chunking_used", False),
+                    "collected_at": datetime.now().isoformat(),
+                }
                 continue
 
             data = [inv.to_dict() for inv in investments]
             cache_key.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            parser_details[health_key] = {
+                "ticker": ticker,
+                "period": period,
+                "filing_type": form,
+                "positions_parsed": len(investments),
+                "status": "used_fallback" if fallback_reasons else "parsed_cleanly",
+                "fallbacks": fallback_reasons,
+                "doc_source": doc_source,
+                "metadata_source": "recorded",
+                "chunking_used": parse_report.get("chunking_used", False),
+                "collected_at": datetime.now().isoformat(),
+            }
             all_investments.extend(data)
 
             if verbose:
                 print(f"    -> {len(investments)} positions cached to {cache_key.name}")
 
+        _save_parser_health_details(parser_details)
         return all_investments
 
     def collect_universe(
@@ -2931,6 +3125,8 @@ def latest_portfolio_cache_files(
         if len(parts) != 2:
             continue
         ticker, period = parts[0].upper(), parts[1]
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", period):
+            continue
         current = latest.get(ticker)
         if current is None or period > current[0]:
             latest[ticker] = (period, fpath)

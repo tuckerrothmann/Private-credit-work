@@ -42,6 +42,8 @@ from typing import Optional
 UNIVERSE_PATH    = Path("data/bdc_universe.json")
 SCORES_HISTORY   = Path("data/scores_history.json")
 DIGEST_PATH      = Path("data/processed/refresh_digest.md")
+PARSER_HEALTH_PATH = Path("data/processed/parser_health.csv")
+MONTHLY_WATCHLIST_PATH = Path("data/processed/monthly_watchlist.csv")
 PORTFOLIO_CACHE  = Path("data/portfolio_cache")
 EDGAR_CACHE      = Path("data/edgar_cache")
 
@@ -206,20 +208,46 @@ def check_new_filings(
 # Refresh runner
 # ---------------------------------------------------------------------------
 
-def run_collection(tickers: list[str], verbose: bool = True) -> None:
-    """Run portfolio_collector for *tickers* to pull the latest SOI data."""
+def run_collection(tickers: list[str], verbose: bool = True) -> list[dict]:
+    """Run portfolio collection for *tickers* and return parser-health rows."""
     if not tickers:
-        return
+        return []
 
     if verbose:
         print(f"\nCollecting SOI data for: {', '.join(tickers)}")
 
-    # Call portfolio_collector's main collection logic directly
-    import subprocess, sys
-    cmd = [sys.executable, "portfolio_collector.py", "--tickers"] + tickers
-    result = subprocess.run(cmd, capture_output=not verbose, text=True)
-    if result.returncode != 0 and not verbose:
-        print(f"  [!] portfolio_collector failed:\n{result.stderr[-500:]}")
+    from portfolio_collector import PortfolioCollector, build_parser_health_report
+
+    collector = PortfolioCollector()
+    for ticker in tickers:
+        collector.collect_fund(ticker, verbose=verbose)
+    return build_parser_health_report()
+
+
+def _print_parser_health_summary(rows: list[dict], verbose: bool = True) -> None:
+    if not rows or not verbose:
+        return
+
+    status_counts: dict[str, int] = {}
+    for row in rows:
+        status = row.get("Status", "")
+        status_counts[status] = status_counts.get(status, 0) + 1
+
+    print("\nParser health:")
+    print(
+        "  "
+        f"{status_counts.get('parsed_cleanly', 0)} parsed cleanly  |  "
+        f"{status_counts.get('used_fallback', 0)} used fallback  |  "
+        f"{status_counts.get('needs_manual_review', 0)} need manual review"
+    )
+
+    for row in [item for item in rows if item.get("Status") != "parsed_cleanly"][:8]:
+        fallback = row.get("Fallbacks", "")
+        detail = f" [{fallback}]" if fallback else ""
+        print(
+            f"  {row.get('Ticker', ''):<8} {row.get('Period', '')}  "
+            f"{row.get('Status', '')}{detail}"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -667,6 +695,7 @@ def run(
     funds = load_universe()
 
     new_filings: dict[str, str] = {}
+    parser_health_rows: list[dict] = []
 
     # ── Step 1: Detect new filings ──────────────────────────────────────────
     if not score_only:
@@ -681,9 +710,15 @@ def run(
     # ── Step 2: Pull new SOI data ───────────────────────────────────────────
     tickers_to_refresh = [t for t in new_filings if new_filings[t] != "forced" or force]
     if tickers_to_refresh and not dry_run:
-        run_collection(tickers_to_refresh, verbose=verbose)
+        parser_health_rows = run_collection(tickers_to_refresh, verbose=verbose)
     elif tickers_to_refresh and dry_run:
         print(f"[dry-run] Would collect: {', '.join(tickers_to_refresh)}")
+    if not parser_health_rows:
+        from portfolio_collector import build_parser_health_report
+
+        parser_health_rows = build_parser_health_report(
+            output_path=None if dry_run else PARSER_HEALTH_PATH
+        )
 
     # ── Step 3: Score all funds ─────────────────────────────────────────────
     if verbose:
@@ -717,6 +752,14 @@ def run(
     else:
         print("\n  No score changes since last run.")
 
+    _print_parser_health_summary(parser_health_rows, verbose=verbose)
+
+    monthly_watchlist_rows: list[dict] = []
+    if not dry_run:
+        from monthly_watchlist import refresh_monthly_watchlist
+
+        monthly_watchlist_rows = refresh_monthly_watchlist(as_of=run_dt)
+
     # ── Step 7: Persist ─────────────────────────────────────────────────────
     if not dry_run:
         save_score_history(current_scores)
@@ -724,6 +767,8 @@ def run(
         DIGEST_PATH.write_text(html_digest, encoding="utf-8")
         if verbose:
             print(f"\nDigest written to {DIGEST_PATH}")
+            print(f"Parser health written to {PARSER_HEALTH_PATH}")
+            print(f"Monthly watchlist written to {MONTHLY_WATCHLIST_PATH}")
 
     # ── Step 8: Email ──────────────────────────────────────────────────────
     if notify and not dry_run:
